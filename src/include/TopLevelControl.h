@@ -1,5 +1,7 @@
 #include <FSM.h>
 #include <Controller.h>
+#include <TrajController.h>
+#include <LocomotionController.h>
 #include <Data.h>
 #include <Wrapper.h>
 #include <params.h>
@@ -16,7 +18,7 @@ class TopLevelControl
         Data* data;
         Wrapper* wrapper;
         double t_last_c ;
-        bool LOCOMOTION_MODE, TARGET_MODE, TRACKING_MODE;
+        bool LOCOMOTION_MODE, TARGET_MODE;
         bool goal_ach;
         
         TopLevelControl();
@@ -29,5 +31,6 @@ class TopLevelControl
 
 
 };
+
 
 #endif

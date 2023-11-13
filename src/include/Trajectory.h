@@ -31,16 +31,7 @@ class Trajectory
         Eigen::Matrix3d get_RDesiredRotationMatrix(double t_real);
         Eigen::Matrix3d get_dRDesiredRotationMatrix(Eigen::Matrix3d R_prev, double dt, double t_real);        
         
-        /* Target - Locomotion*/
-        void updateTarget(Eigen::Vector3d p_T_, Eigen::Vector3d p0_ofphase_, Eigen::Matrix3d R_T_);
-        // void nextDTarget(Eigen::Vector3d p0_ofphase_, double t_ofphase, double dt);
-        // Eigen::Vector3d get_pTarget(Eigen::Vector3d p0_ofphase_, double t_ofphase);
-        // Eigen::Vector3d get_dpTarget(Eigen::Vector3d p0_ofphase_,Eigen::Vector3d p_d_prev, double dt, double t_ofphase);
-        // Eigen::Vector3d get_ddpTarget(Eigen::Vector3d p0_ofphase_,Eigen::Vector3d p_d_prev,Eigen::Vector3d dp_d_prev, double dt, double t_ofphase);
-        // Eigen::Matrix3d get_RTargetRotationMatrix(Eigen::Quaterniond Q0_ofphase, double t_ofphase);
-        // Eigen::Matrix3d get_dRTargetRotationMatrix(Eigen::Quaterniond Q0_ofphase, Eigen::Matrix3d R_prev,double dt, double t_ofphase);
 
-        
 };
 
 #endif

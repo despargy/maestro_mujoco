@@ -8,23 +8,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <LocomotionTopLevelControl.h>
 
 //simulation end time
-double simend = 15;
+// double simend = 30;
 
 //related to writing data to a file
-FILE *fid;
 int loop_index = 0;
-const int data_frequency = 10; //frequency at which data is written to a file
 
 //Change the path <template_writeData>
 //Change the xml file
 char path[] = "/home/despinar/mujoco_ws/maestro_mujoco/";
-char xmlfile[] = "xml/go1/xml/extra_scene.xml";
+char xmlfile[] = "xml/go1/xml/extra_scene.xml"; //
 
-char datafile[] = "data/data.csv";
-
-int ii = 0;
 // MuJoCo data structures
 mjModel* m = NULL;                  // MuJoCo model
 mjData* d = NULL;                   // MuJoCo data
@@ -46,9 +42,12 @@ mjtNum position_history = 0;
 mjtNum previous_time = 0;
 
 // controller related variables
-float_t ctrl_update_freq = 100;
+// float_t ctrl_update_freq = 100;
 mjtNum last_update = 0.0;
 mjtNum ctrl;
+
+/* Maestro TopLevelController global pointer definition*/
+LocomotionTopLevelControl* topController;
 
 // keyboard callback
 void keyboard(GLFWwindow* window, int key, int scancode, int act, int mods)
@@ -116,151 +115,18 @@ void scroll(GLFWwindow* window, double xoffset, double yoffset)
     mjv_moveCamera(m, mjMOUSE_ZOOM, 0, -0.05*yoffset, &scn, &cam);
 }
 
-
-//****************************
-//This function is called once and is used to get the headers
-void init_save_data()
+void my_controller_walk(const mjModel* m, mjData* d)
 {
-  //write name of the variable here (header)
-   fprintf(fid,"t,");
-   fprintf(fid,"FR_foot_x,FR_foot_y,FR_foot_z,");
-   fprintf(fid,"FL_foot_x,FL_foot_y,FL_foot_z,");
-   fprintf(fid,"RR_foot_x,RR_foot_y,RR_foot_z,");
-   fprintf(fid,"RL_foot_x,RL_foot_y,RL_foot_z,");
-
-   //Don't remove the newline
-   fprintf(fid,"\n");
-}
-
-//***************************
-//This function is called at a set frequency, put data here
-void save_data(const mjModel* m, mjData* d)
-{
-  //data here should correspond to headers in init_save_data()
-  //seperate data by a space %f followed by space
-  fprintf(fid,"%f,",d->time);
-  fprintf(fid,"%f,%f,%f,", d->sensordata[89], d->sensordata[90], d->sensordata[91]);
-  fprintf(fid,"%f,%f,%f,", d->sensordata[92], d->sensordata[93], d->sensordata[94]);
-  fprintf(fid,"%f,%f,%f,", d->sensordata[95], d->sensordata[96], d->sensordata[97]);
-  fprintf(fid,"%f,%f,%f,", d->sensordata[98], d->sensordata[99], d->sensordata[100]);
-
-  //Don't remove the newline
-  fprintf(fid,"\n");
-}
-
-/******************************/
-void set_torque_control(const mjModel* m,int actuator_no,int flag)
-{
-  if (flag==0)
-    m->actuator_gainprm[10*actuator_no+0]=0;
-  else
-    m->actuator_gainprm[10*actuator_no+0]=1;
-}
-/******************************/
-
-
-/******************************/
-void set_position_servo(const mjModel* m,int actuator_no,double kp)
-{
-  m->actuator_gainprm[10*actuator_no+0]=kp;
-  m->actuator_biasprm[10*actuator_no+1]=-kp;
-}
-/******************************/
-
-/******************************/
-void set_velocity_servo(const mjModel* m,int actuator_no,double kv)
-{
-  m->actuator_gainprm[10*actuator_no+0]=kv;
-  m->actuator_biasprm[10*actuator_no+2]=-kv;
-}
-/******************************/
-
-//**************************
-void init_controller(const mjModel* m, mjData* d)
-{
-    while(d->time<1)
+    // printf("MuJoCo time %f\n", d->time);
+    if( (d->time - topController->t_last_c) >= topController->controller->dt )
     {
-        printf("wait\n");
-        mj_step(m,d);
+        topController->wrapper->update(m,d,topController->controller->dt);
+        topController->compute(d->time); // call once
+        topController->wrapper->send(m,d);
     }
 }
-void nextQdes(int i, double duration, double* targetPos)
-{
-    double percent = (double)i/duration;
-    double lastPos[12];
-    for(int j=0; j<12; j++)
-    {
-        lastPos[j] = d->sensordata[j];
-    }  
-    for(int j = 0; j < 12 ; j++)
-    {
-       d->ctrl[j] = -100*(d->sensordata[j]-(lastPos[j]*(1-percent) + targetPos[j]*percent))-10*d->sensordata[j+12];
-       
-    }
-}
-//**************************
-void fake(const mjModel* m, mjData* d)
-{
-}
-
-void mycontroller(const mjModel* m, mjData* d)
-{
-    double targetPos[12] = {0.0, 0.67, -1.3, -0.0, 0.67, -1.3, 
-                                            0.0, 0.67, -1.3, -0.0, 0.67, -1.3};
-        
 
 
-    if(d->time<6)
-    {
-        /* Configure init sit down pose for robot */
-        d->ctrl[0] = -70*(d->sensordata[0]-0.0)-10*d->sensordata[0+12];
-        d->ctrl[3] = -70*(d->sensordata[3]+0.0)-10*d->sensordata[3+12];
-        d->ctrl[6] = -70*(d->sensordata[6]-0.0)-10*d->sensordata[6+12];
-        d->ctrl[9] = -70*(d->sensordata[9]+0.0)-10*d->sensordata[9+12];
-
-        d->ctrl[1 ] = -180*(d->sensordata[1 ]-1.13)-10*d->sensordata[1 +12];
-        d->ctrl[4 ] = -180*(d->sensordata[4 ]-1.13)-10*d->sensordata[4 +12];
-        d->ctrl[7 ] = -180*(d->sensordata[7 ]-1.13)-10*d->sensordata[7 +12];
-        d->ctrl[10] = -180*(d->sensordata[10]-1.13)-10*d->sensordata[10+12];
-
-        d->ctrl[2 ] = -300*(d->sensordata[2 ]+2.7)-10*d->sensordata[2 +12];
-        d->ctrl[5 ] = -300*(d->sensordata[5 ]+2.7)-10*d->sensordata[5 +12];
-        d->ctrl[8 ] = -300*(d->sensordata[8 ]+2.7)-10*d->sensordata[8 +12];
-        d->ctrl[11] = -300*(d->sensordata[11]+2.7)-10*d->sensordata[11+12];
-
-    }
-    else
-    {
-        
-
-        ii += 1;
-        nextQdes(ii, 5000, targetPos);
-        // d->ctrl[0] = -70*(d->sensordata[0]-0.2)-3*d->sensordata[0+12];
-        // d->ctrl[3] = -70*(d->sensordata[3]-0.2)-3*d->sensordata[3+12];
-        // d->ctrl[6] = -70*(d->sensordata[6]-0.2)-3*d->sensordata[6+12];
-        // d->ctrl[9] = -70*(d->sensordata[9]-0.2)-3*d->sensordata[9+12];
-
-        // d->ctrl[1 ] = -180*(d->sensordata[1 ]-1.5)-8*d->sensordata[1 +12];
-        // d->ctrl[4 ] = -180*(d->sensordata[4 ]-1.5)-8*d->sensordata[4 +12];
-        // d->ctrl[7 ] = -180*(d->sensordata[7 ]-1.5)-8*d->sensordata[7 +12];
-        // d->ctrl[10] = -180*(d->sensordata[10]-1.5)-8*d->sensordata[10+12];
-
-        // d->ctrl[2 ] = -300*(d->sensordata[2 ]+M_PI)-15*d->sensordata[2 +12];
-        // d->ctrl[5 ] = -300*(d->sensordata[5 ]+M_PI)-15*d->sensordata[5 +12];
-        // d->ctrl[8 ] = -300*(d->sensordata[8 ]+M_PI)-15*d->sensordata[8 +12];
-        // d->ctrl[11] = -300*(d->sensordata[11]+M_PI)-15*d->sensordata[11+12];
-    }
-    printf("****************\n");
-  //write data here (dont change/dete this function call; instead write what you need to save in save_data)
-  if ( loop_index%data_frequency==0)
-    {
-      save_data(m,d);
-    }
-  loop_index = loop_index + 1;
-}
-
-
-//************************
 // main function
 int main(int argc, const char** argv)
 {
@@ -269,14 +135,9 @@ int main(int argc, const char** argv)
     mj_activate("mjkey.txt");
 
     char xmlpath[100]={};
-    char datapath[100]={};
 
     strcat(xmlpath,path);
     strcat(xmlpath,xmlfile);
-
-    strcat(datapath,path);
-    strcat(datapath,datafile);
-
 
     // load and compile model
     char error[1000] = "Could not load binary model";
@@ -331,13 +192,13 @@ int main(int argc, const char** argv)
     cam.lookat[1] = arr_view[4];
     cam.lookat[2] = arr_view[5];
 
+
+    /* Maestro - new TopLevelControl of the global pointer */
+    topController = new LocomotionTopLevelControl("Mujoco") ; // later define gait for walk : gait type 2
+    topController->init_topControl(m,d); // call once
+
     // install control callback
-    mjcb_control = mycontroller;
-
-
-    fid = fopen(datapath,"w");
-    init_save_data();
-    init_controller(m,d);
+    mjcb_control = my_controller_walk;  // set the myTopLevel instead of the default Mujoco's one
 
 
     // use the first while condition if you want to simulate for a period.
@@ -352,13 +213,12 @@ int main(int argc, const char** argv)
         {
             mj_step(m, d);
         }
-
-        if (d->time>=simend)
+        
+        if (d->time>=topController->fsm->t_End)
         {
-           fclose(fid);
+           fclose(topController->data->fid);  
            break;
          }
-
 
        // get framebuffer viewport
         mjrRect viewport = {0, 0, 0, 0};

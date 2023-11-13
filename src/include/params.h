@@ -32,9 +32,9 @@
 #define param_alpha 150.0;
 #define param_slope 0.0001;
 
-#define param_thres_r 0.06;
+// #define param_thres_r 0.06;
 
-#define param_sat_force 0.1;
+// #define param_sat_force 0.1;
 
 /* Decide one of the above tasks/modes */
 #define param_TRACKING_MODE true;

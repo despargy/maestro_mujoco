@@ -164,6 +164,7 @@ void Wrapper::send()
     // TODO send not mujoco
     printf("Default Wrapper \n");
 }
+// Torque control
 void Wrapper::send(const mjModel* m, mjData* d)
 {
     for(int l=0; l< robot->n_legs; l++)

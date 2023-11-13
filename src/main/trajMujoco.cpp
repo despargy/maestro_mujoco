@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include <TopLevelControl.h>
+#include <TrajectoryTopLevelControl.h>
 
 //simulation end time
 // double simend = 30;
@@ -47,7 +47,7 @@ mjtNum last_update = 0.0;
 mjtNum ctrl;
 
 /* Maestro TopLevelController global pointer definition*/
-TopLevelControl* topController;
+TrajectoryTopLevelControl* topController;
 
 // keyboard callback
 void keyboard(GLFWwindow* window, int key, int scancode, int act, int mods)
@@ -192,8 +192,9 @@ int main(int argc, const char** argv)
     cam.lookat[1] = arr_view[4];
     cam.lookat[2] = arr_view[5];
 
+
     /* Maestro - new TopLevelControl of the global pointer */
-    topController = new TopLevelControl("Mujoco") ;
+    topController = new TrajectoryTopLevelControl("Mujoco") ; // 
     topController->init_topControl(m,d); // call once
 
     // install control callback
