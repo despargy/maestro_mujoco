@@ -18,7 +18,6 @@ class TopLevelControl
         Data* data;
         Wrapper* wrapper;
         double t_last_c ;
-        bool LOCOMOTION_MODE, TARGET_MODE;
         bool goal_ach;
         
         TopLevelControl();

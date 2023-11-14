@@ -12,6 +12,10 @@ Data::Data(char* file_)
 }
 /* De-Constructor*/
 Data::~Data(){}
+
+/* ************************* Trajectory Tracking ****************************** */
+/* ************************* ******************** ****************************** */
+
 /* Init function of Data to write headers*/
 void Data::init_save_data()
 {
@@ -21,6 +25,7 @@ void Data::init_save_data()
     //move to a newline
     fprintf(fid,"\n");
 }
+
 /* Function which defines the data/variables we want to save to the csv file*/
 void Data::save(double time, double pc0, double pc1, double pc2, double ep0, double ep1, double ep2, double d_p0, double d_p1, double d_p2, double eo0, double eo1, double eo2)
 {
@@ -34,6 +39,30 @@ void Data::save_error(double time, double ep0, double ep1, double ep2)
     //move to a newline
     fprintf(fid,"\n");
 }
+
+
+
+
+/* *************************                      ****************************** */
+/* ************************* ******************** ****************************** */
+
+
+/* *************************     Locomotion  ****************************** */
+/* ************************* ******************** ****************************** */
+
+void Data::init_save_data_locomotion()
+{
+    //write name of the variable here (header)
+    fprintf(fid,"CoM_x,CoM_y,CoM_z,ep_x,ep_y,ep_z");
+
+    //move to a newline
+    fprintf(fid,"\n");
+}
+
+/* *************************                      ****************************** */
+/* ************************* ******************** ****************************** */
+
+
 // /* Function which defines the data/variables we want to save to the csv file*/
 // void Data::save_loc(double time, double pc0, double pc1, double pc2, double ep0, double ep1, double ep2, double d_p0, double d_p1, double d_p2, double pT0, double pT1, double pT2)
 // {
@@ -41,3 +70,4 @@ void Data::save_error(double time, double ep0, double ep1, double ep2)
 //     //move to a newline
 //     fprintf(fid,"\n");
 // }
+

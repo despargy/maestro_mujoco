@@ -26,6 +26,7 @@
 #define param_ko_TARGET 1100;  //1100 40  40 20
 #define param_ki_TARGET 350;   //350  0   0 100  increases oscillations, decreases steady state error
 
+#define param_robot_z 0.3;
 
 #define param_dt 0.002;
 
@@ -40,5 +41,22 @@
 #define param_TRACKING_MODE true;
 #define param_TARGET_MODE false;
 #define param_LOCOMOTION_MODE false;
+
+// Locomotion Static Gait
+
+#define param_A_SGaus 1.0;
+#define param_b_SGaus 10.0;
+#define param_t0_SGaus 1.0;
+
+#define param_Freq_Swing  1.0;
+#define param_t0_Swing    1.2;
+#define param_thalf_Swing 1.7;
+#define param_slot_Swing  2.5;
+
+
+
+
+
+
 
 #endif

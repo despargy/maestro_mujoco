@@ -140,6 +140,12 @@ void Wrapper::update(const mjModel* m, mjData* d, double dt)
         robot->leg[i]->p_i(0) = d->sensordata[robot->leg[i]->tip_x__];
         robot->leg[i]->p_i(1) = d->sensordata[robot->leg[i]->tip_y__];
         robot->leg[i]->p_i(2) = d->sensordata[robot->leg[i]->tip_z__];    
+
+
+        Eigen::Quaterniond q_i(d->sensordata[robot->leg[i]->quat_w__], d->sensordata[robot->leg[i]->quat_x__], d->sensordata[robot->leg[i]->quat_y__], d->sensordata[robot->leg[i]->quat_z__]);
+        q_i.normalize();
+        robot->leg[i]->R_i = q_i.toRotationMatrix(); 
+
     }
 
     for(int i = 0 ; i <  robot->n_legs ; i++)

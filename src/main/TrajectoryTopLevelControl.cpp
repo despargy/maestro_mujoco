@@ -109,7 +109,7 @@ void TrajectoryTopLevelControl::init_topControl()
 /* Overload init_topControl Mujoco*/
 void TrajectoryTopLevelControl::init_topControl(const mjModel* m, mjData* d)
 {
-    printf("Mujoco init_topControl \n");
+    printf("Mujoco TrajectoryTopLevelControl init_topControl \n");
     while(d->time < this->fsm->t_S0) // delay before start
     {
         mj_step(m,d);

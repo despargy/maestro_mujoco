@@ -16,7 +16,8 @@ class Robot
         Leg **leg; 
         
         double mass, g_gravity;
-
+        double z; 
+        double swingL_id;
         /* Reference to sensordata ids CoM [.] - Mujoco xml*/
         int acc_x__ , acc_y__ , acc_z__ ; // Body acceleration ids
         int gyro_x__, gyro_y__, gyro_z__; // Body gyro    ids

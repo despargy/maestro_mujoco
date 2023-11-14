@@ -3,9 +3,9 @@
 FSM::FSM()
 {
     this->state = S0;
-    this->phase = LOC_1;
+    this->phase = PH_TARGET; // locomotion
 
-    SET_TARGET = true;
+    // SET_TARGET = true;
 }
 /* De-Constructor*/
 FSM::~FSM(){}

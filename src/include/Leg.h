@@ -5,14 +5,9 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <Eigen/Dense>
-// #include <boost/scoped_ptr.hpp>
-// #include <kdl/chainjnttojacsolver.hpp>
-// #include <kdl/treejnttojacsolver.hpp>
-// #include <kdl_parser/kdl_parser.hpp>
+
 #include <kdl/chainfksolver.hpp>
-// #include <kdl/chainfksolverpos_recursive.hpp>
-// #include <kdl/frames.hpp>
-// #include <tf/tf.h>
+
 
 #ifndef _LEG_H_
 #define _LEG_H_
@@ -43,21 +38,21 @@ class Leg
         int gyro_x__, gyro_y__, gyro_z__ ;  // tip acc
         int force_x__, force_y__, force_z__;
 
-        KDL::JntArray q, dq;    // Joint pos qs
-        // KDL::Chain kdl_chain;
-        // KDL::Frame p_frame;          // Tip pose with respect to CoM 
-        // KDL::Jacobian jacobian_kdl;
-        // boost::scoped_ptr<KDL::ChainJntToJacSolver> kdl_solver;
-        // boost::scoped_ptr<KDL::ChainFkSolverPos> kdl_solver_pos;
-        
+        KDL::JntArray q, dq, q_out;    // Joint pos qs
+        // Eigen::Vector3d dq_out;
+
         Eigen::Vector3d f, f_cmd, tau; //applyied force to the tip 
         Eigen::MatrixXd J;            // Jacobian Eigen
         Eigen::Vector3d p_i;
+        Eigen::Matrix3d R_i;
+
+        Eigen::Matrix4d g_0bo_init; // store init leg config in each phase before swing
 
         Leg();
-        // Leg(KDL::Tree robot_kin);
         ~Leg();
-        // void kdlSolver();
+        
+        void storeInitG();
+        void initQout();
 
 };
 
