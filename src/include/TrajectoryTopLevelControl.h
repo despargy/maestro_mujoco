@@ -16,7 +16,9 @@ class TrajectoryTopLevelControl : public TopLevelControl
         ~TrajectoryTopLevelControl();
         void setParams();
         void compute(double top_time);
-
+        void init_topControl();
+        void init_topControl(const mjModel* m, mjData* d);
+      
 
 };
 

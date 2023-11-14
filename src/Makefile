@@ -10,7 +10,7 @@ MAESTRO_CPP = main/FSM.cpp main/Robot.cpp main/Leg.cpp main/Controller.cpp main/
 
 .PHONY: all
 all:
-	# g++ $(COMMON)   main/walkMujoco.cpp -lm -lmujoco -w -lglfw -lnlopt -lorocos-kdl -o exe/walk $(MAESTRO_CPP)
+	g++ $(COMMON)   main/walkMujoco.cpp -lm -lmujoco -w -lglfw -lnlopt -lorocos-kdl -o exe/walk $(MAESTRO_CPP)
 	g++ $(COMMON)   main/trajMujoco.cpp -lm -lmujoco -w -lglfw -lnlopt -lorocos-kdl -o exe/trajectory $(MAESTRO_CPP)
 
 .PHONY: clean
