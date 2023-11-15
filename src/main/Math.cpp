@@ -61,3 +61,8 @@ std::pair<double, double> find_Centroid(std::vector<std::pair<double, double> >&
  
     return ans;
 }
+
+double superGaussian(double A,double b,double r,double d, double n)
+{
+    return A*pow( b, -pow(pow(d,2)/pow(r,2),n*r) );
+}

@@ -13,10 +13,14 @@ class LocomotionController : public Controller
 
         double A, b, t0_superG;
         double freq_swing, t0_swing, t_half_swing, swing_t_slot;
+        double w_max;
         
-        int swing_leg;
+        int swing_leg, ii;
         int* vp_order;
         int* static_free_gait;
+
+        std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
+        std::vector<double> bCurveZ, dot_bCurveZ; // Bezier Curve swinging tip
 
         // vector for target position, inside locomotion mode
         Eigen::Vector3d p_T;
@@ -31,30 +35,15 @@ class LocomotionController : public Controller
         LocomotionController();
         ~LocomotionController();
 
-
-        /* Tracking */
-
-        // void positionError(Eigen::Vector3d p_d, Eigen::Matrix3d R_d); 
-        // void velocityError(Eigen::Vector3d dp_d, Eigen::Matrix3d R_d, Eigen::Vector3d w_d);
-        
-        
-        // void updateControlLaw();
-        // void computeSudoGq();
-        // void computeWeights();
-        // void fComputations(Eigen::Vector3d dp_d, Eigen::Vector3d ddp_d, Eigen::Matrix3d R_d, Eigen::Vector3d w_d );
-
-        /* Target */
-        // void initTarget(double top_time); // target is the centroid of polygon
-        // void initTarget(double top_time, Eigen::Vector3d target_); // overload with target as input
-        // void ReachTarget(double top_time);
-        // void velocityError();
-        // void fComputations();
-        // void PIDwithSat();
         void setPhaseTarget();
-            
-        // /* Locomotion */
-        // void LocomotionTarget(double time_now);
-        // void LocomotionSwing();
+        void computeWeightsSwing();
+        void errors();
+        void computeSudoGq();   
+        void PIDwithSat();
+        void fComputations();
+        void inverseTip();
+        void computeBesierCurve2D(double step);
+        void CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_0frame_);
 
 };
 

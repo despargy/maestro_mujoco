@@ -3,24 +3,24 @@ model name     basic scene
 
 nq                    19
 nv                    18
-nu                    12
+nu                    36
 nbody                 14
-nbvh                  40
+nbvh                  42
 njnt                  13
 ngeom                 43
 nsite                 5
 ncam                  1
-nlight                2
+nlight                1
 nmesh                 5
 nmeshvert             103505
 nmeshnormal           103505
 nmeshface             206331
-ntex                  4
-ntexdata              10493616
-nmat                  2
+ntex                  2
+ntexdata              5505024
+nmat                  1
 nsensor               48
-nnames                1048
-nnames_map            298
+nnames                1381
+nnames_map            338
 nM                    117
 nD                    216
 nB                    144
@@ -28,9 +28,9 @@ njmax                 500
 nconmax               100
 nstack                1835008
 nsensordata           101
-nbuffer               20450472
+nbuffer               15472904
 
-timestep              0.001   
+timestep              0.002   
 apirate               1e+02   
 impratio              1       
 tolerance             1e-08   
@@ -40,7 +40,7 @@ density               0
 viscosity             0       
 o_margin              0       
 integrator            1
-collision             0
+collision             2
 cone                  0
 jacobian              2
 solver                2
@@ -444,7 +444,7 @@ BODY 13:
   body_gravcomp         0        
   body_plugin           -1 
   body_bvhadr           37 
-  body_bvhnum           3 
+  body_bvhnum           5 
 
 
 JOINT 0:
@@ -910,30 +910,30 @@ DOF 17:
 
 
 GEOM 0:
-  name                  floor2
+  name                  floor
   geom_type             0 
   geom_contype          1 
   geom_conaffinity      1 
   geom_condim           3 
   geom_bodyid           0 
   geom_dataid           -1 
-  geom_matid            1 
+  geom_matid            0 
   geom_group            0 
   geom_priority         0 
   geom_sameframe        1 
   geom_solmix           1        
   geom_solref           0.02      1        
   geom_solimp           0.9       0.95      0.001     0.5       2        
-  geom_size             0         0         0.5      
+  geom_size             0         0         1        
   geom_aabb             0         0        -5e+09     1e+10     1e+10     5e+09    
   geom_rbound           0        
   geom_pos              0         0         0        
   geom_quat             1         0         0         0        
-  geom_friction         1         1         1        
+  geom_friction         1         0.0002    0.0002   
   geom_margin           0.001    
   geom_gap              0        
   geom_fluid            0         0         0         0         0         0         0         0         0         0         0         0        
-  geom_rgba             0.5       0.6       0.7       1        
+  geom_rgba             0.1       0.3       1.9       0.1      
 
 GEOM 1:
   name                  
@@ -1479,7 +1479,7 @@ GEOM 21:
   geom_margin           0.001    
   geom_gap              0        
   geom_fluid            0         0         0         0         0         0         0         0         0         0         0         0        
-  geom_rgba             0         0         0         1        
+  geom_rgba             1         0         0         1        
 
 GEOM 22:
   name                  
@@ -1979,7 +1979,7 @@ GEOM 41:
   name                  
   geom_type             2 
   geom_contype          0 
-  geom_conaffinity      0 
+  geom_conaffinity      32 
   geom_condim           3 
   geom_bodyid           13 
   geom_dataid           -1 
@@ -2074,7 +2074,7 @@ SITE 3:
   site_size             0.005     0.005     0.005    
   site_pos              0         0        -0.21     
   site_quat             1         0         0         0        
-  site_rgba             0.5       0.5       0.5       1        
+  site_rgba             0         0         0         1        
 
 SITE 4:
   name                  RL_tip
@@ -2086,7 +2086,7 @@ SITE 4:
   site_size             0.005     0.005     0.005    
   site_pos              0         0        -0.21     
   site_quat             1         0         0         0        
-  site_rgba             0.5       0.5       0.5       1        
+  site_rgba             0         0         0         1        
 
 
 CAMERA 0:
@@ -2121,26 +2121,6 @@ LIGHT 0:
   light_exponent        10       
   light_ambient         0         0         0        
   light_diffuse         0.8       0.8       0.8      
-  light_specular        0.3       0.3       0.3      
-
-LIGHT 1:
-  name                  
-  light_mode            0 
-  light_bodyid          0 
-  light_targetbodyid    -1 
-  light_directional     1 
-  light_castshadow      0 
-  light_active          1 
-  light_pos             0         0         1.5      
-  light_dir             0         0        -1        
-  light_poscom0        -0.0039   -0.0018    1.2      
-  light_pos0            0         0         1.5      
-  light_dir0            0         0        -1        
-  light_attenuation     1         0         0        
-  light_cutoff          45       
-  light_exponent        10       
-  light_ambient         0         0         0        
-  light_diffuse         1         1         1        
   light_specular        0.3       0.3       0.3      
 
 
@@ -2219,20 +2199,6 @@ TEXTURE 1:
   tex_width             512 
   tex_adr               4718592 
 
-TEXTURE 2:
-  name                  
-  tex_type              2 
-  tex_height            3072 
-  tex_width             512 
-  tex_adr               5505024 
-
-TEXTURE 3:
-  name                  groundplane
-  tex_type              0 
-  tex_height            300 
-  tex_width             300 
-  tex_adr               10223616 
-
 
 MATERIAL 0:
   name                  plane
@@ -2243,17 +2209,6 @@ MATERIAL 0:
   mat_specular          0.5      
   mat_shininess         0.5      
   mat_reflectance       0        
-  mat_rgba              1         1         1         1        
-
-MATERIAL 1:
-  name                  groundplane
-  mat_texid             3 
-  mat_texuniform        1 
-  mat_texrepeat         5         5        
-  mat_emission          0        
-  mat_specular          0.5      
-  mat_shininess         0.5      
-  mat_reflectance       0.2      
   mat_rgba              1         1         1         1        
 
 
@@ -2559,6 +2514,630 @@ ACTUATOR 11:
   actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
   actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
   actuator_biasprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 12:
+  name                  pservo_FR_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        1  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 13:
+  name                  vservo_FR_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        1  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 14:
+  name                  pservo_FR_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        2  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         38       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 15:
+  name                  vservo_FR_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        2  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         38       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 16:
+  name                  pservo_FR_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        3  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 17:
+  name                  vservo_FR_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        3  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 18:
+  name                  pservo_FL_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        4  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 19:
+  name                  vservo_FL_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        4  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 20:
+  name                  pservo_FL_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        5  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         38       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 21:
+  name                  vservo_FL_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        5  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         38       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 22:
+  name                  pservo_FL_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        6  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 23:
+  name                  vservo_FL_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        6  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 24:
+  name                  pservo_RR_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        7  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 25:
+  name                  vservo_RR_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        7  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 26:
+  name                  pservo_RR_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        8  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         39       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 27:
+  name                  vservo_RR_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        8  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         39       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 28:
+  name                  pservo_RR_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        9  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 29:
+  name                  vservo_RR_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        9  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 30:
+  name                  pservo_RL_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        10  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 31:
+  name                  vservo_RL_hip
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        10  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         36       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 32:
+  name                  pservo_RL_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        11  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         38       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 33:
+  name                  vservo_RL_thigh
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        11  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         38       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 34:
+  name                  pservo_RL_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        12  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      0         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0        -0         0         0         0         0         0         0         0         0        
+  actuator_ctrlrange   -34        34       
+  actuator_forcerange   0         0        
+  actuator_actrange     0         0        
+  actuator_gear         1         0         0         0         0         0        
+  actuator_cranklength  0        
+  actuator_acc0         77       
+  actuator_length0      0        
+  actuator_lengthrange  0         0        
+  actuator_plugin       -1 
+
+ACTUATOR 35:
+  name                  vservo_RL_calf
+  actuator_trntype      0 
+  actuator_dyntype      0 
+  actuator_gaintype     0 
+  actuator_biastype     1 
+  actuator_trnid        12  -1 
+  actuator_actadr       -1 
+  actuator_actnum       0 
+  actuator_group        0 
+  actuator_ctrllimited  1 
+  actuator_forcelimited 0 
+  actuator_actlimited   0 
+  actuator_dynprm       1         0         0         0         0         0         0         0         0         0        
+  actuator_gainprm      1         0         0         0         0         0         0         0         0         0        
+  actuator_biasprm      0         0        -1         0         0         0         0         0         0         0        
   actuator_ctrlrange   -34        34       
   actuator_forcerange   0         0        
   actuator_actrange     0         0        

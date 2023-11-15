@@ -13,18 +13,18 @@
 #define param_mass 12.0;
 #define param_g_gravity 9.81;
 
-#define param_pbc_x -0.097;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
-#define param_pbc_y 0.0;//0.0125;
+#define param_pbc_x 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
+#define param_pbc_y 0.001;//0.0125;
 #define param_pbc_z 0.0;
 
 #define param_kp_TRACKING 2800;
 #define param_kv_TRACKING 350.0;
 #define param_ko_TRACKING 15.0;
 
-#define param_kp_TARGET 2400; //2400 200 180 220 reduces time, increases oscillations 
-#define param_kv_TARGET 350.0;  //350  40  40 10   reduces oscillations, increases time 
-#define param_ko_TARGET 1100;  //1100 40  40 20
-#define param_ki_TARGET 350;   //350  0   0 100  increases oscillations, decreases steady state error
+#define param_kp_LOC 1300; //2400; //2400 200 180 220 reduces time, increases oscillations 
+#define param_kv_LOC 100; //350.0;  //350  40  40 10   reduces oscillations, increases time 
+#define param_ko_LOC 15; //1100;  //1100 40  40 20
+#define param_ki_LOC 50; //350;   //350  0   0 100  increases oscillations, decreases steady state error
 
 #define param_robot_z 0.3;
 
@@ -52,6 +52,9 @@
 #define param_t0_Swing    1.2;
 #define param_thalf_Swing 1.7;
 #define param_slot_Swing  2.5;
+
+#define param_w0 50;
+#define param_w_max 3500;
 
 
 

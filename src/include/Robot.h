@@ -23,8 +23,11 @@ class Robot
         int gyro_x__, gyro_y__, gyro_z__; // Body gyro    ids
         int com_x__ , com_y__ , com_z__ ; // Body position ids (x,y,z`)
         int quat_w__, quat_x__, quat_y__, quat_z__; // Body quaternion ids (w,x,y,z)
+        int vel_x__, vel_y__, vel_z__; // Body velocity ids(x,y,z)
+
         /* Pose CoM */
         Eigen::Vector3d p_c, p_c0; Eigen::MatrixXd R_c, R_c0;
+        Eigen::Vector3d dp_c; // Just added
         Eigen::Vector3d com_p_prev, dCoM_p;
         Eigen::Vector3d w_CoM;
         Eigen::Matrix3d R_CoM_prev, dR_CoM;

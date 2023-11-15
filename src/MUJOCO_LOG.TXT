@@ -260,3 +260,9 @@ WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstabl
 Mon Nov 13 18:22:36 2023
 WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstable. Time = 10.0010.
 
+Wed Nov 15 16:44:26 2023
+ERROR: Load model error: XML Error: Schema violation: unrecognized element
+
+Element '⁠velocimeter', line 0
+
+

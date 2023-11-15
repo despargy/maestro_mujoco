@@ -22,5 +22,6 @@ Eigen::Vector3d get_dp_CoM(Eigen::Vector3d com_p_prev,Eigen::Vector3d com_p_cur,
 Eigen::Matrix3d get_dR_CoM(Eigen::Matrix3d R_CoM_prev,Eigen::Matrix3d R_CoM_cur, double dt);
 std::pair<double, double> find_Centroid(std::vector<std::pair<double, double> >& v);
 double sigmoid(double t);
+double superGaussian(double A,double b,double r,double d, double n);
 
 #endif
