@@ -35,6 +35,10 @@ class LocomotionController : public Controller
         LocomotionController();
         ~LocomotionController();
 
+
+        void PD(double* target);
+        void PD_smooth(double* target, double smooth);
+        
         void setPhaseTarget();
         void computeWeightsSwing();
         void errors();

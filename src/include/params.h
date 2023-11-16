@@ -21,10 +21,10 @@
 #define param_kv_TRACKING 350.0;
 #define param_ko_TRACKING 15.0;
 
-#define param_kp_LOC 1300; //2400; //2400 200 180 220 reduces time, increases oscillations 
-#define param_kv_LOC 100; //350.0;  //350  40  40 10   reduces oscillations, increases time 
-#define param_ko_LOC 15; //1100;  //1100 40  40 20
-#define param_ki_LOC 50; //350;   //350  0   0 100  increases oscillations, decreases steady state error
+#define param_kp_LOC 20; //1300; // 200 180 220 reduces time, increases oscillations 
+#define param_kv_LOC 5.0;  //100; //  40  40 10   reduces oscillations, increases time 
+#define param_ko_LOC 200;  //15; 1100 // 40  40 20
+#define param_ki_LOC 20; //50;   //350  0   0 100  increases oscillations, decreases steady state error
 
 #define param_robot_z 0.3;
 

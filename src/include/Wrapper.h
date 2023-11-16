@@ -21,7 +21,7 @@ class Wrapper
         ~Wrapper();
         void initConst();
         void update();
-        void update(const mjModel* m, mjData* d);
+        void update_locomotion(const mjModel* m, mjData* d, double dt);
         void update(const mjModel* m, mjData* d, double dt);
         void send();
         void send(const mjModel* m, mjData* d);

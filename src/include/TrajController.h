@@ -17,6 +17,10 @@ class TrajController : public Controller
         TrajController();
         ~TrajController();
  
+
+        void PD(double* target);
+        void PD_smooth(double* target, double smooth);
+        
         // /* Tracking */
         void initTracking(double time_now);
         void Tracking(double time_now);

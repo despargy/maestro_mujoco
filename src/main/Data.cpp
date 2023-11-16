@@ -2,6 +2,7 @@
 /* Constructor*/
 Data::Data()
 {
+
     datafile = "/home/despinar/mujoco_ws/maestro_mujoco/data/data.csv"; // datafile to save data
     fid = fopen(datafile,"w"); // open it for write
 }

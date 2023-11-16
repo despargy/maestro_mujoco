@@ -2,6 +2,8 @@
 /* Constructor*/
 Leg::Leg()
 {
+    std::cout<<"Constractor Leg"<<std::endl;
+
     n_superV_joints =3;
     q.resize(n_superV_joints);  // joint position
     dq.resize(n_superV_joints);   // joint velocity

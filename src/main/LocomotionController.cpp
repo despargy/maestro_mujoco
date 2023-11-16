@@ -4,7 +4,7 @@
 LocomotionController::LocomotionController()
 {
 
-    std::cout<<"Constractor controller"<<std::endl;
+    std::cout<<"Constractor LocomotionController"<<std::endl;
     this->robot = new Robot();
 
     this->e_v.resize(6);
@@ -35,23 +35,24 @@ void LocomotionController::setPhaseTarget()
     std::vector<std::pair<double, double> > vp;
     for(int l = 0; l<robot->n_legs; l++)
     {
-        // if((vp_order[l] != robot->swingL_id) )
-        // {
+        if((vp_order[l] != robot->swingL_id) )
+        {
             vp.push_back({robot->leg[vp_order[l]]->p_i(0),robot->leg[vp_order[l]]->p_i(1)});
-        // }
-        std::cout<<l<<": "<<robot->leg[l]->p_i(0)<<" \t"<<robot->leg[l]->p_i(1)<<std::endl;
+        }
+        // std::cout<<l<<": "<<robot->leg[l]->p_i(0)<<" \t"<<robot->leg[l]->p_i(1)<<std::endl;
 
     }
     std::pair<double, double> C = find_Centroid(vp);
     Eigen::Vector3d target(C.first,C.second,robot->z);
 
     this->p_T =  target;
-    std::cout<<"pc0"<< robot->p_c0<<std::endl;
-    std::cout<<"pc"<< robot->p_c<<std::endl;
-    std::cout<<"target"<< target<<std::endl;
+    // std::cout<<"pc0"<< robot->p_c0<<std::endl;
+    // std::cout<<"pc"<< robot->p_c<<std::endl;
+    // std::cout<<"target"<< target<<std::endl;
 
-    // this->p0_ofphase = robot->p_c;
     this->R_T = robot->R_c0 ;
+    // std::cout<<"target RT"<< this->R_T<<std::endl;
+    // std::cout<<"Rc"<< robot->R_c<<std::endl;
 
     e_p_int = Eigen::Vector3d::Zero();
     e_o_int = Eigen::Vector3d::Zero();
@@ -61,10 +62,22 @@ void LocomotionController::setPhaseTarget()
 }
 void LocomotionController::computeWeightsSwing()
 {
-    /* Added to simuate swing leg weights t inf */
+
+    for(int l = 0; l < robot->n_legs ; l++)
+    {
+        robot->leg[l]->wv_leg(1) = this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt + robot->leg[l]->wv_leg(1) ; // y
+        robot->leg[l]->wv_leg(0) = this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt + robot->leg[l]->wv_leg(0); // x
+
+        // update vvvv vector of robot                          // z stays 1.0 do not change
+        robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
+    }
+    /* Added to simuate swing leg weights t inf */ //TODO
     robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones();
     // robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*superGaussian(A,b,t_half_swing-t0_superG,t_phase - t_half_swing, 13)*Eigen::Vector3d::Ones(); 
     robot->vvvv.block((int) robot->swingL_id*3,0,3,1) = robot->leg[(int) robot->swingL_id]->wv_leg;   // update vvvv vector of robot 
+    
+    robot->W_inv = (robot->vvvv.asDiagonal()).inverse(); // save as matrix the inverse of diagonal vvvv vector
+
 }
 void LocomotionController::errors()
 {
@@ -76,14 +89,15 @@ void LocomotionController::errors()
 
     e_v.block(0,0,3,1) = robot->dCoM_p ; // compute velocity error
     e_v.block(3,0,3,1) = robot->w_CoM ; 
-    e_v.block(3,0,3,1) = 0.7*this->e_v.block(3,0,3,1) ; 
+    e_v.block(3,0,3,1) = 1.0*this->e_v.block(3,0,3,1) ; 
 
+    
     // std::cout<<"e_p"<<std::endl;
-    std::cout<<e_p<<std::endl;
+    // std::cout<<e_p<<std::endl;
     // std::cout<<"e_o"<<std::endl;
-    std::cout<<e_o<<std::endl;
+    // std::cout<<e_o<<std::endl;
     // std::cout<<"e_v"<<std::endl;
-    std::cout<<e_v<<std::endl;
+    // std::cout<<e_v<<std::endl;
 }
 void LocomotionController::computeSudoGq()
 {
@@ -106,7 +120,6 @@ void LocomotionController::fComputations() // Target Control
         robot->leg[l]->f_cmd = -robot->F_a.block(l*3,0,3,1); // slip Fa eq. 3
         robot->leg[l]->f_cmd(2) =  std::fmin(robot->leg[l]->f_cmd(2), 0.0);
         robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
-        std::cout<<robot->leg[l]->tau<<std::endl;
     }
 }
 
@@ -139,9 +152,9 @@ void LocomotionController::PIDwithSat()
         pid_out.block(3,0,3,1) = pid_out.block(3,0,3,1) * 80.0 / pid_out.block(3,0,3,1).norm();
     }
 
-    // std::cout<< "e_p_int "<<e_p_int.transpose() << std::endl;
-    // std::cout<< "e_o_int "<<e_o_int.transpose() << std::endl;
-    // std::cout<< "pid_out "<<pid_out.transpose() << std::endl;
+    // // std::cout<< "e_p_int "<<e_p_int.transpose() << std::endl;
+    // // std::cout<< "e_o_int "<<e_o_int.transpose() << std::endl;
+    // // std::cout<< "pid_out "<<pid_out.transpose() << std::endl;
 
     Gbc.block(3,0,3,3) = scewSymmetric(robot->R_c*robot->pbc);
     pid_out += Gbc*robot->gc;
@@ -211,4 +224,24 @@ void LocomotionController::computeBesierCurve2D(double step) // static gait pre-
         dot_bCurveX.push_back(dot_bCurveXt);
         dot_bCurveZ.push_back(dot_bCurveZt);
     }
+}
+void LocomotionController::PD(double* target)
+{
+    for(int l=0; l< robot->n_legs; l++)
+    {
+        robot->leg[l]->tau(0) = -100*(robot->leg[l]->q(0) - target[0]) -10*robot->leg[l]->dq(0);
+        robot->leg[l]->tau(1) = -100*(robot->leg[l]->q(1) - target[1])-10*robot->leg[l]->dq(1);
+        robot->leg[l]->tau(2) = -100*(robot->leg[l]->q(2) - target[2]) -10*robot->leg[l]->dq(2);
+    }
+}
+void LocomotionController::PD_smooth(double* target, double smooth)
+{   
+    double percent = (double)loop_index/smooth;
+    for(int l=0; l< robot->n_legs; l++)
+    {
+        robot->leg[l]->tau(0) = -100*percent*(robot->leg[l]->q(0) - target[0]) -10*robot->leg[l]->dq(0);
+        robot->leg[l]->tau(1) = -100*percent*(robot->leg[l]->q(1) - target[1]) -10*robot->leg[l]->dq(1);
+        robot->leg[l]->tau(2) = -100*percent*(robot->leg[l]->q(2) - target[2]) -10*robot->leg[l]->dq(2);
+    }
+    loop_index += 1;
 }

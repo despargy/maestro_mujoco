@@ -2,24 +2,10 @@
 /* Construtor */
 TopLevelControl::TopLevelControl()
 {
-    /* Allocate memory */ 
-    this->fsm = new FSM();
-    this->controller = new Controller();
-    this->data = new Data(); // init Data 
 
-    this->wrapper = new Wrapper(); // com. with Mujoco/ROS
-    t_last_c = 0.0;
 }
 TopLevelControl::TopLevelControl(std::string category_)
 {
-
-    /* Allocate memory */ 
-    this->fsm = new FSM();
-    this->controller = new Controller();
-    this->data = new Data(); // init Data 
-
-    this->wrapper = new Wrapper(category_, controller->robot); // com. with Mujoco/ROS
-    t_last_c = 0.0;
 
 }
 /* De-Constructor */
