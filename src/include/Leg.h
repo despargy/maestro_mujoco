@@ -40,7 +40,8 @@ class Leg
 
         int cmd_q_hip__, cmd_q_thigh__, cmd_q_calf__;
         int cmd_dq_hip__, cmd_dq_thigh__, cmd_dq_calf__;
-
+        int actuator_no_pos__, actuator_no_vel__;
+        
         KDL::JntArray q, dq, q_out;    // Joint pos qs
         Eigen::Vector3d dq_out;
 

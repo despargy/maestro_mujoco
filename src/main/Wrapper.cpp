@@ -77,18 +77,21 @@ void Wrapper::initConst()
                 robot->leg[i]->torque_thigh__ = 1 + robot->leg[i]->id*3 ; 
                 robot->leg[i]->torque_calf__  = 2 + robot->leg[i]->id*3 ;
 
-                // robot->leg[i]->cmd_q_hip__   = 0 + robot->leg[i]->id*3 ; // TODO
-                // robot->leg[i]->cmd_q_thigh__ = 1 + robot->leg[i]->id*3 ;
-                // robot->leg[i]->cmd_q_calf__  = 2 + robot->leg[i]->id*3 ;
 
-                // robot->leg[i]->cmd_dq_hip__   = 0 + robot->leg[i]->id*3 ; // TODO
-                // robot->leg[i]->cmd_dq_thigh__ = 1 + robot->leg[i]->id*3 ;
-                // robot->leg[i]->cmd_dq_calf__  = 2 + robot->leg[i]->id*3 ;
+            }
+            for(int i=0; i<robot->n_legs; i++ )
+            {              
+                robot->leg[i]->cmd_q_hip__   = 0 + 12 + robot->leg[i]->id*6 ; // TODO
+                robot->leg[i]->cmd_dq_hip__  = 1 + 12 + robot->leg[i]->id*6 ; // TODO
+
+                robot->leg[i]->cmd_q_thigh__ = 2 + 12 + robot->leg[i]->id*6 ;
+                robot->leg[i]->cmd_dq_thigh__= 3 + 12 + robot->leg[i]->id*6 ;
+
+                robot->leg[i]->cmd_q_calf__  = 4 + 12 + robot->leg[i]->id*6 ;
+                robot->leg[i]->cmd_dq_calf__ = 5 + 12 + robot->leg[i]->id*6 ;
             }
             // CoM vel x, y, z  [101 - 103
             robot->vel_x__ = 101 , robot->vel_y__ = 102 , robot->vel_z__ = 103; // Body velocity ids (x,y,z`)
-
-
 
         }
         // TODO
@@ -258,10 +261,10 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
         Q_i.normalize();
         robot->leg[i]->R_i = Q_i.toRotationMatrix(); 
 
-        robot->leg[i]->g_o.block(0,0,3,3) = robot->leg[i]->R_i; //    TODO is this g_o or g_o_world ?
-        robot->leg[i]->g_o.block(0,3,3,1) = robot->leg[i]->p_i;
+        robot->leg[i]->g_o_world.block(0,0,3,3) = robot->leg[i]->R_i; //    TODO is this g_o or g_o_world ?
+        robot->leg[i]->g_o_world.block(0,3,3,1) = robot->leg[i]->p_i;
 
-        robot->leg[i]->g_o_world = robot->g_com*robot->leg[i]->g_o;
+        // robot->leg[i]->g_o_world = robot->g_com*robot->leg[i]->g_o;
     }
 
     for(int i = 0 ; i <  robot->n_legs ; i++)
@@ -304,13 +307,52 @@ void Wrapper::send_torque_pos(const mjModel* m, mjData* d)
         d->ctrl[robot->leg[l]->torque_thigh__] = robot->leg[l]->tau(1);
         d->ctrl[robot->leg[l]->torque_calf__]  = robot->leg[l]->tau(2);
     }
+    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id]->q_out(0);
+    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id]->q_out(1);
+    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id]->q_out(2);
 
-    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id]->q_out(0);
-    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id]->q_out(1);
-    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id]->q_out(2);
+    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id]->dq_out(0);
+    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id]->dq_out(1);
+    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id]->dq_out(2);
 
-    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id]->dq_out(0);
-    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id]->dq_out(1);
-    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id]->dq_out(2);
+}
+bool Wrapper::change_gains(const mjModel* m, mjData* d)
+{
 
+    double kp = 5, kv = 1.5;
+
+    for(int i = 0 ; i < robot->n_legs; i++)
+    {
+        m->actuator_gainprm[10*robot->leg[i]->cmd_q_hip__+0]    =  0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_q_hip__+1]    = -0;
+        m->actuator_gainprm[10*robot->leg[i]->cmd_dq_hip__+0]   =  1.0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_dq_hip__+1]   = -1.0;
+        m->actuator_gainprm[10*robot->leg[i]->cmd_q_thigh__+0]  =  0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_q_thigh__+1]  = -0;
+        m->actuator_gainprm[10*robot->leg[i]->cmd_dq_thigh__+0] =  1.0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_dq_thigh__+1] = -1.0;
+        m->actuator_gainprm[10*robot->leg[i]->cmd_q_calf__+0]   =  0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_q_calf__+1]   = -0;
+        m->actuator_gainprm[10*robot->leg[i]->cmd_dq_calf__+0]  =  1.0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_dq_calf__+1]  = -1.0;
+    }
+    m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_hip__+0] =  8;
+    m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_hip__+1] = -8;
+
+    m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_hip__+0] =  3.5;
+    m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_hip__+1] = -3.5;
+
+    m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_thigh__+0] =  5;
+    m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_thigh__+1] = -5;
+
+    m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__+0] =  2.0;
+    m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__+1] = -2.0;
+
+    m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_calf__+0] =  3;
+    m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_calf__+1] = -3;
+
+    m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_calf__+0] =  1.5;
+    m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_calf__+1] = -1.5;
+
+    return false; // this will change the C 
 }

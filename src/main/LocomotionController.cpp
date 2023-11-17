@@ -22,6 +22,8 @@ LocomotionController::LocomotionController()
     static_free_gait = new int[robot->n_legs];
     static_free_gait[0] = 0; static_free_gait[1] = 3; static_free_gait[2] = 1; static_free_gait[3] = 2; // define gait order
 
+    CHANGE_GAINS = false;
+
 }
 LocomotionController::~LocomotionController(){}
 void LocomotionController::setPhaseTarget()
@@ -46,9 +48,9 @@ void LocomotionController::setPhaseTarget()
     Eigen::Vector3d target(C.first,C.second,robot->z);
 
     this->p_T =  target;
-    std::cout<<"pc0"<< robot->p_c0<<std::endl;
-    std::cout<<"pc"<< robot->p_c<<std::endl;
-    std::cout<<"target"<< target<<std::endl;
+    // std::cout<<"pc0"<< robot->p_c0<<std::endl;
+    // std::cout<<"pc"<< robot->p_c<<std::endl;
+    // std::cout<<"target"<< target<<std::endl;
 
     this->R_T = robot->R_c0 ;
     // std::cout<<"target RT"<< this->R_T<<std::endl;
@@ -57,8 +59,12 @@ void LocomotionController::setPhaseTarget()
     e_p_int = Eigen::Vector3d::Zero();
     e_o_int = Eigen::Vector3d::Zero();
     pid_out = Eigen::VectorXd::Zero(6);
-    
+
+    d_CoM_pos = Eigen::Vector4f::Ones();
+
     robot->leg[(int)robot->swingL_id]->storeInitG(); 
+
+    CHANGE_GAINS = true;
 }
 void LocomotionController::computeWeightsSwing()
 {
@@ -72,8 +78,8 @@ void LocomotionController::computeWeightsSwing()
         robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
     }
     /* Added to simuate swing leg weights t inf */ //TODO
-    robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones();
-    // robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*superGaussian(A,b,t_half_swing-t0_superG,t_phase - t_half_swing, 13)*Eigen::Vector3d::Ones(); 
+    // robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones();
+    robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*superGaussian(A,b,t_half_swing-t0_superG,t_phase - t_half_swing, 13)*Eigen::Vector3d::Ones(); 
     robot->vvvv.block((int) robot->swingL_id*3,0,3,1) = robot->leg[(int) robot->swingL_id]->wv_leg;   // update vvvv vector of robot 
     
     robot->W_inv = (robot->vvvv.asDiagonal()).inverse(); // save as matrix the inverse of diagonal vvvv vector
@@ -182,9 +188,9 @@ void LocomotionController::inverseTip()
     Eigen::Matrix4f BC_T = Eigen::Matrix4f::Identity(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
     BC_T.block(0,3,3,1) = robot->leg[(int)robot->swingL_id]->g_0bo_init.block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
     
-    
-    Eigen::Vector4f d_CoM_pos =  BC_T*d_tip_pos;
 
+    d_CoM_pos =  BC_T*d_tip_pos;
+    
     CLIK(d_CoM_pos.block(0,0,3,1), d_tip_vel);
     
 }

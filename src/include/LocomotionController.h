@@ -14,7 +14,7 @@ class LocomotionController : public Controller
         double A, b, t0_superG;
         double freq_swing, t0_swing, t_half_swing, swing_t_slot;
         double w_max;
-        
+        bool CHANGE_GAINS;
         int swing_leg, ii;
         int* vp_order;
         int* static_free_gait;
@@ -31,8 +31,8 @@ class LocomotionController : public Controller
         Eigen::Vector3d e_p_int, e_o_int;
         Eigen::VectorXd  pid_out; 
 
-        Eigen::Vector4f d_tip_pos;
-        Eigen::Vector3f d_tip_vel;
+        Eigen::Vector4f d_tip_pos, d_CoM_pos;
+        Eigen::Vector3f d_tip_vel, d_tip_pos_world;
 
         LocomotionController();
         ~LocomotionController();

@@ -34,7 +34,7 @@ Robot::Robot()
     W_inv = (vvvv.asDiagonal()).inverse();
 
     g_com = Eigen::Matrix4d::Identity();
-    
+    swingL_id = 0; // do not play role
 }
 /* De-Constructor*/
 Robot::~Robot()

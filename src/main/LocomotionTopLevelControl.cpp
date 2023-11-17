@@ -112,7 +112,7 @@ void LocomotionTopLevelControl::compute(double top_time)
         
         controller->t_real = top_time - controller->t0; //update time
 
-        if( controller->t_phase >= controller->swing_t_slot ) // TODO change by forces not time
+        if( controller->t_phase >= controller->swing_t_slot ) // TODO change by forces not time 
             fsm->phase = PH_TARGET;
 
         switch (fsm->phase )
@@ -132,15 +132,16 @@ void LocomotionTopLevelControl::compute(double top_time)
             controller->computeSudoGq();
             controller->PIDwithSat();
             controller->fComputations();
-            // controller->inverseTip();
+            controller->inverseTip();
             
             break;
         }
 
-        // data->save(controller->t_real,controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
-        //     controller->e_p(0),controller->e_p(1),controller->e_p(2),
-        //     controller->p_T(0),controller->p_T(1),controller->p_T(2),
-        //     controller->e_o(0),controller->e_o(1),controller->e_o(2)); 
+        data->save_loc(controller->t_real,controller->robot->leg[0]->p_i(0),
+                        controller->robot->leg[0]->p_i(1), controller->robot->leg[0]->p_i(2),
+                        controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
+                        controller->robot->leg[2]->wv_leg(2), controller->robot->leg[3]->wv_leg(0),
+                        controller->d_CoM_pos(0), controller->d_CoM_pos(1),controller-> d_CoM_pos(2)); 
         break;    
     }
 

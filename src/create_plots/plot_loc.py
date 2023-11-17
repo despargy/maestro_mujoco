@@ -14,34 +14,41 @@ p0 = data[:,1]
 p1 = data[:,2]
 p2 = data[:,3]
 
-d_p0 = data[:,7]
-d_p1 = data[:,8]
-d_p2 = data[:,9]
+w0 = data[:,4]
+w1 = data[:,5]
+w2 = data[:,6]
+w3 = data[:,7]
 
-
-pT0 = data[:,10]
-pT1 = data[:,11]
-pT2 = data[:,12]
-
+p0d = data[:,8]
+p1d = data[:,9]
+p2d = data[:,10]
 plt.figure()
-plt.plot(t_real,p0,Label="p x")
-plt.plot(t_real,p1,Label="p y")
-plt.plot(t_real,p2,Label="p z")
+plt.plot(t_real,p0,Label="tip p x")
+plt.plot(t_real,p1,Label="tip p y")
+plt.plot(t_real,p2,Label="tip p z")
 
-plt.plot(t_real,d_p0,Label="d_p x")
-plt.plot(t_real,d_p1,Label="d_p y")
-plt.plot(t_real,d_p2,Label="d_p z")
-
-plt.plot(t_real,pT0,Label="pT x")
-plt.plot(t_real,pT1,Label="pT y")
-plt.plot(t_real,pT2,Label="pT z")
+plt.plot(t_real,p0d,Label="tip pd x")
+plt.plot(t_real,p1d,Label="tip pd y")
+plt.plot(t_real,p2d,Label="tip pd z")
 
 plt.legend()
 plt.xlabel("t_real")
-plt.ylabel("CoM position")
-plt.title("CoM  - time")
+plt.ylabel("Tip 0 position")
+plt.title("Tip  - time")
+
+plt.figure()
 
 
+plt.plot(t_real,w0,Label="w0 x")
+plt.plot(t_real,w1,Label="w1 x")
+plt.plot(t_real,w2,Label="w2 x")
+plt.plot(t_real,w3,Label="w3 x")
+
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("Weights position")
+plt.title("Weights  - time")
 
 # fig = plt.figure()
 # ax = plt.axes(projection='3d')
@@ -49,21 +56,21 @@ plt.title("CoM  - time")
 
 
 
-# Error plots
+# # Error plots
 
-ep0 = data[:,4]
-ep1 = data[:,5]
-ep2 = data[:,6]
+# ep0 = data[:,4]
+# ep1 = data[:,5]
+# ep2 = data[:,6]
 
 
-plt.figure()
-plt.plot(t_real,ep0,Label="p error x")
-plt.plot(t_real,ep1,Label="p error y")
-plt.plot(t_real,ep2,Label="p error z")
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("Error position")
-plt.title("Error  - time")
+# plt.figure()
+# plt.plot(t_real,ep0,Label="p error x")
+# plt.plot(t_real,ep1,Label="p error y")
+# plt.plot(t_real,ep2,Label="p error z")
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("Error position")
+# plt.title("Error  - time")
 
 
 # f0 = data[:,1]
