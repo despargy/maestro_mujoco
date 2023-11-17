@@ -38,8 +38,11 @@ class Leg
         int gyro_x__, gyro_y__, gyro_z__ ;  // tip acc
         int force_x__, force_y__, force_z__;
 
+        int cmd_q_hip__, cmd_q_thigh__, cmd_q_calf__;
+        int cmd_dq_hip__, cmd_dq_thigh__, cmd_dq_calf__;
+
         KDL::JntArray q, dq, q_out;    // Joint pos qs
-        // Eigen::Vector3d dq_out;
+        Eigen::Vector3d dq_out;
 
         Eigen::Vector3d f, f_cmd, tau; //applyied force to the tip 
         Eigen::MatrixXd J;            // Jacobian Eigen
@@ -47,6 +50,7 @@ class Leg
         Eigen::Matrix3d R_i;
 
         Eigen::Matrix4d g_0bo_init; // store init leg config in each phase before swing
+        Eigen::Matrix4d g_o_world, g_o; // store init leg config in each phase before swing
 
         Leg();
         ~Leg();

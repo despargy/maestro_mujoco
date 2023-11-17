@@ -324,6 +324,7 @@
         <force name="RR_foot_force" site="RR_tip"/> 
         <force name="RL_foot_force" site="RL_tip"/> 
 
+        <!-- Velocity of the CoM -->
         <velocimeter name="Body_Vel" site="imu"/>
 
     </sensor>

@@ -112,7 +112,7 @@ void LocomotionTopLevelControl::compute(double top_time)
         
         controller->t_real = top_time - controller->t0; //update time
 
-        if( controller->t_phase >= 500.0 ) // TODO change by forces not time
+        if( controller->t_phase >= controller->swing_t_slot ) // TODO change by forces not time
             fsm->phase = PH_TARGET;
 
         switch (fsm->phase )
@@ -123,12 +123,6 @@ void LocomotionTopLevelControl::compute(double top_time)
             controller->setPhaseTarget(); // setphase target etc.
 
             fsm->phase = PH_SWING;
-
-            // std::cout<< "time:"<<controller->t_real<< std::endl;
-            // std::cout<< "swing:"<<controller->robot->swingL_id<< std::endl;
-            // std::cout<<"phase = PH_TARGET"<<std::endl;
-            // std::cout<< controller->t_phase<<std::endl;
-            // std::cout<<"  "<<std::endl;
 
         case PH_SWING:
 

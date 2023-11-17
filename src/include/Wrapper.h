@@ -25,6 +25,7 @@ class Wrapper
         void update(const mjModel* m, mjData* d, double dt);
         void send();
         void send(const mjModel* m, mjData* d);
+        void send_torque_pos(const mjModel* m, mjData* d);
 
 };
 

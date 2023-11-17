@@ -120,7 +120,7 @@ void my_controller_walk(const mjModel* m, mjData* d)
     // printf("MuJoCo time %f\n", d->time);
     if( (d->time - topController->t_last_c) >= topController->controller->dt )
     {
-        topController->wrapper->update(m,d,topController->controller->dt);
+        topController->wrapper->update_locomotion(m,d,topController->controller->dt);
         topController->compute(d->time); // call once
         topController->wrapper->send(m,d);
     }

@@ -77,6 +77,13 @@ void Wrapper::initConst()
                 robot->leg[i]->torque_thigh__ = 1 + robot->leg[i]->id*3 ; 
                 robot->leg[i]->torque_calf__  = 2 + robot->leg[i]->id*3 ;
 
+                // robot->leg[i]->cmd_q_hip__   = 0 + robot->leg[i]->id*3 ; // TODO
+                // robot->leg[i]->cmd_q_thigh__ = 1 + robot->leg[i]->id*3 ;
+                // robot->leg[i]->cmd_q_calf__  = 2 + robot->leg[i]->id*3 ;
+
+                // robot->leg[i]->cmd_dq_hip__   = 0 + robot->leg[i]->id*3 ; // TODO
+                // robot->leg[i]->cmd_dq_thigh__ = 1 + robot->leg[i]->id*3 ;
+                // robot->leg[i]->cmd_dq_calf__  = 2 + robot->leg[i]->id*3 ;
             }
             // CoM vel x, y, z  [101 - 103
             robot->vel_x__ = 101 , robot->vel_y__ = 102 , robot->vel_z__ = 103; // Body velocity ids (x,y,z`)
@@ -178,96 +185,102 @@ void Wrapper::update(const mjModel* m, mjData* d, double dt)
     }
 
 }
-// void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
-// {
+void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
+{
 
-//                 /* Robot - CoM */
-//     // CoM position
-//     robot->p_c(0) = d->sensordata[robot->com_x__] ;
-//     robot->p_c(1) = d->sensordata[robot->com_y__] ;
-//     robot->p_c(2) = d->sensordata[robot->com_z__] ;
+                /* Robot - CoM */
+    // CoM position
+    robot->p_c(0) = d->sensordata[robot->com_x__] ;
+    robot->p_c(1) = d->sensordata[robot->com_y__] ;
+    robot->p_c(2) = d->sensordata[robot->com_z__] ;
 
-//     // CoM orientation
-//     Eigen::Quaterniond cur_c(d->sensordata[robot->quat_w__], d->sensordata[robot->quat_x__], d->sensordata[robot->quat_y__], d->sensordata[robot->quat_z__]);
-//     cur_c.normalize();
-//     robot->R_c = cur_c.toRotationMatrix(); 
+    // CoM orientation
+    Eigen::Quaterniond cur_c(d->sensordata[robot->quat_w__], d->sensordata[robot->quat_x__], d->sensordata[robot->quat_y__], d->sensordata[robot->quat_z__]);
+    cur_c.normalize();
+    robot->R_c = cur_c.toRotationMatrix(); 
 
-//     // CoM velocity
-//     robot->dp_c(0) = d->sensordata[robot->vel_x__] ;
-//     robot->dp_c(1) = d->sensordata[robot->vel_y__] ;
-//     robot->dp_c(2) = d->sensordata[robot->vel_z__] ;
+    // CoM velocity
+    robot->dp_c(0) = d->sensordata[robot->vel_x__] ;
+    robot->dp_c(1) = d->sensordata[robot->vel_y__] ;
+    robot->dp_c(2) = d->sensordata[robot->vel_z__] ;
+
+    robot->g_com.block(0,0,3,3) = robot->R_c;
+    robot->g_com.block(0,3,3,1) = robot->p_c;
+
+    if (once)
+    {
+
+        /* init CoM zero position */
+        robot->p_c0(0) = d->sensordata[robot->com_x__] ;
+        robot->p_c0(1) = d->sensordata[robot->com_y__] ;
+        robot->p_c0(2) = d->sensordata[robot->com_z__] ;    
+        robot->com_p_prev =  robot->p_c0; // set init value to prev CoM position
+
+        Eigen::Quaterniond cur_c(d->sensordata[robot->quat_w__], d->sensordata[robot->quat_x__], d->sensordata[robot->quat_y__], d->sensordata[robot->quat_z__]); // init CoM zero orientation 
+        cur_c.normalize();
+        robot->R_c0 = cur_c.toRotationMatrix(); 
+        robot->R_CoM_prev = robot->R_c0;
+
+        once = false;
+    }
+
+    // CoM velocity 
+    // robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, dt);  //TODO
+    robot->dR_CoM = get_dR_CoM(robot->R_CoM_prev, robot->R_c, dt);  //TODO
+    robot->w_CoM  = scewSymmetricInverse(robot->dR_CoM*robot->R_c.transpose());
+    // store current as prev for the next control cycle 
+    robot->com_p_prev = robot->p_c;
+    robot->R_CoM_prev = robot->R_c;
 
 
-//     if (once)
-//     {
+                /* Legs */
+    for(int i = 0 ; i <  robot->n_legs ; i++)
+    {
+        // q of Joints per leg (hip,thigh,calf)
+        robot->leg[i]->q(0) = d->sensordata[robot->leg[i]->q_hip__];
+        robot->leg[i]->q(1) = d->sensordata[robot->leg[i]->q_thigh__];
+        robot->leg[i]->q(2) = d->sensordata[robot->leg[i]->q_calf__];
+        // dq of Joints per leg (hip,thigh,calf)
+        robot->leg[i]->dq(0) = d->sensordata[robot->leg[i]->dq_hip__];
+        robot->leg[i]->dq(1) = d->sensordata[robot->leg[i]->dq_thigh__];
+        robot->leg[i]->dq(2) = d->sensordata[robot->leg[i]->dq_calf__];
+        // foot Force on tip 'current' (x,y,z)
+        robot->leg[i]->f(0) = d->sensordata[robot->leg[i]->force_x__];
+        robot->leg[i]->f(1) = d->sensordata[robot->leg[i]->force_y__];
+        robot->leg[i]->f(2) = d->sensordata[robot->leg[i]->force_z__];       
 
-//         /* init CoM zero position */
-//         robot->p_c0(0) = d->sensordata[robot->com_x__] ;
-//         robot->p_c0(1) = d->sensordata[robot->com_y__] ;
-//         robot->p_c0(2) = d->sensordata[robot->com_z__] ;    
-//         robot->com_p_prev =  robot->p_c0; // set init value to prev CoM position
+        // tip pose (x,y,z)
+        robot->leg[i]->p_i(0) = d->sensordata[robot->leg[i]->tip_x__];
+        robot->leg[i]->p_i(1) = d->sensordata[robot->leg[i]->tip_y__];
+        robot->leg[i]->p_i(2) = d->sensordata[robot->leg[i]->tip_z__];    
 
-//         Eigen::Quaterniond cur_c(d->sensordata[robot->quat_w__], d->sensordata[robot->quat_x__], d->sensordata[robot->quat_y__], d->sensordata[robot->quat_z__]); // init CoM zero orientation 
-//         cur_c.normalize();
-//         robot->R_c0 = cur_c.toRotationMatrix(); 
-//         robot->R_CoM_prev = robot->R_c0;
+        Eigen::Quaterniond Q_i(d->sensordata[robot->leg[i]->quat_w__], d->sensordata[robot->leg[i]->quat_x__], d->sensordata[robot->leg[i]->quat_y__], d->sensordata[robot->leg[i]->quat_z__]);
+        Q_i.normalize();
+        robot->leg[i]->R_i = Q_i.toRotationMatrix(); 
 
-//         once = false;
-//     }
+        robot->leg[i]->g_o.block(0,0,3,3) = robot->leg[i]->R_i; //    TODO is this g_o or g_o_world ?
+        robot->leg[i]->g_o.block(0,3,3,1) = robot->leg[i]->p_i;
 
-//     // CoM velocity 
-//     // robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, dt);  //TODO
-//     robot->dR_CoM = get_dR_CoM(robot->R_CoM_prev, robot->R_c, dt);  //TODO
-//     robot->w_CoM  = scewSymmetricInverse(robot->dR_CoM*robot->R_c.transpose());
-//     // store current as prev for the next control cycle 
-//     robot->com_p_prev = robot->p_c;
-//     robot->R_CoM_prev = robot->R_c;
+        robot->leg[i]->g_o_world = robot->g_com*robot->leg[i]->g_o;
+    }
 
+    for(int i = 0 ; i <  robot->n_legs ; i++)
+    {
+        int nv = m->nv;
+        double jacp1[3*nv];
+        double point[3] = {d->sensordata[robot->leg[i]->tip_x__],d->sensordata[robot->leg[i]->tip_y__],d->sensordata[robot->leg[i]->tip_z__]};
+        mj_jac(m,d,jacp1,NULL,point,robot->leg[i]->body__);
 
-//                 /* Legs */
-//     for(int i = 0 ; i <  robot->n_legs ; i++)
-//     {
-//         // q of Joints per leg (hip,thigh,calf)
-//         robot->leg[i]->q(0) = d->sensordata[robot->leg[i]->q_hip__];
-//         robot->leg[i]->q(1) = d->sensordata[robot->leg[i]->q_thigh__];
-//         robot->leg[i]->q(2) = d->sensordata[robot->leg[i]->q_calf__];
-//         // dq of Joints per leg (hip,thigh,calf)
-//         robot->leg[i]->dq(0) = d->sensordata[robot->leg[i]->dq_hip__];
-//         robot->leg[i]->dq(1) = d->sensordata[robot->leg[i]->dq_thigh__];
-//         robot->leg[i]->dq(2) = d->sensordata[robot->leg[i]->dq_calf__];
-//         // foot Force on tip 'current' (x,y,z)
-//         robot->leg[i]->f(0) = d->sensordata[robot->leg[i]->force_x__];
-//         robot->leg[i]->f(1) = d->sensordata[robot->leg[i]->force_y__];
-//         robot->leg[i]->f(2) = d->sensordata[robot->leg[i]->force_z__];       
-
-//         // tip pose (x,y,z)
-//         robot->leg[i]->p_i(0) = d->sensordata[robot->leg[i]->tip_x__];
-//         robot->leg[i]->p_i(1) = d->sensordata[robot->leg[i]->tip_y__];
-//         robot->leg[i]->p_i(2) = d->sensordata[robot->leg[i]->tip_z__];    
-
-//         Eigen::Quaterniond Q_i(d->sensordata[robot->leg[i]->quat_w__], d->sensordata[robot->leg[i]->quat_x__], d->sensordata[robot->leg[i]->quat_y__], d->sensordata[robot->leg[i]->quat_z__]);
-//         Q_i.normalize();
-//         robot->leg[i]->R_i = Q_i.toRotationMatrix(); 
-
-//     }
-
-//     for(int i = 0 ; i <  robot->n_legs ; i++)
-//     {
-//         int nv = m->nv;
-//         double jacp1[3*nv];
-//         double point[3] = {d->sensordata[robot->leg[i]->tip_x__],d->sensordata[robot->leg[i]->tip_y__],d->sensordata[robot->leg[i]->tip_z__]};
-//         mj_jac(m,d,jacp1,NULL,point,robot->leg[i]->body__);
-
-//         robot->leg[i]->J(0,0) = jacp1[6+3*i+0];      robot->leg[i]->J(0,1) = jacp1[6+3*i+1];      robot->leg[i]->J(0,2) = jacp1[6+3*i+2]; 
-//         robot->leg[i]->J(1,0) = jacp1[6+3*i+0+nv];   robot->leg[i]->J(1,1) = jacp1[6+3*i+1+nv];   robot->leg[i]->J(1,2) = jacp1[6+3*i+2+nv]; 
-//         robot->leg[i]->J(2,0) = jacp1[6+3*i+0+2*nv]; robot->leg[i]->J(2,1) = jacp1[6+3*i+1+2*nv]; robot->leg[i]->J(2,2) = jacp1[6+3*i+2+2*nv]; 
+        robot->leg[i]->J(0,0) = jacp1[6+3*i+0];      robot->leg[i]->J(0,1) = jacp1[6+3*i+1];      robot->leg[i]->J(0,2) = jacp1[6+3*i+2]; 
+        robot->leg[i]->J(1,0) = jacp1[6+3*i+0+nv];   robot->leg[i]->J(1,1) = jacp1[6+3*i+1+nv];   robot->leg[i]->J(1,2) = jacp1[6+3*i+2+nv]; 
+        robot->leg[i]->J(2,0) = jacp1[6+3*i+0+2*nv]; robot->leg[i]->J(2,1) = jacp1[6+3*i+1+2*nv]; robot->leg[i]->J(2,2) = jacp1[6+3*i+2+2*nv]; 
     
-//         // Probability of Contact Estimation
-//         robot->leg[i]->prob_stable = std::fmin(1.0,1.0); // TODO 
+        // Probability of Contact Estimation
+        robot->leg[i]->prob_stable = std::fmin(1.0,1.0); // TODO 
 
-//     }
+    }
 
-// }
+}
 void Wrapper::send()
 {
     // TODO send not mujoco
@@ -282,4 +295,22 @@ void Wrapper::send(const mjModel* m, mjData* d)
         d->ctrl[robot->leg[l]->torque_thigh__] = robot->leg[l]->tau(1);
         d->ctrl[robot->leg[l]->torque_calf__]  = robot->leg[l]->tau(2);
     }
+}
+void Wrapper::send_torque_pos(const mjModel* m, mjData* d)
+{
+    for(int l=0; l< robot->n_legs; l++)
+    {
+        d->ctrl[robot->leg[l]->torque_hip__]   = robot->leg[l]->tau(0);
+        d->ctrl[robot->leg[l]->torque_thigh__] = robot->leg[l]->tau(1);
+        d->ctrl[robot->leg[l]->torque_calf__]  = robot->leg[l]->tau(2);
+    }
+
+    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id]->q_out(0);
+    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id]->q_out(1);
+    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id]->q_out(2);
+
+    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id]->dq_out(0);
+    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id]->dq_out(1);
+    // d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id]->dq_out(2);
+
 }

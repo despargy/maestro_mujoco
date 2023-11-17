@@ -33,9 +33,7 @@ Robot::Robot()
     vvvv = leg[0]->w0*Eigen::VectorXd::Ones(12); //as Legs wv_leg init
     W_inv = (vvvv.asDiagonal()).inverse();
 
-    // this->com_p_prev = Eigen::Vector3d::Zero();
-    // this->R_CoM_prev = Eigen::Matrix3d::Zero();
-
+    g_com = Eigen::Matrix4d::Identity();
     
 }
 /* De-Constructor*/

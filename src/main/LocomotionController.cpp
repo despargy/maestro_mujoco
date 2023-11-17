@@ -26,7 +26,7 @@ LocomotionController::LocomotionController()
 LocomotionController::~LocomotionController(){}
 void LocomotionController::setPhaseTarget()
 {
-    robot->leg[(int) robot->swingL_id]->initQout(); // set all q_out as zeros
+    robot->leg[(int) robot->swingL_id]->initQout(); // set all q_out as current value
 
     this->t_phase = 0.0;
     this->t0_phase = t_real; // when that phase started relatve to real time
@@ -37,7 +37,7 @@ void LocomotionController::setPhaseTarget()
     {
         if((vp_order[l] != robot->swingL_id) )
         {
-            vp.push_back({robot->leg[vp_order[l]]->p_i(0),robot->leg[vp_order[l]]->p_i(1)});
+            vp.push_back({robot->leg[vp_order[l]]->g_o_world(0,3),robot->leg[vp_order[l]]->g_o_world(1,3)});
         }
         // std::cout<<l<<": "<<robot->leg[l]->p_i(0)<<" \t"<<robot->leg[l]->p_i(1)<<std::endl;
 
@@ -46,9 +46,9 @@ void LocomotionController::setPhaseTarget()
     Eigen::Vector3d target(C.first,C.second,robot->z);
 
     this->p_T =  target;
-    // std::cout<<"pc0"<< robot->p_c0<<std::endl;
-    // std::cout<<"pc"<< robot->p_c<<std::endl;
-    // std::cout<<"target"<< target<<std::endl;
+    std::cout<<"pc0"<< robot->p_c0<<std::endl;
+    std::cout<<"pc"<< robot->p_c<<std::endl;
+    std::cout<<"target"<< target<<std::endl;
 
     this->R_T = robot->R_c0 ;
     // std::cout<<"target RT"<< this->R_T<<std::endl;
@@ -87,11 +87,10 @@ void LocomotionController::errors()
     ang.fromRotationMatrix(Re);
     e_o = ang.angle()*ang.axis();
 
-    e_v.block(0,0,3,1) = robot->dCoM_p ; // compute velocity error
+    e_v.block(0,0,3,1) = robot->dp_c ; // compute velocity error TODO
     e_v.block(3,0,3,1) = robot->w_CoM ; 
     e_v.block(3,0,3,1) = 1.0*this->e_v.block(3,0,3,1) ; 
 
-    
     // std::cout<<"e_p"<<std::endl;
     // std::cout<<e_p<<std::endl;
     // std::cout<<"e_o"<<std::endl;
@@ -162,50 +161,46 @@ void LocomotionController::PIDwithSat()
 }
 void LocomotionController::inverseTip()
 {
-    // /**************** Bezier curve ***************/ 
-    // if(t_phase<t0_swing)
-    // {
-    //     d_tip_pos<< 0.0, 0.0, 0.0, 1.0; 
-    //     d_tip_vel<< 0.0, 0.0, 0.0;
-    // }
-    // else if( t_phase>=t0_swing & t_phase<=(t0_swing + 1/freq_swing) ) 
-    // {
-    //     ++ii;
-    //     d_tip_pos << bCurveX[ii] , robot->leg[(int)robot->swingL_id]->y_tip,  bCurveZ[ii] , 1.0;
-    //     d_tip_vel << dot_bCurveX[ii], 0.0,  dot_bCurveZ[ii];
-    // }
-    // else 
-    // {
-    //     d_tip_vel<< 0.0, 0.0, 0.0;
-    // }  
-    // /**************** Bezier curve ***************/ 
-    // d_traj_tipframe(0) = d_tip_pos(0);
-    // d_traj_tipframe(1) = d_tip_pos(1);
-    // d_traj_tipframe(2) = d_tip_pos(2);
-    // Eigen::Matrix4f BC_T = Eigen::Matrix4f::Zero(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
-    // BC_T(3,3) = 1.0;
-    // BC_T.block(0,0,3,3) = Eigen::Matrix3f::Identity() ;// robot_->g_com_init.block(0,0,3,3).cast<float>();// ->g_com_init.block(0,0,3,3).inverse().cast<float>(); // B from C is inv. the robot R_c orientation as the robot frame {0}
-    // BC_T.block(0,3,3,1) = robot->leg[(int)robot->swingL_id]->g_0bo_init.block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
+    /**************** Bezier curve ***************/ 
+    if(t_phase<t0_swing)
+    {
+        d_tip_pos<< 0.0, 0.0, 0.0, 1.0; 
+        d_tip_vel<< 0.0, 0.0, 0.0;
+    }
+    else if( t_phase>=t0_swing & t_phase<=(t0_swing + 1/freq_swing) ) 
+    {
+        ++ii;
+        d_tip_pos << bCurveX[ii] , 0.0,  bCurveZ[ii] , 1.0;
+        d_tip_vel << dot_bCurveX[ii], 0.0,  dot_bCurveZ[ii];
+    }
+    else 
+    {
+        d_tip_vel<< 0.0, 0.0, 0.0;
+    }  
+    /**************** Bezier curve ***************/ 
+
+    Eigen::Matrix4f BC_T = Eigen::Matrix4f::Identity(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
+    BC_T.block(0,3,3,1) = robot->leg[(int)robot->swingL_id]->g_0bo_init.block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
     
-    // // desired swinging-tip trajectory represented from {0} is:
-    // Eigen::Vector4f d_CoM_pos =  BC_T*d_tip_pos;
-    // if(robot_->swingL_id == 0)
-    //     d_traj_0frame = d_CoM_pos.block(0,0,3,1); // cut last 1
-    // CLIK(d_CoM_pos.block(0,0,3,1), d_tip_vel);
+    
+    Eigen::Vector4f d_CoM_pos =  BC_T*d_tip_pos;
+
+    CLIK(d_CoM_pos.block(0,0,3,1), d_tip_vel);
     
 }
 void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_0frame_)
 {
-    // Eigen::Vector3f d_q_ = (   robot->R_c* robot->leg[(int)robot->swingL_id]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_ - 16*(robot->leg[(int)robot->swingL_id]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_) );
-    // // std::cout<<"leg_mng[(int)robot_->swingL_id].g_o_world.block(0,3,3,1).cast<float>():"<< leg_mng[(int)robot_->swingL_id].g_o_world.block(0,3,3,1).cast<float>().transpose()<<std::endl;
-    // // std::cout<<"pd_0frame_:"<< pd_0frame_.transpose()<<std::endl;
-    // // std::cout<<"p--------------------------------------------"<< std::endl;
-    // leg_mng[(int)robot_->swingL_id].q_out(0) = d_q_(0)*dt + leg_mng[(int)robot_->swingL_id].q_out(0);
-    // leg_mng[(int)robot_->swingL_id].q_out(1) = d_q_(1)*dt + leg_mng[(int)robot_->swingL_id].q_out(1);
-    // leg_mng[(int)robot_->swingL_id].q_out(2) = d_q_(2)*dt + leg_mng[(int)robot_->swingL_id].q_out(2);
-    // leg_mng[(int)robot_->swingL_id].dq_out(0) = d_q_(0);
-    // leg_mng[(int)robot_->swingL_id].dq_out(1) = d_q_(1);
-    // leg_mng[(int)robot_->swingL_id].dq_out(2) = d_q_(2);
+
+    Eigen::Vector3f d_q_ = (   robot->R_c* robot->leg[(int)robot->swingL_id]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_ - 16*(robot->leg[(int) robot->swingL_id]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_) );
+    // std::cout<<"leg_mng[(int)robot_->swingL_id].g_o_world.block(0,3,3,1).cast<float>():"<< leg_mng[(int)robot_->swingL_id].g_o_world.block(0,3,3,1).cast<float>().transpose()<<std::endl;
+    // std::cout<<"pd_0frame_:"<< pd_0frame_.transpose()<<std::endl;
+    // std::cout<<"p--------------------------------------------"<< std::endl;
+    robot->leg[(int)robot->swingL_id]->q_out(0) = d_q_(0)*dt + robot->leg[(int)robot->swingL_id]->q_out(0);
+    robot->leg[(int)robot->swingL_id]->q_out(1) = d_q_(1)*dt + robot->leg[(int)robot->swingL_id]->q_out(1);
+    robot->leg[(int)robot->swingL_id]->q_out(2) = d_q_(2)*dt + robot->leg[(int)robot->swingL_id]->q_out(2);
+    robot->leg[(int)robot->swingL_id]->dq_out(0) = d_q_(0);
+    robot->leg[(int)robot->swingL_id]->dq_out(1) = d_q_(1);
+    robot->leg[(int)robot->swingL_id]->dq_out(2) = d_q_(2);
 }
 void LocomotionController::computeBesierCurve2D(double step) // static gait pre-fixed swinging trajectory
 {

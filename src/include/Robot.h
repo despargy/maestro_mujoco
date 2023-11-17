@@ -39,6 +39,8 @@ class Robot
         Eigen::DiagonalMatrix<double,12> W_inv;
         Eigen::Vector3d pbc ;
 
+        Eigen::Matrix4d g_com ;
+
         bool KEEP_CONTROL;
         // KDL::Tree robot_kin;
 

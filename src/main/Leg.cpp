@@ -15,6 +15,8 @@ Leg::Leg()
     wv_leg = w0*Eigen::Vector3d::Ones(); 
     
     g_0bo_init = Eigen::Matrix4d::Identity();
+    g_o = Eigen::Matrix4d::Identity();
+    g_o_world = Eigen::Matrix4d::Identity();
 }
 
 /* De-Constructor*/
@@ -22,12 +24,12 @@ Leg::~Leg(){}
 
 void Leg::storeInitG()
 {
-    g_0bo_init.block(0,0,3,3) = R_i; 
-    g_0bo_init.block(0,3,3,1) = p_i;
+    g_0bo_init = g_o_world;
 }
 void Leg::initQout()
 {
     q_out(0) = q(0);
     q_out(1) = q(1);
     q_out(2) = q(2);
+
 }

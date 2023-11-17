@@ -31,6 +31,8 @@ class LocomotionController : public Controller
         Eigen::Vector3d e_p_int, e_o_int;
         Eigen::VectorXd  pid_out; 
 
+        Eigen::Vector4f d_tip_pos;
+        Eigen::Vector3f d_tip_vel;
 
         LocomotionController();
         ~LocomotionController();
