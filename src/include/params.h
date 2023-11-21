@@ -13,8 +13,8 @@
 #define param_mass 12.0;
 #define param_g_gravity 9.81;
 
-#define param_pbc_x 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
-#define param_pbc_y 0.001;//0.0125;
+#define param_pbc_x 0;// 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
+#define param_pbc_y 0;//0.001;//0.0125;
 #define param_pbc_z 0.0;
 
 #define param_kp_TRACKING 2800;
@@ -22,7 +22,7 @@
 #define param_ko_TRACKING 15.0;
 
 #define param_kp_LOC 150; //1300; // 200 180 220 reduces time, increases oscillations 
-#define param_kv_LOC 30.0;  //100; //  40  40 10   reduces oscillations, increases time 
+#define param_kv_LOC 20.0;  //100; //  40  40 10   reduces oscillations, increases time 
 #define param_ko_LOC 200;  //15; 1100 // 40  40 20
 #define param_ki_LOC 80; //50;   //350  0   0 100  increases oscillations, decreases steady state error
 
@@ -32,10 +32,6 @@
 
 #define param_alpha 150.0;
 #define param_slope 0.0001;
-
-// #define param_thres_r 0.06;
-
-// #define param_sat_force 0.1;
 
 /* Decide one of the above tasks/modes */
 #define param_TRACKING_MODE true;
@@ -56,10 +52,12 @@
 #define param_w0 50;
 #define param_w_max 3500;
 
+#define param_Kp_hip 8;
+#define param_Kp_thing 5; 
+#define param_Kp_calf 3;
 
-
-
-
-
+#define param_Kv_hip 3.5;
+#define param_Kv_thing 2.0 ;
+#define param_Kv_calf 1.5;
 
 #endif

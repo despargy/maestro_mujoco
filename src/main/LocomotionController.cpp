@@ -60,11 +60,11 @@ void LocomotionController::setPhaseTarget()
     e_o_int = Eigen::Vector3d::Zero();
     pid_out = Eigen::VectorXd::Zero(6);
 
-    d_CoM_pos = Eigen::Vector4f::Ones();
+    d_world_pos = Eigen::Vector4f::Ones();
 
     robot->leg[(int)robot->swingL_id]->storeInitG(); 
 
-    CHANGE_GAINS = true;
+    CHANGE_GAINS = true; // TODO THIS when bezier start
 }
 void LocomotionController::computeWeightsSwing()
 {
@@ -78,7 +78,6 @@ void LocomotionController::computeWeightsSwing()
         robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
     }
     /* Added to simuate swing leg weights t inf */ //TODO
-    // robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones();
     robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*superGaussian(A,b,t_half_swing-t0_superG,t_phase - t_half_swing, 13)*Eigen::Vector3d::Ones(); 
     robot->vvvv.block((int) robot->swingL_id*3,0,3,1) = robot->leg[(int) robot->swingL_id]->wv_leg;   // update vvvv vector of robot 
     
@@ -95,7 +94,7 @@ void LocomotionController::errors()
 
     e_v.block(0,0,3,1) = robot->dp_c ; // compute velocity error TODO
     e_v.block(3,0,3,1) = robot->w_CoM ; 
-    e_v.block(3,0,3,1) = 1.0*this->e_v.block(3,0,3,1) ; 
+    e_v.block(3,0,3,1) = 0.7*this->e_v.block(3,0,3,1) ; 
 
     // std::cout<<"e_p"<<std::endl;
     // std::cout<<e_p<<std::endl;
@@ -137,11 +136,11 @@ void LocomotionController::PIDwithSat()
     /*  Integral -> Target Control */ 
     for (int axis = 0; axis<3; axis++)
     {
-        if(fabs(e_p(axis))<0.01)
+        if(fabs(e_p(axis))<0.1)
         {
             e_p_int(axis) += e_p(axis)*dt; //position
         }
-        if(fabs(e_o(axis))<0.2)
+        if(fabs(e_o(axis))<0.1)
         {
             e_o_int(axis) += e_o(axis)*dt; //orientation
         }
@@ -150,11 +149,11 @@ void LocomotionController::PIDwithSat()
     pid_out.block(0,0,3,1) += -ki*e_p_int.block(0,0,3,1) ;
     pid_out.block(3,0,3,1) += -0.3*ki*e_o_int ;
 
-    if(pid_out.block(0,0,3,1).norm()>80.0){
-        pid_out.block(0,0,3,1) = pid_out.block(0,0,3,1) * 80.0 / pid_out.block(0,0,3,1).norm();
+    if(pid_out.block(0,0,3,1).norm()>40.0){
+        pid_out.block(0,0,3,1) = pid_out.block(0,0,3,1) * 40.0 / pid_out.block(0,0,3,1).norm();
     }
-    if(pid_out.block(3,0,3,1).norm()>80.0){
-        pid_out.block(3,0,3,1) = pid_out.block(3,0,3,1) * 80.0 / pid_out.block(3,0,3,1).norm();
+    if(pid_out.block(3,0,3,1).norm()>40.0){
+        pid_out.block(3,0,3,1) = pid_out.block(3,0,3,1) * 40.0 / pid_out.block(3,0,3,1).norm();
     }
 
     // // std::cout<< "e_p_int "<<e_p_int.transpose() << std::endl;
@@ -189,9 +188,9 @@ void LocomotionController::inverseTip()
     BC_T.block(0,3,3,1) = robot->leg[(int)robot->swingL_id]->g_0bo_init.block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
     
 
-    d_CoM_pos =  BC_T*d_tip_pos;
+    d_world_pos =  BC_T*d_tip_pos;
     
-    CLIK(d_CoM_pos.block(0,0,3,1), d_tip_vel);
+    CLIK(d_world_pos.block(0,0,3,1), d_tip_vel);
     
 }
 void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_0frame_)

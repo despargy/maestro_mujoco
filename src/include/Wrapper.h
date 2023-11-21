@@ -15,6 +15,9 @@ class Wrapper
         std::string category;
 
         Robot* robot; // Controller pointer obj.
+        double Kp_hip, Kp_thing, Kp_calf;
+        double Kv_hip, Kv_thing, Kv_calf;
+
         bool once;
         Wrapper();
         Wrapper(std::string category_, Robot* t_);

@@ -266,3 +266,6 @@ ERROR: Load model error: XML Error: Schema violation: unrecognized element
 Element '⁠velocimeter', line 0
 
 
+Mon Nov 20 13:32:15 2023
+WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstable. Time = 10.0020.
+

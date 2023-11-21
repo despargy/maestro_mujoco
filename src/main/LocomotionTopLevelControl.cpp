@@ -74,7 +74,12 @@ void LocomotionTopLevelControl::setParams()
 
     controller->w_max = param_w_max;
 
-
+    wrapper->Kp_hip   = param_Kp_hip;
+    wrapper->Kp_thing = param_Kp_thing;
+    wrapper->Kp_calf  = param_Kp_calf;
+    wrapper->Kv_hip   = param_Kv_hip;
+    wrapper->Kv_thing = param_Kv_thing;
+    wrapper->Kv_calf  = param_Kv_calf;
 }
 
 void LocomotionTopLevelControl::compute(double top_time)
@@ -121,7 +126,7 @@ void LocomotionTopLevelControl::compute(double top_time)
             
             controller->robot->swingL_id = controller->static_free_gait[(int)(++loc_i%controller->robot->n_legs)]; // change swing leg by free gat order
             controller->setPhaseTarget(); // setphase target etc.
-
+            std::cout<<"here"<<std::endl;
             fsm->phase = PH_SWING;
 
         case PH_SWING:
@@ -133,15 +138,17 @@ void LocomotionTopLevelControl::compute(double top_time)
             controller->PIDwithSat();
             controller->fComputations();
             controller->inverseTip();
-            
+
             break;
         }
 
-        data->save_loc(controller->t_real,controller->robot->leg[0]->p_i(0),
-                        controller->robot->leg[0]->p_i(1), controller->robot->leg[0]->p_i(2),
+        data->save_loc(controller->t_real,controller->robot->leg[0]->g_o_world(0,3),
+                        controller->robot->leg[0]->g_o_world(1,3), controller->robot->leg[0]->g_o_world(2,3),
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
-                        controller->robot->leg[2]->wv_leg(2), controller->robot->leg[3]->wv_leg(0),
-                        controller->d_CoM_pos(0), controller->d_CoM_pos(1),controller-> d_CoM_pos(2)); 
+                        controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
+                        controller->d_world_pos(0), controller->d_world_pos(1),controller-> d_world_pos(2),
+                        controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
+                        controller->p_T(0),controller->p_T(1),controller->p_T(2)); 
         break;    
     }
 

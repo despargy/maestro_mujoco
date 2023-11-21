@@ -54,7 +54,7 @@ void Data::save_error(double time, double ep0, double ep1, double ep2)
 void Data::init_save_data_locomotion()
 {
     //write name of the variable here (header)
-    fprintf(fid,"CoM_x,CoM_y,CoM_z,ep_x,ep_y,ep_z");
+    fprintf(fid,"time, CoM_x,CoM_y,CoM_z,ep_x,ep_y,ep_z");
 
     //move to a newline
     fprintf(fid,"\n");
@@ -65,9 +65,9 @@ void Data::init_save_data_locomotion()
 
 
 /* Function which defines the data/variables we want to save to the csv file*/
-void Data::save_loc(double time, double p0x, double p0y, double p0z, double w0, double w1, double w2, double w3, double p0xd, double p0yd, double p0zd)
+void Data::save_loc(double time, double p0x, double p0y, double p0z, double w0, double w1, double w2, double w3, double p0xd, double p0yd, double p0zd,double x1, double x2, double x3,double x1_d, double x2_d, double x3_d)
 {
-    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f",time,p0x,p0y,p0z,w0, w1, w2, w3,p0xd,p0yd,p0zd); 
+    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,p0x,p0y,p0z,w0, w1, w2, w3,p0xd,p0yd,p0zd,x1,x2,x3,x1_d,x2_d,x3_d); 
     //move to a newline
     fprintf(fid,"\n");
 }

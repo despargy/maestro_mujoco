@@ -22,6 +22,15 @@ w3 = data[:,7]
 p0d = data[:,8]
 p1d = data[:,9]
 p2d = data[:,10]
+
+x1 = data[:,11]
+y2 = data[:,12]
+z3 = data[:,13]
+
+x1_d = data[:,14]
+y2_d = data[:,15]
+z3_d = data[:,16]
+
 plt.figure()
 plt.plot(t_real,p0,Label="tip p x")
 plt.plot(t_real,p1,Label="tip p y")
@@ -49,6 +58,22 @@ plt.legend()
 plt.xlabel("t_real")
 plt.ylabel("Weights position")
 plt.title("Weights  - time")
+
+plt.figure()
+
+
+plt.plot(t_real,x1,Label="x actual")
+plt.plot(t_real,y2,Label="y actual")
+plt.plot(t_real,z3,Label="z actual")
+
+plt.plot(t_real,x1_d,Label="x T")
+plt.plot(t_real,y2_d,Label="y T")
+plt.plot(t_real,z3_d,Label="z T")
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM pos")
+plt.title("CoM  - time")
 
 # fig = plt.figure()
 # ax = plt.axes(projection='3d')

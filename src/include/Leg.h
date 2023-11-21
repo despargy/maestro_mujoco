@@ -17,7 +17,7 @@ class Leg
     public:
         
         double sit0[3] = {0.0, 1.13, -2.7};
-        double sit1[3] = {0.0, 0.87, -1.4};
+        double sit1[3] = {0.0, 0.87, -1.6};
         
         std::string name;
         int id, n_superV_joints;
@@ -37,11 +37,14 @@ class Leg
         int acc_x__, acc_y__, acc_z__; // tip acc
         int gyro_x__, gyro_y__, gyro_z__ ;  // tip acc
         int force_x__, force_y__, force_z__;
+        int tip_x_world__, tip_y_world__, tip_z_world__; // tip pos world
 
         int cmd_q_hip__, cmd_q_thigh__, cmd_q_calf__;
         int cmd_dq_hip__, cmd_dq_thigh__, cmd_dq_calf__;
         int actuator_no_pos__, actuator_no_vel__;
         
+        int qpos_hip__, qpos_thigh__, qpos_calf__  ;
+
         KDL::JntArray q, dq, q_out;    // Joint pos qs
         Eigen::Vector3d dq_out;
 
