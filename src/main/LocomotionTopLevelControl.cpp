@@ -126,7 +126,6 @@ void LocomotionTopLevelControl::compute(double top_time)
             
             controller->robot->swingL_id = controller->static_free_gait[(int)(++loc_i%controller->robot->n_legs)]; // change swing leg by free gat order
             controller->setPhaseTarget(); // setphase target etc.
-            std::cout<<"here"<<std::endl;
             fsm->phase = PH_SWING;
 
         case PH_SWING:

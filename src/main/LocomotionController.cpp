@@ -41,7 +41,7 @@ void LocomotionController::setPhaseTarget()
         {
             vp.push_back({robot->leg[vp_order[l]]->g_o_world(0,3),robot->leg[vp_order[l]]->g_o_world(1,3)});
         }
-        // std::cout<<l<<": "<<robot->leg[l]->p_i(0)<<" \t"<<robot->leg[l]->p_i(1)<<std::endl;
+        // std::cout<<"forces "<<l<<": "<<robot->leg[l]->f(0)<<" \t"<<robot->leg[l]->f(1)<<" \t"<<robot->leg[l]->f(2)<<std::endl;
 
     }
     std::pair<double, double> C = find_Centroid(vp);
@@ -167,12 +167,12 @@ void LocomotionController::PIDwithSat()
 void LocomotionController::inverseTip()
 {
     /**************** Bezier curve ***************/ 
-    if(t_phase<t0_swing)
+    if(t_phase<t0_swing) //  yet there are forces
     {
         d_tip_pos<< 0.0, 0.0, 0.0, 1.0; 
         d_tip_vel<< 0.0, 0.0, 0.0;
     }
-    else if( t_phase>=t0_swing & t_phase<=(t0_swing + 1/freq_swing) ) 
+    else if( t_phase>=t0_swing & t_phase<=(t0_swing + 1/freq_swing) &  robot->leg[(int) robot->swingL_id]->f(2) > -7) 
     {
         ++ii;
         d_tip_pos << bCurveX[ii] , 0.0,  bCurveZ[ii] , 1.0;
@@ -180,19 +180,22 @@ void LocomotionController::inverseTip()
     }
     else 
     {
-        // d_tip_pos(2) = -0.03;
+        d_tip_pos << bCurveX[0] , 0.0,  bCurveZ[0] , 1.0;
         d_tip_vel<< 0.0, 0.0, 0.0;
-        int l = robot->swingL_id;
-        robot->leg[l]->f_cmd(2) -= 5 ;
-        robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
+        // int l = robot->swingL_id;
+        // robot->leg[l]->f_cmd(2) -= 10 ;
+        // robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
+
     }  
     /**************** Bezier curve ***************/ 
 
     Eigen::Matrix4f BC_T = Eigen::Matrix4f::Identity(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
-    BC_T.block(0,3,3,1) = robot->leg[(int)robot->swingL_id]->g_0bo_init.block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
+    // HERE TODO add for dynAMIC GAIT robot->g_com*
+    BC_T.block(0,3,3,1) = (robot->leg[(int)robot->swingL_id]->g_0bo_init).block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
     
 
     d_world_pos =  BC_T*d_tip_pos;
+    
     
     CLIK(d_world_pos.block(0,0,3,1), d_tip_vel);
     

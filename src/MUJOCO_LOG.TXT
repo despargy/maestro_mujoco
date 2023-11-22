@@ -269,3 +269,40 @@ Element '⁠velocimeter', line 0
 Mon Nov 20 13:32:15 2023
 WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstable. Time = 10.0020.
 
+Wed Nov 22 13:02:59 2023
+ERROR: Load model error: XML parse error 3:
+Error=XML_ERROR_FILE_NOT_FOUND ErrorID=3 (0x3) Line number=0: filename=/home/despinar/mujoco_ws/mujoco_menagerie//unitree_go1/extra_scene.xml
+
+
+Wed Nov 22 13:03:06 2023
+ERROR: Load model error: XML parse error 3:
+Error=XML_ERROR_FILE_NOT_FOUND ErrorID=3 (0x3) Line number=0: filename=/home/despinar/mujoco_ws/mujoco_menagerie//unitree_go1/extra_scene.xml
+
+
+Wed Nov 22 13:04:19 2023
+ERROR: Load model error: XML parse error 3:
+Error=XML_ERROR_FILE_NOT_FOUND ErrorID=3 (0x3) Line number=0: filename=/home/despinar/mujoco_ws/mujoco_menagerie/unitree_go1/extra_scene.xml
+
+
+Wed Nov 22 13:05:09 2023
+ERROR: Load model error: Error: repeated name in actuator array, position 12
+Object name = FR_hip, id = 12, line = 0, column = -1
+
+Wed Nov 22 13:06:07 2023
+ERROR: Load model error: Error: repeated name in actuator array, position 12
+Object name = FR_hip, id = 12, line = 0, column = -1
+
+Wed Nov 22 13:09:55 2023
+ERROR: Load model error: Error: repeated name in actuator array, position 13
+Object name = pservo_FR_hip, id = 13, line = 0, column = -1
+
+Wed Nov 22 13:11:06 2023
+ERROR: Load model error: Error: key 0: invalid ctrl size, expected length 36
+Object name = home, id = 0
+
+Wed Nov 22 13:12:59 2023
+WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 12. The simulation is unstable. Time = 10.0020.
+
+Wed Nov 22 13:15:58 2023
+WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 12. The simulation is unstable. Time = 10.0020.
+

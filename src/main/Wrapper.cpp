@@ -275,6 +275,9 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
         robot->leg[i]->g_o.block(0,3,3,1) = robot->leg[i]->p_i; // framequat ref to CoM
 
         robot->leg[i]->g_o_world = robot->g_com*robot->leg[i]->g_o; //
+
+        std::cout<<"forces "<<i<<": "<<robot->leg[i]->f(0)<<" \t"<<robot->leg[i]->f(1)<<" \t"<<robot->leg[i]->f(2)<<std::endl;
+
     }
 
     for(int i = 0 ; i <  robot->n_legs ; i++)
