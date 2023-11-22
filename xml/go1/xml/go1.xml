@@ -167,32 +167,32 @@
 
 
         <!-- Added by me - to simulate motor Kp/Kd -->
-        <position name="pservo_FR_hip" joint="FR_hip_joint"     kp="0" />
+        <position name="pservo_FR_hip" joint="FR_hip_joint"     kp="0"   />
         <velocity name="vservo_FR_hip" joint="FR_hip_joint"     kv="1.5" />
-        <position name="pservo_FR_thigh" joint="FR_thigh_joint" kp="0" />
+        <position name="pservo_FR_thigh" joint="FR_thigh_joint" kp="0"   />
         <velocity name="vservo_FR_thigh" joint="FR_thigh_joint" kv="1.0" />
-        <position name="pservo_FR_calf" joint="FR_calf_joint"   kp="0" />
+        <position name="pservo_FR_calf" joint="FR_calf_joint"   kp="0"   />
         <velocity name="vservo_FR_calf" joint="FR_calf_joint"   kv="1.0" />
 
-        <position name="pservo_FL_hip" joint="FL_hip_joint"     kp="0" />
+        <position name="pservo_FL_hip" joint="FL_hip_joint"     kp="0"   />
         <velocity name="vservo_FL_hip" joint="FL_hip_joint"     kv="1.5" />
-        <position name="pservo_FL_thigh" joint="FL_thigh_joint" kp="0" />
+        <position name="pservo_FL_thigh" joint="FL_thigh_joint" kp="0"   />
         <velocity name="vservo_FL_thigh" joint="FL_thigh_joint" kv="1.0" />
-        <position name="pservo_FL_calf" joint="FL_calf_joint"   kp="0" />
+        <position name="pservo_FL_calf" joint="FL_calf_joint"   kp="0"   />
         <velocity name="vservo_FL_calf" joint="FL_calf_joint"   kv="1.0" />
 
-        <position name="pservo_RR_hip" joint="RR_hip_joint"     kp="0" />
+        <position name="pservo_RR_hip" joint="RR_hip_joint"     kp="0"   />
         <velocity name="vservo_RR_hip" joint="RR_hip_joint"     kv="1.5" />
-        <position name="pservo_RR_thigh" joint="RR_thigh_joint" kp="0" />
+        <position name="pservo_RR_thigh" joint="RR_thigh_joint" kp="0"   />
         <velocity name="vservo_RR_thigh" joint="RR_thigh_joint" kv="1.0" />
-        <position name="pservo_RR_calf" joint="RR_calf_joint"   kp="0" />
+        <position name="pservo_RR_calf" joint="RR_calf_joint"   kp="0"   />
         <velocity name="vservo_RR_calf" joint="RR_calf_joint"   kv="1.0" />
 
-        <position name="pservo_RL_hip" joint="RL_hip_joint"     kp="0" />
+        <position name="pservo_RL_hip" joint="RL_hip_joint"     kp="0"   />
         <velocity name="vservo_RL_hip" joint="RL_hip_joint"     kv="1.5" />
-        <position name="pservo_RL_thigh" joint="RL_thigh_joint" kp="0" />
+        <position name="pservo_RL_thigh" joint="RL_thigh_joint" kp="0"   />
         <velocity name="vservo_RL_thigh" joint="RL_thigh_joint" kv="1.0" />
-        <position name="pservo_RL_calf" joint="RL_calf_joint"   kp="0" />
+        <position name="pservo_RL_calf" joint="RL_calf_joint"   kp="0"   />
         <velocity name="vservo_RL_calf" joint="RL_calf_joint"   kv="1.0" />
 
         <!-- 
@@ -263,17 +263,17 @@
         <framequat name="Body_Quat" objtype="site" objname="imu"/>
         
         <!-- Extra sensors for tips Pos/Quat -->
-        <framepos name="FR_Pos" objtype="site" objname="FR_tip"/>
-        <framequat name="FR_Quat" objtype="site" objname="FR_tip"/>
+        <framepos name="FR_Pos" objtype="site" objname="FR_tip" reftype="site" refname="imu"/>
+        <framequat name="FR_Quat" objtype="site" objname="FR_tip"  reftype="site" refname="imu"/>
 
-        <framepos name="FL_Pos" objtype="site" objname="FL_tip"/>
-        <framequat name="FL_Quat" objtype="site" objname="FL_tip"/>
+        <framepos name="FL_Pos" objtype="site" objname="FL_tip"  reftype="site" refname="imu"/>
+        <framequat name="FL_Quat" objtype="site" objname="FL_tip"  reftype="site" refname="imu"/>
 
-        <framepos name="RR_Pos" objtype="site" objname="RR_tip"/>
-        <framequat name="RR_Quat" objtype="site" objname="RR_tip"/>
+        <framepos name="RR_Pos" objtype="site" objname="RR_tip"  reftype="site" refname="imu"/>
+        <framequat name="RR_Quat" objtype="site" objname="RR_tip"  reftype="site" refname="imu"/>
 
-        <framepos name="RL_Pos" objtype="site" objname="RL_tip"/>
-        <framequat name="RL_Quat" objtype="site" objname="RL_tip"/>
+        <framepos name="RL_Pos" objtype="site" objname="RL_tip"  reftype="site" refname="imu"/>
+        <framequat name="RL_Quat" objtype="site" objname="RL_tip"  reftype="site" refname="imu"/>
 
         <!-- Extra IMU sensor on foot tips -->
         <accelerometer name="FR_Acc" site="FR_tip"/>

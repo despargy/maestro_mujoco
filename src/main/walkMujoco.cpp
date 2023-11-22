@@ -137,8 +137,8 @@ void my_controller_walk(const mjModel* m, mjData* d)
         // if (topController->controller->CHANGE_GAINS) // is called only in setPhase run
         //     topController->controller->CHANGE_GAINS = topController->wrapper->change_gains(m,d); // then it is changed here returns false
 
-        // topController->wrapper->send_torque_pos(m,d); // TODO
-        topController->wrapper->send(m,d); // TODO
+        topController->wrapper->send_torque_pos(m,d); // TODO
+        // topController->wrapper->send(m,d); // TODO
 
     }
 }

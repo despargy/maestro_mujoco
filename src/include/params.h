@@ -42,12 +42,12 @@
 
 #define param_A_SGaus 1.0;
 #define param_b_SGaus 10.0;
-#define param_t0_SGaus 1.0;
+#define param_t0_SGaus 0.6;
 
-#define param_Freq_Swing  1.0;
-#define param_t0_Swing    1.2;
-#define param_thalf_Swing 1.7;
-#define param_slot_Swing  2.5;
+#define param_Freq_Swing  2.0;//2.0;
+#define param_t0_Swing    0.8;//0.3;
+#define param_thalf_Swing 1.0;//0.5;
+#define param_slot_Swing  1.6;//10.0;
 
 #define param_w0 50;
 #define param_w_max 3500;

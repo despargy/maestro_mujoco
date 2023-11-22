@@ -138,7 +138,7 @@ void LocomotionTopLevelControl::compute(double top_time)
             controller->PIDwithSat();
             controller->fComputations();
             controller->inverseTip();
-
+            
             break;
         }
 

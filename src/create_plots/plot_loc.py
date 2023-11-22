@@ -75,6 +75,22 @@ plt.xlabel("t_real")
 plt.ylabel("CoM pos")
 plt.title("CoM  - time")
 
+plt.figure()
+
+
+plt.plot(t_real,w0/10000,Label="weight")
+plt.plot(t_real,p0d,Label="p0d")
+plt.plot(t_real,z3,Label="z actual")
+plt.axvline(0.8, color='k',label='t0 swing')
+plt.axvline(2.1, color='r',label='end swinging')
+plt.axvline(1.0, color='b',label='t haalph swing swinging')
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM pos")
+plt.title("CoM  - time")
+
+
 # fig = plt.figure()
 # ax = plt.axes(projection='3d')
 # ax.scatter3D(p0, p1, p2, c=p2, cmap='Greens')

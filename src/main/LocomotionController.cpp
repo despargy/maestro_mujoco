@@ -180,7 +180,11 @@ void LocomotionController::inverseTip()
     }
     else 
     {
+        // d_tip_pos(2) = -0.03;
         d_tip_vel<< 0.0, 0.0, 0.0;
+        int l = robot->swingL_id;
+        robot->leg[l]->f_cmd(2) -= 5 ;
+        robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
     }  
     /**************** Bezier curve ***************/ 
 
@@ -209,7 +213,7 @@ void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_
 }
 void LocomotionController::computeBesierCurve2D(double step) // static gait pre-fixed swinging trajectory
 {
-    std::vector<double> xX{0.0, 0.08, 0.09, 0.07};
+    std::vector<double> xX{0.0, 0.04, 0.05, 0.03}; // 0.08, 0.09, 0.07 HERE TODO
     std::vector<double> zZ{0.0, 0.1, 0.05, 0.0};
     double bCurveXt, dot_bCurveXt;
     double bCurveZt, dot_bCurveZt;

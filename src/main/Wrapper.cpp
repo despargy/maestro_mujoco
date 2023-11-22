@@ -330,21 +330,21 @@ void Wrapper::send_torque_pos(const mjModel* m, mjData* d)
 bool Wrapper::change_gains(const mjModel* m, mjData* d)
 {
 
-    for(int i = 0 ; i < robot->n_legs; i++)
-    {
-        m->actuator_gainprm[10*robot->leg[i]->cmd_q_hip__+0]    =  0;
-        m->actuator_biasprm[10*robot->leg[i]->cmd_q_hip__+1]    = -0;
-        m->actuator_gainprm[10*robot->leg[i]->cmd_dq_hip__+0]   =  3.0;
-        m->actuator_biasprm[10*robot->leg[i]->cmd_dq_hip__+1]   = -3.0;
-        m->actuator_gainprm[10*robot->leg[i]->cmd_q_thigh__+0]  =  0;
-        m->actuator_biasprm[10*robot->leg[i]->cmd_q_thigh__+1]  = -0;
-        m->actuator_gainprm[10*robot->leg[i]->cmd_dq_thigh__+0] =  2.0;
-        m->actuator_biasprm[10*robot->leg[i]->cmd_dq_thigh__+1] = -2.0;
-        m->actuator_gainprm[10*robot->leg[i]->cmd_q_calf__+0]   =  0;
-        m->actuator_biasprm[10*robot->leg[i]->cmd_q_calf__+1]   = -0;
-        m->actuator_gainprm[10*robot->leg[i]->cmd_dq_calf__+0]  =  1.5;
-        m->actuator_biasprm[10*robot->leg[i]->cmd_dq_calf__+1]  = -1.5;
-    }
+    // for(int i = 0 ; i < robot->n_legs; i++)
+    // {
+    //     m->actuator_gainprm[10*robot->leg[i]->cmd_q_hip__+0]    =  0;
+    //     m->actuator_biasprm[10*robot->leg[i]->cmd_q_hip__+1]    = -0;
+    //     m->actuator_gainprm[10*robot->leg[i]->cmd_dq_hip__+0]   =  1.5;
+    //     m->actuator_biasprm[10*robot->leg[i]->cmd_dq_hip__+1]   = -1.5;
+    //     m->actuator_gainprm[10*robot->leg[i]->cmd_q_thigh__+0]  =  0;
+    //     m->actuator_biasprm[10*robot->leg[i]->cmd_q_thigh__+1]  = -0;
+    //     m->actuator_gainprm[10*robot->leg[i]->cmd_dq_thigh__+0] =  1.0;
+    //     m->actuator_biasprm[10*robot->leg[i]->cmd_dq_thigh__+1] = -1.0;
+    //     m->actuator_gainprm[10*robot->leg[i]->cmd_q_calf__+0]   =  0;
+    //     m->actuator_biasprm[10*robot->leg[i]->cmd_q_calf__+1]   = -0;
+    //     m->actuator_gainprm[10*robot->leg[i]->cmd_dq_calf__+0]  =  1.0;
+    //     m->actuator_biasprm[10*robot->leg[i]->cmd_dq_calf__+1]  = -1.0;
+    // }
     // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_hip__+0] =  Kp_hip;
     // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_hip__+1] = -Kp_hip;
 
