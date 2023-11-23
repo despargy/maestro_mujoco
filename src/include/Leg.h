@@ -26,7 +26,7 @@ class Leg
         Eigen::Vector3d wv_leg;
         /* Probability of Stable Contact */
         double prob_stable;
-        
+        double pros;
         /* Mujoco id's-variables*/
         int body__, site__;
         int q_hip__, q_thigh__, q_calf__ ; // joint position

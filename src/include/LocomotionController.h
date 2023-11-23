@@ -14,13 +14,14 @@ class LocomotionController : public Controller
         double A, b, t0_superG;
         double freq_swing, t0_swing, t_half_swing, swing_t_slot;
         double w_max;
-        bool CHANGE_GAINS;
+        bool CHANGE_GAINS, CHANGE_PHASE ;
         int swing_leg, ii;
         int* vp_order;
         int* static_free_gait;
 
         std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
         std::vector<double> bCurveZ, dot_bCurveZ; // Bezier Curve swinging tip
+        Eigen::Vector3d f_applied;
 
         // vector for target position, inside locomotion mode
         Eigen::Vector3d p_T;

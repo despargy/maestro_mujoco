@@ -116,8 +116,8 @@ void LocomotionTopLevelControl::compute(double top_time)
     case STATIC_GAIT:
         
         controller->t_real = top_time - controller->t0; //update time
-
-        if( controller->t_phase >= controller->swing_t_slot ) // TODO change by forces not time 
+        // TODO change condition - make it better
+        if( controller->t_phase >= controller->swing_t_slot )// TODO change by forces not time 
             fsm->phase = PH_TARGET;
 
         switch (fsm->phase )
@@ -137,17 +137,19 @@ void LocomotionTopLevelControl::compute(double top_time)
             controller->PIDwithSat();
             controller->fComputations();
             controller->inverseTip();
-            
+
             break;
         }
 
-        data->save_loc(controller->t_real,controller->robot->leg[0]->g_o_world(0,3),
-                        controller->robot->leg[0]->g_o_world(1,3), controller->robot->leg[0]->g_o_world(2,3),
+        data->save_loc(controller->t_real,controller->robot->leg[(int)controller->robot->swingL_id]->g_o_world(0,3),
+                        controller->robot->leg[(int)controller->robot->swingL_id]->g_o_world(1,3), controller->robot->leg[(int)controller->robot->swingL_id]->g_o_world(2,3),
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
                         controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
                         controller->d_world_pos(0), controller->d_world_pos(1),controller-> d_world_pos(2),
                         controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
-                        controller->p_T(0),controller->p_T(1),controller->p_T(2)); 
+                        controller->p_T(0),controller->p_T(1),controller->p_T(2),
+                        controller->f_applied(0),
+                        controller->f_applied(1), controller->f_applied(2)); 
         break;    
     }
 

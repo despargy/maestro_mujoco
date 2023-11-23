@@ -35,6 +35,14 @@ Robot::Robot()
 
     g_com = Eigen::Matrix4d::Identity();
     swingL_id = 0; // do not play role
+
+    if (n_legs==4)
+    {
+        leg[0]->pros = - 1;
+        leg[1]->pros = + 1;
+        leg[2]->pros = - 1;
+        leg[3]->pros = + 1;
+    }
 }
 /* De-Constructor*/
 Robot::~Robot()

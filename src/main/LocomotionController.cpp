@@ -171,31 +171,47 @@ void LocomotionController::inverseTip()
     {
         d_tip_pos<< 0.0, 0.0, 0.0, 1.0; 
         d_tip_vel<< 0.0, 0.0, 0.0;
+        Eigen::Matrix4f BC_T = Eigen::Matrix4f::Identity(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
+        // HERE TODO add for dynAMIC GAIT robot->g_com ?
+        BC_T.block(0,3,3,1) = (robot->leg[(int)robot->swingL_id]->g_0bo_init).block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
+        d_world_pos =  BC_T*d_tip_pos;
     }
-    else if( t_phase>=t0_swing & t_phase<=(t0_swing + 1/freq_swing) &  robot->leg[(int) robot->swingL_id]->f(2) > -7) 
+    else if( t_phase>=t0_swing & t_phase<=(t0_swing + 1/freq_swing) ) 
     {
         ++ii;
-        d_tip_pos << bCurveX[ii] , 0.0,  bCurveZ[ii] , 1.0;
+        d_tip_pos << bCurveX[ii] , 0.0 ,  bCurveZ[ii] , 1.0;
         d_tip_vel << dot_bCurveX[ii], 0.0,  dot_bCurveZ[ii];
+        Eigen::Matrix4f BC_T = Eigen::Matrix4f::Identity(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
+        // HERE TODO add for dynAMIC GAIT robot->g_com ?
+        BC_T.block(0,3,3,1) = (robot->leg[(int)robot->swingL_id]->g_0bo_init).block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
+        d_world_pos =  BC_T*d_tip_pos;
     }
-    else 
+    else if( t_phase>(t0_swing + 1/freq_swing) ) 
     {
-        d_tip_pos << bCurveX[0] , 0.0,  bCurveZ[0] , 1.0;
-        d_tip_vel<< 0.0, 0.0, 0.0;
-        // int l = robot->swingL_id;
-        // robot->leg[l]->f_cmd(2) -= 10 ;
-        // robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
+        Eigen::Vector3d f_applied;
+        f_applied = robot->leg[(int)robot->swingL_id]->R_i.transpose()*robot->leg[(int)robot->swingL_id]->f;
+        if ( f_applied(2) < -7)
+        {
+            d_tip_pos(2) -= 0.001*dt ;
+            d_tip_vel(2) -= 0.001 ;
+            Eigen::Matrix4f BC_T = Eigen::Matrix4f::Identity(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
+            // HERE TODO add for dynAMIC GAIT robot->g_com ?
+            BC_T.block(0,3,3,1) = (robot->leg[(int)robot->swingL_id]->g_0bo_init).block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
+            d_world_pos =  BC_T*d_tip_pos;
 
-    }  
+            // int l = robot->swingL_id;
+            // robot->leg[l]->f_cmd(2) -= 10 ;
+            // robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
+
+        }
+        else
+        {
+            d_tip_vel << 0.0 , 0.0, 0.0;
+        }
+
+    }
+ 
     /**************** Bezier curve ***************/ 
-
-    Eigen::Matrix4f BC_T = Eigen::Matrix4f::Identity(); // let B be system B at tip, then BO_T is the transformation from B to world frame {0}, with:
-    // HERE TODO add for dynAMIC GAIT robot->g_com*
-    BC_T.block(0,3,3,1) = (robot->leg[(int)robot->swingL_id]->g_0bo_init).block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
-    
-
-    d_world_pos =  BC_T*d_tip_pos;
-    
     
     CLIK(d_world_pos.block(0,0,3,1), d_tip_vel);
     
