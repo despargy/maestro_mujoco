@@ -30,7 +30,7 @@ based on previous work for slip detection
 <a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation" target="_blank">Probabilistic Contact Estimation</a>.
 
 ## How To Use
-#### Replace current workspace path in 
+#### Specify the local workspace path within the code lines.: 
    * line 6, src/Data.cpp
    * line 21, src/trajMujoco.cpp
    * line 21, src/walkMujoco.cpp
