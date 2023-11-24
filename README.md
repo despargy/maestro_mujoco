@@ -35,33 +35,31 @@ based on previous work for slip detection
    * line 21, src/trajMujoco.cpp
    * line 21, src/walkMujoco.cpp
 
-
+All .
+   ```sh
+   cd maestro_mujoco/src/cmake 
+   mkdir build
+   cd build
+   cmake ..
+   make
+   ```
 
 Trajecotry tracking execution.
  ```sh
-   cd maestro_mujoco/src 
-   make trajectory # Make trajectory
-   ./exe/traj # Run trajectory
-   cd creat_plots
+   cd maestro_mujoco/src/cmake/build
+   ./traj  # Run trajectory
+   cd maestro_mujoco/src/creat_plots
    python3 plot_traj.py # Vizualize results
    ```
 
 Locomotion execution.
  ```sh
-   cd maestro_mujoco/src 
-   make walk # Make locomtion
-   ./exe/walk # Run locomotion
-   cd creat_plots
+   cd maestro_mujoco/src/cmake/build
+   ./walk # Run locomotion
+   cd maestro_mujoco/src/creat_plots
    python3 plot_loc.py # Vizualize results
    ```
-All .
-   ```sh
-   cd maestro_mujoco/src 
-   make #make all
-   ./exe/traj # run trajectory tracking 
-              # (or either)
-   ./exe/walk # run locomotion
-   ```
+
   
 ## Download
 
