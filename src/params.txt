@@ -1,6 +1,0 @@
-Robot: n_legs
-Data: datafile
-TopControl:    controller->ADAPT_B = false;
-TopControl:    controller->robot->KEEP_CONTROL = true;
-TopControl:    controller->robot->mass = 12.0;
-TopControl:    controller->robot->g_gravity = 9.81;

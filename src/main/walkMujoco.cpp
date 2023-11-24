@@ -126,21 +126,7 @@ void my_controller_walk(const mjModel* m, mjData* d)
     {
         topController->wrapper->update_locomotion(m,d,topController->controller->dt);
         topController->compute(d->time); // call once
-        
-        // if(topController->fsm->phase == STATIC_GAIT & topController->controller->t_phase<=( 2*topController->controller->t_half_swing - topController->controller->t0_superG ))
-        // {
-        //     topController->wrapper->send_torque_pos(m,d);
-        // }
-        // else
-        // {
-        //     topController->wrapper->send(m,d);
-        // }
-        // TODO THIS
-        // if (topController->controller->CHANGE_GAINS) // is called only in setPhase run
-        //     topController->controller->CHANGE_GAINS = topController->wrapper->change_gains(m,d); // then it is changed here returns false
-
-        topController->wrapper->send_torque_pos(m,d); // TODO
-        // topController->wrapper->send(m,d); // TODO
+        topController->wrapper->send_torque_pos(m,d); 
 
     }
 }
@@ -244,7 +230,7 @@ int main(int argc, const char** argv)
         glfwGetFramebufferSize(window, &viewport.width, &viewport.height);
 
           // update scene and render
-        opt.frame = mjFRAME_WORLD;
+        // opt.frame = mjFRAME_WORLD;
         mjv_updateScene(m, d, &opt, NULL, &cam, mjCAT_ALL, &scn);
         mjr_render(viewport, &scn, &con);
         // printf("{%f, %f, %f, %f, %f, %f};\n",cam.azimuth,cam.elevation, cam.distance,cam.lookat[0],cam.lookat[1],cam.lookat[2]);

@@ -101,10 +101,8 @@ void TrajectoryTopLevelControl::compute(double top_time)
 void TrajectoryTopLevelControl::init_topControl()
 {
     printf("Default init_topControl \n");
-    // TODO usleep this->fsm->t_S0  
     this->setParams();
-    this->wrapper->initConst(); // TODO this is not for Mujoco
-
+    this->wrapper->initConst(); // may adjust for non-Mujoco simulator
 }
 /* Overload init_topControl Mujoco*/
 void TrajectoryTopLevelControl::init_topControl(const mjModel* m, mjData* d)
@@ -130,7 +128,6 @@ void TrajectoryTopLevelControl::init_topControl(const mjModel* m, mjData* d)
     Eigen::Quaterniond cur_c(d->sensordata[wrapper->robot->quat_w__], d->sensordata[wrapper->robot->quat_x__], d->sensordata[wrapper->robot->quat_y__], d->sensordata[wrapper->robot->quat_z__]);
     cur_c.normalize();
     wrapper->robot->R_c0 = cur_c.toRotationMatrix(); 
-    // set init value to prev CoM orientation
-    wrapper->robot->R_CoM_prev =  wrapper->robot->R_c0; 
+    wrapper->robot->R_CoM_prev =  wrapper->robot->R_c0;  // set init value to prev CoM orientation
 
 }
