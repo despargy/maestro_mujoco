@@ -79,4 +79,4 @@ Locomotion execution.
 
 ## License
 
-MIT
+MIT License
