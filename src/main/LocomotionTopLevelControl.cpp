@@ -148,8 +148,7 @@ void LocomotionTopLevelControl::compute(double top_time)
                         controller->d_world_pos(0), controller->d_world_pos(1),controller-> d_world_pos(2),
                         controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
                         controller->p_T(0),controller->p_T(1),controller->p_T(2),
-                        controller->f_applied(0),
-                        controller->f_applied(1), controller->f_applied(2)); 
+                        controller->f_applied(0), controller->f_applied(1), controller->f_applied(2)); 
         break;    
     }
 

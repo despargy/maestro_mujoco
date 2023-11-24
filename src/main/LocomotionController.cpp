@@ -188,7 +188,6 @@ void LocomotionController::inverseTip()
     }
     else if( t_phase>(t0_swing + 1/freq_swing) ) 
     {
-        Eigen::Vector3d f_applied;
         f_applied = robot->leg[(int)robot->swingL_id]->R_i.transpose()*robot->leg[(int)robot->swingL_id]->f;
         if ( f_applied(2) < -7)
         {
@@ -198,10 +197,6 @@ void LocomotionController::inverseTip()
             // HERE TODO add for dynAMIC GAIT robot->g_com ?
             BC_T.block(0,3,3,1) = (robot->leg[(int)robot->swingL_id]->g_0bo_init).block(0,3,3,1).cast<float>();  // translation as tip init pose, from {0}
             d_world_pos =  BC_T*d_tip_pos;
-
-            // int l = robot->swingL_id;
-            // robot->leg[l]->f_cmd(2) -= 10 ;
-            // robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
 
         }
         else

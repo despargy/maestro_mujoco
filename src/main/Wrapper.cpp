@@ -143,6 +143,10 @@ void Wrapper::update(const mjModel* m, mjData* d, double dt)
     Eigen::Quaterniond cur_c(d->sensordata[robot->quat_w__], d->sensordata[robot->quat_x__], d->sensordata[robot->quat_y__], d->sensordata[robot->quat_z__]);
     cur_c.normalize();
     robot->R_c = cur_c.toRotationMatrix(); 
+
+    robot->g_com.block(0,0,3,3) = robot->R_c;
+    robot->g_com.block(0,3,3,1) = robot->p_c;
+
     // CoM velocity 
     robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, dt);  //TODO
     robot->dR_CoM = get_dR_CoM(robot->R_CoM_prev, robot->R_c, dt);  //TODO
@@ -177,6 +181,11 @@ void Wrapper::update(const mjModel* m, mjData* d, double dt)
         Q_i.normalize();
         robot->leg[i]->R_i = Q_i.toRotationMatrix(); 
 
+
+        robot->leg[i]->g_o.block(0,0,3,3) = robot->leg[i]->R_i; // framepos ref to CoM
+        robot->leg[i]->g_o.block(0,3,3,1) = robot->leg[i]->p_i; // framequat ref to CoM
+
+        robot->leg[i]->g_o_world = robot->g_com*robot->leg[i]->g_o; //
     }
 
     for(int i = 0 ; i <  robot->n_legs ; i++)
@@ -187,6 +196,9 @@ void Wrapper::update(const mjModel* m, mjData* d, double dt)
         // mj_jac(m,d,jacp1,NULL,point,robot->leg[i]->body__);
         double point[3] = {robot->leg[i]->g_o_world(0,3),robot->leg[i]->g_o_world(1,3),robot->leg[i]->g_o_world(2,3)};
         mj_jac(m,d,jacp1,NULL,point,robot->leg[i]->body__);
+
+        // mj_jacSite(m,d,jacp1,NULL,robot->leg[i]->site__);
+
 
         robot->leg[i]->J(0,0) = jacp1[6+3*i+0];      robot->leg[i]->J(0,1) = jacp1[6+3*i+1];      robot->leg[i]->J(0,2) = jacp1[6+3*i+2]; 
         robot->leg[i]->J(1,0) = jacp1[6+3*i+0+nv];   robot->leg[i]->J(1,1) = jacp1[6+3*i+1+nv];   robot->leg[i]->J(1,2) = jacp1[6+3*i+2+nv]; 

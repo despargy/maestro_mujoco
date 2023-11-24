@@ -1,37 +1,38 @@
 #!/usr/bin/env python3
 import numpy as np
-import pandas as pd
 from matplotlib import pyplot as plt
-import math 
 from mpl_toolkits import mplot3d
+import os
 
-data = np.genfromtxt("/home/despinar/mujoco_ws/maestro_mujoco/data/data.csv", delimiter=" ", skip_header=1) #TODO
+os.chdir("../../data/")
+data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
 
 # times
 t_real = data[:,0]
-
+# Each swinging tip pos
 p0 = data[:,1]
 p1 = data[:,2]
 p2 = data[:,3]
-
+# Weights for each tip (x-axis)
 w0 = data[:,4]
 w1 = data[:,5]
 w2 = data[:,6]
 w3 = data[:,7]
-
+# Each swinging desired tip pos
 p0d = data[:,8]
 p1d = data[:,9]
 p2d = data[:,10]
 
+# CoM current pos
 x1 = data[:,11]
 y2 = data[:,12]
 z3 = data[:,13]
-
+# CoM targer pos
 x1_d = data[:,14]
 y2_d = data[:,15]
 z3_d = data[:,16]
 
-
+# Each swinging tip forces transformed
 f0 = data[:,17]
 f1 = data[:,18]
 f2 = data[:,19]
