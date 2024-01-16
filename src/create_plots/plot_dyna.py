@@ -10,55 +10,48 @@ data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
 # times
 t_real = data[:,0]
 # Each swinging tip pos
-p0 = data[:,1]
-p1 = data[:,2]
-p2 = data[:,3]
+ev_0 = data[:,1]
+ev_1 = data[:,2]
+ev_2 = data[:,3]
 # Weights for each tip (x-axis)
 w0 = data[:,4]
 w1 = data[:,5]
 w2 = data[:,6]
 w3 = data[:,7]
 # Each swinging desired tip pos
-p0d = data[:,8]
-p1d = data[:,9]
-p2d = data[:,10]
+tipd_a0 = data[:,8]
+tipd_a1 = data[:,9]
+tipd_a2 = data[:,10]
 
-# CoM current pos
-x1 = data[:,11]
-y2 = data[:,12]
-z3 = data[:,13]
-# CoM targer pos
+tipd_b0 = data[:,11]
+tipd_b1 = data[:,12]
+tipd_b2 = data[:,13]
+
+# CoM pos
 x1_d = data[:,14]
 y2_d = data[:,15]
 z3_d = data[:,16]
 
 # Each swinging tip forces transformed
 f = data[:,17]
-# f1 = data[:,18]
-# f2 = data[:,19]
+
 
 plt.figure()
-plt.plot(t_real,p0,Label="tip p x")
-plt.plot(t_real,p1,Label="tip p y")
-plt.plot(t_real,p2,Label="tip p z")
-
-plt.plot(t_real,p0d,Label="tip pd x")
-plt.plot(t_real,p1d,Label="tip pd y")
-plt.plot(t_real,p2d,Label="tip pd z")
+plt.plot(t_real,ev_0,Label="ev x")
+plt.plot(t_real,ev_1,Label="ev y")
+plt.plot(t_real,ev_2,Label="ev z")
 
 plt.legend()
 plt.xlabel("t_real")
-plt.ylabel("Tip 0 position")
-plt.title("Tip  - time")
+plt.ylabel("Vel error")
+plt.title("Vel error  - time")
 
 plt.figure()
-
 
 plt.plot(t_real,w0,Label="w0 x")
 plt.plot(t_real,w1,Label="w1 x")
 plt.plot(t_real,w2,Label="w2 x")
 plt.plot(t_real,w3,Label="w3 x")
-
 
 plt.legend()
 plt.xlabel("t_real")
@@ -68,28 +61,28 @@ plt.title("Weights  - time")
 plt.figure()
 
 
-plt.plot(t_real,x1,Label="x actual")
-plt.plot(t_real,y2,Label="y actual")
-plt.plot(t_real,z3,Label="z actual")
+plt.plot(t_real,tipd_a0,Label="Tip A x ")
+plt.plot(t_real,tipd_a1,Label="Tip A y ")
+plt.plot(t_real,tipd_a2,Label="Tip A z ")
 
-plt.plot(t_real,x1_d,Label="x T")
-plt.plot(t_real,y2_d,Label="y T")
-plt.plot(t_real,z3_d,Label="z T")
+plt.plot(t_real,tipd_b0,Label="Tip B x")
+plt.plot(t_real,tipd_b1,Label="Tip B y")
+plt.plot(t_real,tipd_b2,Label="Tip B z")
 
 plt.legend()
 plt.xlabel("t_real")
-plt.ylabel("CoM pos")
-plt.title("CoM  - time")
+plt.ylabel("Tip pos")
+plt.title("Tips  - time")
 
 plt.figure()
 
 
 plt.plot(t_real,w0/10000,Label="weight")
-plt.plot(t_real,p0d,Label="p0d")
-plt.plot(t_real,z3,Label="z actual")
-plt.axvline(0.4, color='k',label='t0 swing')
-plt.axvline(0.65, color='b',label='t half swing swinging')
-plt.axvline(1.1, color='r',label='end swinging')
+# plt.plot(t_real,p0d,Label="p0d")
+# plt.plot(t_real,z3,Label="z actual")
+plt.axvline(0.02, color='k',label='t0 swing')
+plt.axvline(0.05, color='b',label='t half swing swinging')
+plt.axvline(2.11, color='r',label='end swinging')
 
 plt.legend()
 plt.xlabel("t_real")

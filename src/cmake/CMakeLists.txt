@@ -59,7 +59,13 @@ set(MAESTRO_CPP
 add_executable(walk ../main/walkMujoco.cpp ${MAESTRO_CPP})
 target_link_libraries(walk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
 
-add_executable(trajectory ../main/trajMujoco.cpp ${MAESTRO_CPP})
-target_link_libraries(trajectory ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
+add_executable(dynawalk ../main/dynawalkMujoco.cpp ${MAESTRO_CPP})
+target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
 
 
+# add_executable(trajectory ../main/trajMujoco.cpp ${MAESTRO_CPP})
+# target_link_libraries(trajectory ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
+
+
+# add_executable(explore ../main/explorationMujoco.cpp ${MAESTRO_CPP})
+# target_link_libraries(explore ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)

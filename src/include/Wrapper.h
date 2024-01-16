@@ -30,7 +30,7 @@ class Wrapper
         void send(const mjModel* m, mjData* d);
         void send_torque_pos(const mjModel* m, mjData* d);
         bool change_gains(const mjModel* m, mjData* d);
-
+        void send_torque_pos_Dynamic(const mjModel* m, mjData* d);
 };
 
 #endif

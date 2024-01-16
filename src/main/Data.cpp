@@ -65,10 +65,27 @@ void Data::init_save_data_locomotion()
 
 
 /* Function which defines the data/variables we want to save to the csv file*/
-void Data::save_loc(double time, double p0x, double p0y, double p0z, double w0, double w1, double w2, double w3, double p0xd, double p0yd, double p0zd,double x1, double x2, double x3,double x1_d, double x2_d, double x3_d, double f0, double f1, double f2)
+void Data::save_loc(double time, double p0x, double p0y, double p0z, double w0, double w1, double w2, double w3, double p0xd, double p0yd, double p0zd,double x1, double x2, double x3,double x1_d, double x2_d, double x3_d, double f)
 {
-    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,p0x,p0y,p0z,w0, w1, w2, w3,p0xd,p0yd,p0zd,x1,x2,x3,x1_d,x2_d,x3_d,f0,f1,f2); 
+    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,p0x,p0y,p0z,w0, w1, w2, w3,p0xd,p0yd,p0zd,x1,x2,x3,x1_d,x2_d,x3_d,f); 
     //move to a newline
     fprintf(fid,"\n");
 }
 
+
+/* Init function of Data to write headers*/
+void Data::init_save_data_exp()
+{
+    //write name of the variable here (header)
+    fprintf(fid,"Time,Wx0,Wx1,Wx2,Wx3, Bx,By, Bz, Tipx, Tipy,Tipz, px, py, pz, pTx, pTy, pTz");
+
+    //move to a newline
+    fprintf(fid,"\n");
+}
+/* Function which defines the data/variables we want to save to the csv file*/
+void Data::save_exp(double time, double w0, double w1, double w2, double w3, float bx, float by, float bz, float tipx, float tipy, float tipz, double pcx, double pcy, double pcz, double pTx, double pTy, double pTz)
+{
+    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,w0, w1, w2, w3, bx, by, bz, tipx, tipy, tipz, pcx, pcy, pcz, pTx, pTy, pTz); 
+    //move to a newline
+    fprintf(fid,"\n");
+}
