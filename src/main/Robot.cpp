@@ -4,8 +4,8 @@ Robot::Robot()
 {
     std::cout<<"Constractor Robot"<<std::endl;
 
-    this->R_c.resize(3,3);
-    this->R_c0.resize(3,3);
+    // this->R_c.resize(3,3);
+    // this->R_c0.resize(3,3);
     this->H_c.resize(6,6);
     this->C_c.resize(6,6);
     this->Gq.resize(6,12);
@@ -36,12 +36,20 @@ Robot::Robot()
     g_com = Eigen::Matrix4d::Identity();
     swingL_id = 0; // do not play role
 
+    double d = 0.128, l1 = 0.17, l2 = 0.19;
+
     if (n_legs==4)
     {
         leg[0]->pros = - 1;
         leg[1]->pros = + 1;
         leg[2]->pros = - 1;
         leg[3]->pros = + 1;
+
+        leg[0]->TIP_EXT = Eigen::Vector3d(+l1, -d, 0.019);
+        leg[2]->TIP_EXT = Eigen::Vector3d(-l2, -d, 0.019);
+        leg[1]->TIP_EXT = Eigen::Vector3d(+l1, +d, 0.019);
+        leg[3]->TIP_EXT = Eigen::Vector3d(-l2, +d, 0.019);
+
     }
 }
 /* De-Constructor*/

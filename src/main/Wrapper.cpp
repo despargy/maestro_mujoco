@@ -4,12 +4,14 @@ Wrapper::Wrapper()
 {
     this->category = "None"; // defines Mujoco or Ros/Real
     once = true;
+    CHANGE_GAINS = false;
 }
 Wrapper::Wrapper(std::string category_, Robot* r_)
 {
     this->category = category_; // defines Mujoco or Ros/Real
     this->robot = r_; // pass robot pointer to wrapper to update robot/legs profile
     once = true;
+    CHANGE_GAINS = false;
 }
 /* De-Constructor*/
 Wrapper::~Wrapper(){}
@@ -341,7 +343,7 @@ void Wrapper::send_torque_pos(const mjModel* m, mjData* d)
     d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id]->dq_out(2);
 
 }
-void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d)
+void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
 {
     for(int l=0; l< robot->n_legs; l++)
     {
@@ -349,59 +351,107 @@ void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d)
         d->ctrl[robot->leg[l]->torque_thigh__] = robot->leg[l]->tau(1);
         d->ctrl[robot->leg[l]->torque_calf__]  = robot->leg[l]->tau(2);
     }
-    d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_a]->q_out(0);
-    d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_a]->q_out(1);
-    d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_a]->q_out(2);
 
-    d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id_a]->dq_out(0);
-    d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id_a]->dq_out(1);
-    d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id_a]->dq_out(2);
+    // if (A_PD)
+    // {
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_a]->q_out(0);
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_a]->q_out(1);
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_a]->q_out(2);
 
-    d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_b]->q_out(0);
-    d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_b]->q_out(1);
-    d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_b]->q_out(2);
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id_a]->dq_out(0);
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id_a]->dq_out(1);
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id_a]->dq_out(2);
+    // }
+    // else
+    // {
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_a]->q_out(0);
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_a]->q_out(1);
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_a]->q_out(2);
 
-    d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id_b]->dq_out(0);
-    d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id_b]->dq_out(1);
-    d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id_b]->dq_out(2);
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__]   = 0.0;
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__] = 0.0;
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__]  = 0.0;
+    // }
+    // if (B_PD)
+    // {
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_b]->q_out(0);
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_b]->q_out(1);
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_b]->q_out(2);
 
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id_b]->dq_out(0);
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id_b]->dq_out(1);
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id_b]->dq_out(2);
+    // }
+    // else
+    // {
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_b]->q_out(0);
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_b]->q_out(1);
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_b]->q_out(2);
 
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__]   = 0.0;
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__] = 0.0;
+    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__]  = 0.0;
+    // }
 }
-bool Wrapper::change_gains(const mjModel* m, mjData* d)
+bool Wrapper::change_gains(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
 {
 
-    // for(int i = 0 ; i < robot->n_legs; i++)
-    // {
-    //     m->actuator_gainprm[10*robot->leg[i]->cmd_q_hip__+0]    =  0;
-    //     m->actuator_biasprm[10*robot->leg[i]->cmd_q_hip__+1]    = -0;
-    //     m->actuator_gainprm[10*robot->leg[i]->cmd_dq_hip__+0]   =  1.5;
-    //     m->actuator_biasprm[10*robot->leg[i]->cmd_dq_hip__+1]   = -1.5;
-    //     m->actuator_gainprm[10*robot->leg[i]->cmd_q_thigh__+0]  =  0;
-    //     m->actuator_biasprm[10*robot->leg[i]->cmd_q_thigh__+1]  = -0;
-    //     m->actuator_gainprm[10*robot->leg[i]->cmd_dq_thigh__+0] =  1.0;
-    //     m->actuator_biasprm[10*robot->leg[i]->cmd_dq_thigh__+1] = -1.0;
-    //     m->actuator_gainprm[10*robot->leg[i]->cmd_q_calf__+0]   =  0;
-    //     m->actuator_biasprm[10*robot->leg[i]->cmd_q_calf__+1]   = -0;
-    //     m->actuator_gainprm[10*robot->leg[i]->cmd_dq_calf__+0]  =  1.0;
-    //     m->actuator_biasprm[10*robot->leg[i]->cmd_dq_calf__+1]  = -1.0;
-    // }
-    // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_hip__+0] =  Kp_hip;
-    // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_hip__+1] = -Kp_hip;
+    for(int i = 0 ; i < robot->n_legs; i++)
+    {
+        m->actuator_gainprm[10*robot->leg[i]->cmd_q_hip__+0]    =  0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_q_hip__+1]    = -0;
+        // m->actuator_gainprm[10*robot->leg[i]->cmd_dq_hip__+0]   =  1.5;
+        // m->actuator_biasprm[10*robot->leg[i]->cmd_dq_hip__+1]   = -1.5;
+        m->actuator_gainprm[10*robot->leg[i]->cmd_q_thigh__+0]  =  0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_q_thigh__+1]  = -0;
+        // m->actuator_gainprm[10*robot->leg[i]->cmd_dq_thigh__+0] =  1.0;
+        // m->actuator_biasprm[10*robot->leg[i]->cmd_dq_thigh__+1] = -1.0;
+        m->actuator_gainprm[10*robot->leg[i]->cmd_q_calf__+0]   =  0;
+        m->actuator_biasprm[10*robot->leg[i]->cmd_q_calf__+1]   = -0;
+        // m->actuator_gainprm[10*robot->leg[i]->cmd_dq_calf__+0]  =  1.0;
+        // m->actuator_biasprm[10*robot->leg[i]->cmd_dq_calf__+1]  = -1.0;
+    }
 
-    // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_hip__+0] =  Kv_hip;
-    // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_hip__+1] = -Kv_hip;
+    if (A_PD)
+    {
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__+0] =  Kp_hip;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__+1] = -Kp_hip;
 
-    // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_thigh__+0] =  Kp_thing;
-    // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_thigh__+1] = -Kp_thing;
+        // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__+0] =  Kv_hip;
+        // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__+1] = -Kv_hip;
 
-    // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__+0] =  Kv_thing;
-    // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__+1] = -Kv_thing;
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__+0] =  Kp_thing;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__+1] = -Kp_thing;
 
-    // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_calf__+0] =  Kp_calf;
-    // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_q_calf__+1] = -Kp_calf;
+        // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__+0] =  Kv_thing;
+        // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__+1] = -Kv_thing;
 
-    // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_calf__+0] =  Kv_calf;
-    // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id]->cmd_dq_calf__+1] = -Kv_calf;
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__+0] =  Kp_calf;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__+1] = -Kp_calf;
+
+        // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__+0] =  Kv_calf;
+        // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__+1] = -Kv_calf;
+    }
+    if(B_PD)
+    {
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__+0] =  Kp_hip;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__+1] = -Kp_hip;
+
+        // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__+0] =  Kv_hip;
+        // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__+1] = -Kv_hip;
+
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__+0] =  Kp_thing;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__+1] = -Kp_thing;
+
+        // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__+0] =  Kv_thing;
+        // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__+1] = -Kv_thing;
+
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__+0] =  Kp_calf;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__+1] = -Kp_calf;
+
+        // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__+0] =  Kv_calf;
+        // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__+1] = -Kv_calf;
+    }
 
     return false; // this will change the C 
 }

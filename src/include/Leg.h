@@ -52,14 +52,16 @@ class Leg
         Eigen::MatrixXd J;            // Jacobian Eigen
         Eigen::Vector3d p_i;
         Eigen::Matrix3d R_i;
-
+        
         Eigen::Matrix4d g_0bo_init; // store init leg config in each phase before swing
         Eigen::Matrix4d g_o_world, g_o; // store init leg config in each phase before swing
 
         std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
         std::vector<double> bCurveY, dot_bCurveY; // Bezier Curve swinging tip
         std::vector<double> bCurveZ, dot_bCurveZ; // Bezier Curve swinging tip
-        
+
+        Eigen::Vector3d TIP_EXT;
+        Eigen::Vector3d foothold;
         Leg();
         ~Leg();
         

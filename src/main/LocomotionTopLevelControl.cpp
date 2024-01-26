@@ -12,6 +12,7 @@ LocomotionTopLevelControl::LocomotionTopLevelControl()
 
     loc_i = -1 ;
     dp_cmd<< 0.0,0.0,0.0;
+    foothold_id = 0;
 
 }
 LocomotionTopLevelControl::LocomotionTopLevelControl(std::string category_)
@@ -24,7 +25,7 @@ LocomotionTopLevelControl::LocomotionTopLevelControl(std::string category_)
     t_last_c = 0.0;
     loc_i = -1 ; 
     dp_cmd<< 0.0,0.0,0.0;
-
+    foothold_id = 0;
 }
 /* De-Constructor */
 LocomotionTopLevelControl::~LocomotionTopLevelControl()
@@ -88,7 +89,7 @@ void LocomotionTopLevelControl::setParams()
 /* Function to initialize variables and/or call other init functions */
 void LocomotionTopLevelControl::setParamsDynamic()
 {
-    data->init_save_data_locomotion(); // initialization function of Data
+    data->init_save_data_dynamic(); // initialization function of Data
     controller->loop_index = 0; // is used to save data in specific loop frequency
     
     /*  get from params.h */
@@ -114,7 +115,10 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->t0_swing =      param_t0_Swing_DYNA;
     controller->t_half_swing =  param_thalf_Swing_DYNA ; 
     controller->swing_t_slot =  param_slot_Swing_DYNA; 
-  
+
+    dp_cmd(0) = param_dp_cmd ;
+    controller->ofset = param_ofset;
+
     controller->robot->z = param_robot_z;
     controller->w_max = param_w_max;
     wrapper->Kp_hip   = param_Kp_hip;
@@ -123,6 +127,7 @@ void LocomotionTopLevelControl::setParamsDynamic()
     wrapper->Kv_hip   = param_Kv_hip;
     wrapper->Kv_thing = param_Kv_thing;
     wrapper->Kv_calf  = param_Kv_calf;
+
 
 }
 
@@ -216,7 +221,7 @@ void LocomotionTopLevelControl::compute(double top_time)
             controller->setPhaseTarget(); // setphase target etc.
             controller->generateBezier(controller->freq_swing*controller->dt/(1+controller->dt*controller->freq_swing));
             fsm->phase = PH_SWING;
-
+            
         case PH_SWING:
 
             controller->t_phase = controller->t_real - controller->t0_phase;
@@ -280,55 +285,82 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             controller->robot->com_p_prev =  controller->robot->p_c0; // set init value to prev CoM position
             controller->robot->R_CoM_prev = controller->robot->R_c0;
 
-            fsm->state = DYNA_GAIT;
+            controller->step_bez = controller->freq_swing*controller->dt/(1+controller->dt*controller->freq_swing);
 
+            fsm->state = DYNA_GAIT;
             fsm->phase = PH_TARGET;
+
+            controller->robot->leg[0]->foothold = controller->robot->leg[0]->g_0bo_init.block(0,3,3,1);
+            controller->robot->leg[1]->foothold = controller->robot->leg[1]->g_0bo_init.block(0,3,3,1);
+            controller->robot->leg[2]->foothold = controller->robot->leg[2]->g_0bo_init.block(0,3,3,1);
+            controller->robot->leg[3]->foothold = controller->robot->leg[3]->g_0bo_init.block(0,3,3,1);
+                
         }
         break; // this break might add 0.002 = dt to time
    
     case DYNA_GAIT:
 
         controller->t_real = top_time - controller->t0; //update time
-        //Dyna Locomotion
-        if( controller->t_phase >= controller->swing_t_slot )// TODO change by forces not time 
-            fsm->phase = PH_TARGET;
-
+        // //Dyna Locomotion
         switch (fsm->phase )
         {
         case PH_TARGET:
             
             controller->robot->swingL_id_a = (int)(++loc_i%2); // change swing leg by free gat order
-            controller->robot->swingL_id_b = (int) (3 - controller->robot->swingL_id_a); //( a.{0,3} , b.{1,2} )
-            std::cout<<controller->robot->swingL_id_a<<std::endl;
-            std::cout<<controller->robot->swingL_id_b<<std::endl;
-
-            controller->setDynamicPhase(); // setphase target etc.            
-            controller->dynamicBezier(controller->freq_swing*controller->dt/(1+controller->dt*controller->freq_swing), controller->robot->leg[(int)controller->robot->swingL_id_a]);
-            controller->dynamicBezier(controller->freq_swing*controller->dt/(1+controller->dt*controller->freq_swing), controller->robot->leg[(int)controller->robot->swingL_id_b]);
+            controller->robot->swingL_id_b = (int) (3 - controller->robot->swingL_id_a); //( case A.{0,3} , case B.{1,2} )
             
+            controller->setDynamicPhase(); // setphase target etc. 
+
+            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_a]);
+            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_b]);
+
             fsm->phase = PH_SWING;
 
+    
         case PH_SWING:
 
             controller->t_phase = controller->t_real - controller->t0_phase;
+
             // Commanded velocity
-            if (controller->t_real>0.002)
-                dp_cmd<< 1.7,0.0,0.0;
             controller->computeDynamicWeights();
             controller->dynaErrors(dp_cmd);
             controller->dynaControlSignal();
             controller->doubleInverseTip();
+            // if ( controller->A_TOUCHED & controller->B_TOUCHED)
+            // {
+            //     wrapper ->CHANGE_GAINS_TAU_PD = true; ;
+            //     std::cout<<"COUNT_2"<<std::endl;
+            // }
 
             break;
         }
 
-        data->save_loc(controller->t_real,controller->e_v(0),controller->e_v(1),controller->e_v(2),
+        data->save_dyna(controller->t_real,
+                        controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
                         controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
-                        controller->bezier_world_a(0),controller->bezier_world_a(1),controller->bezier_world_a(2),
-                        controller->bezier_world_b(0),controller->bezier_world_b(1),controller->bezier_world_b(2),
-                        controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
-                        controller->f_applied.norm()); 
+                        
+                        controller->robot->leg[0]->foothold(0),controller->robot->leg[0]->foothold(1),controller->robot->leg[0]->foothold(2),
+                        controller->robot->leg[1]->foothold(0),controller->robot->leg[1]->foothold(1),controller->robot->leg[1]->foothold(2),
+                        controller->robot->leg[2]->foothold(0),controller->robot->leg[2]->foothold(1),controller->robot->leg[2]->foothold(2),
+                        controller->robot->leg[3]->foothold(0),controller->robot->leg[3]->foothold(1),controller->robot->leg[3]->foothold(2),
+
+                        controller->robot->leg[0]->g_o_world(0,3),           controller->robot->leg[0]->g_o_world(1,3),           controller->robot->leg[0]->g_o_world(2,3),
+                        controller->robot->leg[1]->g_o_world(0,3),           controller->robot->leg[1]->g_o_world(1,3),           controller->robot->leg[1]->g_o_world(2,3),
+                        controller->robot->leg[2]->g_o_world(0,3),           controller->robot->leg[2]->g_o_world(1,3),           controller->robot->leg[2]->g_o_world(2,3),
+                        controller->robot->leg[3]->g_o_world(0,3),           controller->robot->leg[3]->g_o_world(1,3),           controller->robot->leg[3]->g_o_world(2,3),
+                        
+                        // controller->f_applied_a(0), controller->f_applied_a(1), controller->f_applied_a(2),
+                        // controller->f_applied_b(0), controller->f_applied_b(1), controller->f_applied_b(2)
+
+                        controller->bezier_world_a(0), controller->bezier_world_a(1), controller->bezier_world_a(2),
+                        controller->bezier_world_b(0), controller->bezier_world_b(1), controller->bezier_world_b(2)
+
+                        
+                        );
+
+                        
+
         break;    
 
     }

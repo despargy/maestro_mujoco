@@ -21,8 +21,8 @@ LocomotionController::LocomotionController()
     static_free_gait = new int[robot->n_legs];
     static_free_gait[0] = 0; static_free_gait[1] = 3; static_free_gait[2] = 1; static_free_gait[3] = 2; // define gait order
 
-    CHANGE_GAINS = false;
-
+    A_PD = false;
+    B_PD = false;
 }
 LocomotionController::~LocomotionController(){}
 void LocomotionController::setPhaseTarget()
@@ -56,8 +56,6 @@ void LocomotionController::setPhaseTarget()
     d_world_pos = Eigen::Vector4f::Ones();
 
     robot->leg[(int)robot->swingL_id]->storeInitG(); 
-
-    CHANGE_GAINS = true; // TODO THIS when bezier start
 }
 void LocomotionController::setDynamicPhase()
 {
@@ -69,15 +67,21 @@ void LocomotionController::setDynamicPhase()
     this->ii = -1; // counter for bezier execution
 
     this->R_T = robot->R_c0 ;
-
-    // e_p_int = Eigen::Vector3d::Zero();
-    // e_o_int = Eigen::Vector3d::Zero();
-    // pid_out = Eigen::VectorXd::Zero(6);
-
-    // d_world_pos = Eigen::Vector4f::Ones();
+    this->robot->p_c0 = this->robot->p_c;
+    this->robot->R_c0 = this->robot->R_c;
 
     robot->leg[(int)robot->swingL_id_a]->storeInitG(); 
     robot->leg[(int)robot->swingL_id_b]->storeInitG(); 
+
+    A_TOUCHED = false;
+    B_TOUCHED = false;
+
+    A_PD = false;
+    B_PD = false; 
+
+    this->tA = 0.0;
+    this->tB = 0.0;
+
 }
 void LocomotionController::computeWeightsSwing()
 {
@@ -108,12 +112,17 @@ void LocomotionController::computeDynamicWeights()
         // update vvvv vector of robot                          // z stays 1.0 do not change
         robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
     }
-    /* Added to simuate swing leg weights t inf */ //TODO
-    robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*superGaussian(A,b,t_half_swing-t0_superG,t_phase - t_half_swing, 93)*Eigen::Vector3d::Ones(); 
-    robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*superGaussian(A,b,t_half_swing-t0_superG,t_phase - t_half_swing, 93)*Eigen::Vector3d::Ones(); 
-    // robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*Eigen::Vector3d::Ones(); 
-    // robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*Eigen::Vector3d::Ones(); 
+
+    if (A_TOUCHED)
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA))*Eigen::Vector3d::Ones(); 
+    else
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase)*Eigen::Vector3d::Ones(); 
     
+    if (B_TOUCHED)
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB))*Eigen::Vector3d::Ones(); 
+    else
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase)*Eigen::Vector3d::Ones(); 
+
     robot->vvvv.block((int) robot->swingL_id_a*3,0,3,1) = robot->leg[(int) robot->swingL_id_a]->wv_leg;   // update vvvv vector of robot 
     robot->vvvv.block((int) robot->swingL_id_b*3,0,3,1) = robot->leg[(int) robot->swingL_id_b]->wv_leg;   // update vvvv vector of robot 
 
@@ -240,46 +249,79 @@ void LocomotionController::inverseTip()
 }
 void LocomotionController::doubleInverseTip()
 {
-    // /**************** Bezier curve ***************/ 
 
+    // /**************** Bezier curve ***************/ 
     if(t_phase<t0_swing) //  yet there are forces
     {
         bezier_world_a = robot->leg[(int) robot->swingL_id_a]->g_0bo_init.block(0,3,3,1).cast<float>();
         bezier_world_b = robot->leg[(int) robot->swingL_id_b]->g_0bo_init.block(0,3,3,1).cast<float>();
         
-        doubleCLIK(bezier_world_a, Eigen::Vector3f::Zero(), bezier_world_b, Eigen::Vector3f::Zero());
+        doubleCLIK(bezier_world_a, Eigen::Vector3f::Zero(), (int) robot->swingL_id_a);
+        doubleCLIK(bezier_world_b, Eigen::Vector3f::Zero(), (int) robot->swingL_id_b);
 
     }
-    else if( t_phase>=t0_swing & t_phase<=(t0_swing + 1/freq_swing) ) 
+    else if( t_phase>=t0_swing & t_phase<(t0_swing + 1/freq_swing) ) 
     {
         ++ii;
         bezier_world_a = Eigen::Vector3f(robot->leg[(int) robot->swingL_id_a]->bCurveX[ii],robot->leg[(int) robot->swingL_id_a]->bCurveY[ii],robot->leg[(int) robot->swingL_id_a]->bCurveZ[ii]);
         bezier_world_b = Eigen::Vector3f(robot->leg[(int) robot->swingL_id_b]->bCurveX[ii],robot->leg[(int) robot->swingL_id_b]->bCurveY[ii],robot->leg[(int) robot->swingL_id_b]->bCurveZ[ii]);
 
-        doubleCLIK(bezier_world_a, Eigen::Vector3f(robot->leg[(int) robot->swingL_id_a]->dot_bCurveX[ii], robot->leg[(int) robot->swingL_id_a]->dot_bCurveY[ii],robot->leg[(int) robot->swingL_id_a]->dot_bCurveZ[ii]), bezier_world_b , Eigen::Vector3f(robot->leg[(int) robot->swingL_id_b]->dot_bCurveX[ii],robot->leg[(int) robot->swingL_id_b]->dot_bCurveY[ii],robot->leg[(int) robot->swingL_id_b]->dot_bCurveZ[ii]));
+        doubleCLIK(bezier_world_a, Eigen::Vector3f(robot->leg[(int) robot->swingL_id_a]->dot_bCurveX[ii], robot->leg[(int) robot->swingL_id_a]->dot_bCurveY[ii],robot->leg[(int) robot->swingL_id_a]->dot_bCurveZ[ii]), (int) robot->swingL_id_a);
+        doubleCLIK(bezier_world_b , Eigen::Vector3f(robot->leg[(int) robot->swingL_id_b]->dot_bCurveX[ii],robot->leg[(int) robot->swingL_id_b]->dot_bCurveY[ii],robot->leg[(int) robot->swingL_id_b]->dot_bCurveZ[ii]), (int) robot->swingL_id_b);
+    
+        A_PD = true; // Run PD mode
+        B_PD = true; //Run PD mode
+    }
+    else
+        checkTouchDown();
 
+}
+void LocomotionController::checkTouchDown()
+{
+    f_applied_a = robot->leg[(int)robot->swingL_id_a]->R_i.transpose()*robot->leg[(int)robot->swingL_id_a]->f;
+    f_applied_b = robot->leg[(int)robot->swingL_id_b]->R_i.transpose()*robot->leg[(int)robot->swingL_id_b]->f;
+
+    if (A_TOUCHED)
+    {
+        freezedoubleCLIK((int) robot->swingL_id_a);
+        // if( ( t_phase - tA) >= t0_swing/2) //HERE CHECK IF IT NEEDED
+            A_PD = false; // Cancel PD 
     }
     else
     {
-        // f_applied = robot->leg[(int)robot->swingL_id]->R_i.transpose()*robot->leg[(int)robot->swingL_id]->f;
-        f_applied = robot->leg[(int)robot->swingL_id_a]->R_i.transpose()*robot->leg[(int)robot->swingL_id]->f;
-        
-        // if ( f_applied(2) < -7)
-        // {
-            // bezier_world_a(2) -= 0.002*dt ;
-            // bezier_world_b(2) -= 0.002*dt ;
-
-            doubleCLIK(bezier_world_a , Eigen::Vector3f(0.0,0.0,-0.00), bezier_world_b , Eigen::Vector3f(0.0,0.0,-0.00));
-            
-        // }
-        // else
-        // {
-        //     CLIK(bezier_world , Eigen::Vector3f::Zero());
-
-        // }
+        if(f_applied_a(2) > 0.01)
+        {
+            A_TOUCHED = true;
+            tA = t_phase;
+        }
+        else
+        {
+            bezier_world_a(2) = 0.019 ;
+            doubleCLIK(bezier_world_a , Eigen::Vector3f(0.0,0.0,-0.0001),(int) robot->swingL_id_a ); 
+        }
     }
 
 
+    if(B_TOUCHED)
+    {
+        freezedoubleCLIK((int) robot->swingL_id_b);
+        // if( (t_phase - tB) >= t0_swing/2) //HERE CHECK IF IT NEEDED
+            B_PD = false; // Cancel PD 
+    }
+    else 
+    {
+        if (f_applied_b(2) > 0.01 )
+        {
+            B_TOUCHED = true;
+            tB = t_phase;
+        }
+        else
+        {
+            bezier_world_b(2) = 0.019 ;
+            doubleCLIK(bezier_world_b , Eigen::Vector3f(0.0,0.0,-0.0001),(int) robot->swingL_id_b ); 
+        }
+        
+    }
 }
 void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_0frame_)
 {
@@ -295,25 +337,28 @@ void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_
     robot->leg[(int)robot->swingL_id]->dq_out(1) = d_q_(1);
     robot->leg[(int)robot->swingL_id]->dq_out(2) = d_q_(2);
 }
-void LocomotionController::doubleCLIK(Eigen::Vector3f pd_0frame_A, Eigen::Vector3f dpd_0frame_A, Eigen::Vector3f pd_0frame_B, Eigen::Vector3f dpd_0frame_B)
+void LocomotionController::doubleCLIK(Eigen::Vector3f pd_0frame_A, Eigen::Vector3f dpd_0frame_A, int i)
 {
 
-    Eigen::Vector3f d_q_A = (   robot->R_c* robot->leg[(int)robot->swingL_id_a]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - 16*(robot->leg[(int) robot->swingL_id_a]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
-    Eigen::Vector3f d_q_B = (   robot->R_c* robot->leg[(int)robot->swingL_id_b]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_B - 16*(robot->leg[(int) robot->swingL_id_b]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_B) );
+    Eigen::Vector3f d_q_ = (   robot->R_c* robot->leg[i]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - 64*(robot->leg[i]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
 
-    robot->leg[(int)robot->swingL_id_a]->q_out(0) =  d_q_A(0)*dt + robot->leg[(int)robot->swingL_id_a]->q_out(0);
-    robot->leg[(int)robot->swingL_id_a]->q_out(1) =  d_q_A(1)*dt + robot->leg[(int)robot->swingL_id_a]->q_out(1);
-    robot->leg[(int)robot->swingL_id_a]->q_out(2) =  d_q_A(2)*dt + robot->leg[(int)robot->swingL_id_a]->q_out(2);
-    robot->leg[(int)robot->swingL_id_a]->dq_out(0) = d_q_A(0);
-    robot->leg[(int)robot->swingL_id_a]->dq_out(1) = d_q_A(1);
-    robot->leg[(int)robot->swingL_id_a]->dq_out(2) = d_q_A(2);
+    robot->leg[i]->q_out(0) =  d_q_(0)*dt + robot->leg[i]->q_out(0);
+    robot->leg[i]->q_out(1) =  d_q_(1)*dt + robot->leg[i]->q_out(1);
+    robot->leg[i]->q_out(2) =  d_q_(2)*dt + robot->leg[i]->q_out(2);
+    robot->leg[i]->dq_out(0) = d_q_(0);
+    robot->leg[i]->dq_out(1) = d_q_(1);
+    robot->leg[i]->dq_out(2) = d_q_(2);
 
-    robot->leg[(int)robot->swingL_id_b]->q_out(0) =  d_q_B(0)*dt + robot->leg[(int)robot->swingL_id_b]->q_out(0);
-    robot->leg[(int)robot->swingL_id_b]->q_out(1) =  d_q_B(1)*dt + robot->leg[(int)robot->swingL_id_b]->q_out(1);
-    robot->leg[(int)robot->swingL_id_b]->q_out(2) =  d_q_B(2)*dt + robot->leg[(int)robot->swingL_id_b]->q_out(2);
-    robot->leg[(int)robot->swingL_id_b]->dq_out(0) = d_q_B(0);
-    robot->leg[(int)robot->swingL_id_b]->dq_out(1) = d_q_B(1);
-    robot->leg[(int)robot->swingL_id_b]->dq_out(2) = d_q_B(2);
+
+}
+void LocomotionController::freezedoubleCLIK(int i)
+{
+    robot->leg[i]->q_out(0) =   robot->leg[i]->q_out(0);
+    robot->leg[i]->q_out(1) =   robot->leg[i]->q_out(1);
+    robot->leg[i]->q_out(2) =   robot->leg[i]->q_out(2);
+    robot->leg[i]->dq_out(0) = 0.0;
+    robot->leg[i]->dq_out(1) = 0.0;
+    robot->leg[i]->dq_out(2) = 0.0;
 }
 void LocomotionController::computeBesierCurve2D(double step) // static gait pre-fixed swinging trajectory
 {
@@ -461,7 +506,7 @@ void LocomotionController::generateBezier(double step)
         dot_bCurveZ.push_back(dot_bCurveZt);
     }
 }
-void LocomotionController::dynamicBezier(double step, Leg* l)
+void LocomotionController::dynamicBezier(Leg* l)
 {
     l->dot_bCurveX.clear();
     l->dot_bCurveY.clear();
@@ -470,21 +515,24 @@ void LocomotionController::dynamicBezier(double step, Leg* l)
     l->bCurveY.clear();
     l->bCurveZ.clear();
 
-    // double step = freq_swing*dt/(1+dt*freq_swing);
-
-    Eigen::Vector3d ofset = Eigen::Vector3d(0.1, l->pros*0.01, 0.02);
-    
     Eigen::Vector3d p0 = l->g_0bo_init.block(0,3,3,1);
-    Eigen::Vector3d p3 = p0 + ofset;
+    
+    // Eigen::Vector2d help_vect = robot->R_c.block(0,0,2,2)*(robot->p_c0.block(0,0,2,1) + l->TIP_EXT) ;
+    Eigen::Vector3d p3(robot->p_c0 + robot->R_c0*l->TIP_EXT ) ;
+    p3(2) = p0(2);
+    l->foothold = p3; 
+    Eigen::Vector3d ofset = p3 - p0;
+    ofset(2) = 0.019;
+    std::cout<<"p0"<<std::endl;
+    std::cout<<p0<<std::endl;
+    std::cout<<"p3"<<std::endl;
+    std::cout<<p3<<std::endl;
+    std::cout<<"ofset"<<std::endl;
+    std::cout<<ofset<<std::endl;
     Eigen::Vector3d p1, p2;
     p1(0) = p0(0) + 0.5*ofset(0);   p2(0) = p0(0) + 0.8*ofset(0);
     p1(1) = p0(1) + 0.5*ofset(1);     p2(1) = p0(1) + 0.8*ofset(1);
-    p1(2) = p0(2) + 2.5*ofset(2);   p2(2) = p0(2) + 2.8*ofset(2);
-    // std::cout<<"swing leg "<<l<<std::endl;
-    std::cout<<"p0"<<p0(0)<<" "<<p0(1)<<" "<<p0(2)<<std::endl;
-    std::cout<<"p1"<<p1(0)<<" "<<p1(1)<<" "<<p1(2)<<std::endl;
-    std::cout<<"p2"<<p2(0)<<" "<<p2(1)<<" "<<p2(2)<<std::endl;
-    std::cout<<"p3"<<p3(0)<<" "<<p3(1)<<" "<<p3(2)<<std::endl;
+    p1(2) = p0(2) + 1.5*ofset(2);   p2(2) = p0(2) + 1.8*ofset(2);
 
     std::vector<double> xX{p0(0), p1(0), p2(0), p3(0)}; 
     std::vector<double> yY{p0(1), p1(1), p2(1), p3(1)}; 
@@ -493,7 +541,7 @@ void LocomotionController::dynamicBezier(double step, Leg* l)
     double bCurveXt, dot_bCurveXt;
     double bCurveYt, dot_bCurveYt;
     double bCurveZt, dot_bCurveZt;
-    for (double t = 0.0; t <= 1; t += step)
+    for (double t = 0.0; t <= 1; t += step_bez)
     {
         bCurveXt = std::pow((1 - t), 3) * xX[0] + 3 * std::pow((1 - t), 2) * t * xX[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * xX[2] + std::pow(t, 3) * xX[3]; //  p0(0) + ofset(0)*t; //
         bCurveYt = std::pow((1 - t), 3) * yY[0] + 3 * std::pow((1 - t), 2) * t * yY[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * yY[2] + std::pow(t, 3) * yY[3]; // p0(1) + ofset(1)*t;// 
@@ -508,6 +556,7 @@ void LocomotionController::dynamicBezier(double step, Leg* l)
         l->dot_bCurveY.push_back(dot_bCurveYt);
         l->dot_bCurveZ.push_back(dot_bCurveZt);
     }
+    
 }
 void LocomotionController::swingTrajectory()
 {
@@ -529,7 +578,6 @@ void LocomotionController::swingTrajectory()
         CLIK(bezier_world , Eigen::Vector3f::Zero());
     }
 }
-
 void LocomotionController::dynaControlSignal()
 {
     // robot->F_c.block(0,0,3,1) = - kv*(robot->dp_c - dp_cmd) + Eigen::Vector3d(0,0,robot->mass*robot->g_gravity);
@@ -558,11 +606,10 @@ void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
     
     Eigen::Matrix4d g_vel = Eigen::Matrix4d::Identity();
     g_vel.block(0,0,3,3) = robot->R_c0;
-    g_vel.block(0,3,3,1) = dp_cmd;
+    g_vel.block(0,3,3,1) = dp_cmd; //robot->R_c0*
 
     // HERE change commanded velocity based on the current robots ori??
-    e_v.block(0,0,3,1) = (robot->dp_c - dp_cmd) ; // compute velocity error TODO
+    e_v.block(0,0,3,1) = (robot->dp_c - dp_cmd) ; // compute velocity error TODO //robot->R_c0*
     e_v.block(3,0,3,1) = robot->w_CoM ; 
     e_v.block(3,0,3,1) = 0.7*this->e_v.block(3,0,3,1) ; 
-
 }

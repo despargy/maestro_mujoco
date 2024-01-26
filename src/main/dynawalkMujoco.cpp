@@ -119,14 +119,15 @@ void scroll(GLFWwindow* window, double xoffset, double yoffset)
 
 void my_controller_walk(const mjModel* m, mjData* d)
 {
-    // printf("MuJoCo time %f\n", d->time);
+    // printf("MuJoCo time %f\n ", d->time);
     // printf("topController->t_last_c %f\n", topController->t_last_c);
 
     if( (d->time - topController->t_last_c) >= topController->controller->dt )
     {
         topController->wrapper->update_locomotion(m,d,topController->controller->dt);
         topController->computeDynamic(d->time); // call once
-        topController->wrapper->send_torque_pos_Dynamic(m,d); 
+        topController->wrapper->change_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 
+        topController->wrapper->send_torque_pos_Dynamic(m,d,topController->controller->A_PD,topController->controller->B_PD); 
 
     }
 }

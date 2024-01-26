@@ -19,6 +19,7 @@ Leg::Leg()
     g_o_world = Eigen::Matrix4d::Identity();
 
     dq_out = Eigen::Vector3d::Zero();
+
 }
 
 /* De-Constructor*/

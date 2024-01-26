@@ -12,19 +12,21 @@ class LocomotionController : public Controller
         double t0_phase, t_phase ; // time variables for adaptive tracking
 
         double A, b, t0_superG;
-        double freq_swing, t0_swing, t_half_swing, swing_t_slot;
+        double freq_swing, t0_swing, t_half_swing, swing_t_slot, tA, tB;
         double w_max;
-        bool CHANGE_GAINS, CHANGE_PHASE ;
+        bool  CHANGE_PHASE, A_PD, B_PD ; ;
         int ii;
         int* vp_order;
         int* static_free_gait;
         double kr;
+        double ofset, step_bez;
+        bool A_TOUCHED, B_TOUCHED;
 
         std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
         std::vector<double> bCurveY, dot_bCurveY; // Bezier Curve swinging tip
         std::vector<double> bCurveZ, dot_bCurveZ; // Bezier Curve swinging tip
 
-        Eigen::Vector3d f_applied;
+        Eigen::Vector3d f_applied, f_applied_a, f_applied_b;
 
         // vector for target position, inside locomotion mode
         Eigen::Vector3d p_T;
@@ -52,28 +54,29 @@ class LocomotionController : public Controller
         void setPhaseTarget();
         void computeWeightsSwing();
         void errors();
+        void CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_0frame_);
         void computeSudoGq();   
         void PIDwithSat();
         void fComputations();
-        void inverseTip();
-        void computeBesierCurve2D(double step);
-        void CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_0frame_);
+        void dynamicBezier(Leg* l);
+        void doubleInverseTip();
 
+        void inverseTip();
+        void signalFc();
+        void computeBesierCurve2D(double step);
         void spiralExploration();
         void computeWeightsSigmoid();
-        void signalFc();
         void generateBezier(double step);
         void swingTrajectory();
-        
-        void dynaControlSignal();
-        void dynaErrors(Eigen::Vector3d dp_cmd);
         void setDynamicPhase();
-
-        void dynamicBezier(double step, Leg* l);
+        void doubleCLIK(Eigen::Vector3f pd_0frame_A, Eigen::Vector3f dpd_0frame_A, int i);
+        void dynaErrors(Eigen::Vector3d dp_cmd);
+        void dynaControlSignal();
         void computeDynamicWeights();
-        void doubleInverseTip();
-        void doubleCLIK(Eigen::Vector3f pd_0frame_A, Eigen::Vector3f dpd_0frame_A, Eigen::Vector3f pd_0frame_B, Eigen::Vector3f dpd_0frame_B);
         void initWeights();
+        void freezedoubleCLIK(int i);
+        void checkTouchDown();
+
 };
 
 #endif

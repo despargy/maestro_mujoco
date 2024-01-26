@@ -27,7 +27,7 @@ class Robot
         int vel_x__, vel_y__, vel_z__; // Body velocity ids(x,y,z)
 
         /* Pose CoM */
-        Eigen::Vector3d p_c, p_c0; Eigen::MatrixXd R_c, R_c0;
+        Eigen::Vector3d p_c, p_c0; Eigen::Matrix3d R_c, R_c0;
         Eigen::Vector3d dp_c; // Just added
         Eigen::Vector3d com_p_prev, dCoM_p;
         Eigen::Vector3d w_CoM;

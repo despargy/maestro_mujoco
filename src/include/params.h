@@ -10,16 +10,38 @@
 #define param_ADAPT_B false;
 #define param_KEEP_CONTROL true;
 
-#define param_mass 13.0;
+#define param_mass 12.0;
 #define param_g_gravity 9.81;
 
 #define param_pbc_x -0.01;// 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
 #define param_pbc_y 0.01;//0.001;//0.0125;
-#define param_pbc_z 0.0;
+#define param_pbc_z 0;
+
+#define param_robot_z 0.25;
+
+#define param_dt 0.002;
+
+#define param_alpha 150.0;
+#define param_slope 0.0001;
+
+#define param_w0 50;
+#define param_w_max 3500;
+
+#define param_Kp_hip 8;
+#define param_Kp_thing 5; 
+#define param_Kp_calf 3;
+
+#define param_Kv_hip 2.5;
+#define param_Kv_thing 2.0 ;
+#define param_Kv_calf 1.5;
+
+/**********************  TRACKING   *************************/
 
 #define param_kp_TRACKING 2800;//2800;
 #define param_kv_TRACKING 350;//350.0;
 #define param_ko_TRACKING 15;//15.0;
+
+/********************** STATIC LOCOMOTION   *************************/
 
 #define param_kp_LOC 250;//250; //150 reduces time, increases oscillations 
 #define param_kv_LOC 10;//30.0;  //20   reduces oscillations, increases time 
@@ -29,13 +51,6 @@
 #define param_kx_r_LOC 100; // gain region controller
 #define param_ky_r_LOC 100; // gain region controller
 #define param_kz_r_LOC 0; // gain region controller
-
-#define param_robot_z 0.31;
-
-#define param_dt 0.002;
-
-#define param_alpha 150.0;
-#define param_slope 0.0001;
 
 /* Decide one of the above tasks/modes */
 #define param_TRACKING_MODE true;
@@ -53,16 +68,7 @@
 #define param_thalf_Swing 0.65;//1.1;
 #define param_slot_Swing  1.1;//1.8;
 
-#define param_w0 50;
-#define param_w_max 3500;
-
-#define param_Kp_hip 8;
-#define param_Kp_thing 5; 
-#define param_Kp_calf 3;
-
-#define param_Kv_hip 2.5;
-#define param_Kv_thing 2.0 ;
-#define param_Kv_calf 1.5;
+/**********************  EXPLORATION   *************************/
 
 #define param_kp_EXP 150;
 #define param_kv_EXP 20;
@@ -72,16 +78,44 @@
 #define param_Freq_Swing_EXP 2;
 #define param_t0_Swing_EXP    0.8;//0.3;
 
+/**********************  DYNAMIC LOCOMOTION  FAST *************************/
+
+// #define param_DYNA_LOCO true;
+// #define param_kv_DYNA 20; //20
+// #define param_ko_DYNA 1000; //100
+
+// #define param_A_SGaus_DYNA 1.0;
+// #define param_b_SGaus_DYNA 10.0;
+// #define param_t0_SGaus_DYNA 0.008;
+// #define param_Freq_Swing_DYNA 20.0;
+// #define param_t0_Swing_DYNA 0.02;
+// #define param_thalf_Swing_DYNA 0.05;
+// #define param_slot_Swing_DYNA 0.11;
+// #define param_dp_cmd 2.7;
+// // SET THIS TO OFFSET Eigen::Vector3d(0.1, controller->robot->leg[(int)controller->robot->swingL_id_a]->pros*0.01, 0.02)
+
+/********************** ******************** *************************/
+
+/**********************  DYNAMIC LOCOMOTION  FAST *************************/
+
 #define param_DYNA_LOCO true;
-#define param_kv_DYNA 20; //20
 #define param_ko_DYNA 1000; //100
+#define param_kv_DYNA 20; //20
+
 
 #define param_A_SGaus_DYNA 1.0;
 #define param_b_SGaus_DYNA 10.0;
 #define param_t0_SGaus_DYNA 0.008;
-#define param_Freq_Swing_DYNA 20.0;
-#define param_t0_Swing_DYNA 0.02;
-#define param_thalf_Swing_DYNA 0.05;
-#define param_slot_Swing_DYNA 0.11;
+#define param_Freq_Swing_DYNA 2.0;
+#define param_t0_Swing_DYNA 0.04;
+#define param_thalf_Swing_DYNA 10.3;
+#define param_slot_Swing_DYNA 10.8;
+#define param_dp_cmd 0.0; // m/s
+#define param_ofset 0.08;
+
+// ofset x / t_slot = dp_cmd
+
+/********************** ******************** *************************/
+
 
 #endif
