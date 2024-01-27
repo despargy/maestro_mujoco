@@ -25,9 +25,10 @@ Eigen::Matrix3d get_dR_CoM(Eigen::Matrix3d R_CoM_prev,Eigen::Matrix3d R_CoM_cur,
     return (R_CoM_cur - R_CoM_prev)/dt;
 }
 
-double sigmoid(double t)
+double sigmoid(double t, double c1, double c2)
 {
-    return 1/(1 + exp( -1000*(t-0.03)) );
+    return 1/(1 + exp( -c1*(t-c2)) );
+    // c1 = 1000, c2 = 0.03
 }
  
 std::pair<double, double> find_Centroid(std::vector<std::pair<double, double> >& v)

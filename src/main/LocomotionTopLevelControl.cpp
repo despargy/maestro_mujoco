@@ -105,7 +105,6 @@ void LocomotionTopLevelControl::setParamsDynamic()
 
     controller->dt = param_dt; // same as mujoco .xml
 
-
     controller->kv = param_kv_DYNA;
     controller->ko = param_ko_DYNA;
     controller->A = param_A_SGaus_DYNA;
@@ -128,7 +127,10 @@ void LocomotionTopLevelControl::setParamsDynamic()
     wrapper->Kv_thing = param_Kv_thing;
     wrapper->Kv_calf  = param_Kv_calf;
 
+    controller->c1 = param_c1;
+    controller->c2 = param_c2;
 
+    controller->force_thres = param_force_thres;
 }
 
 /* Function to initialize variables and/or call other init functions */

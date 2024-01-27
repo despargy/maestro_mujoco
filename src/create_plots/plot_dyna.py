@@ -86,8 +86,12 @@ plt.title("Footgoals  - time")
 
 plt.figure()
 
-plt.plot(t_real,w0/10000,Label="weight")
-plt.plot(t_real,10*tip_0z,Label="swing tip")
+plt.plot(t_real,w0/10000,Label="weight 0")
+plt.plot(t_real,w3/10000,Label="weight 3")
+
+plt.plot(t_real,10*tip_0z,Label="swing tip 0")
+plt.plot(t_real,10*tip_3z,Label="swing tip 3")
+
 plt.plot(t_real,pc_2,Label="z actual")
 plt.axvline(0.03, color='k',label='t0 swing')
 plt.axvline(10.3, color='b',label='t half swing swinging')

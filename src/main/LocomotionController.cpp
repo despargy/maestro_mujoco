@@ -114,14 +114,14 @@ void LocomotionController::computeDynamicWeights()
     }
 
     if (A_TOUCHED)
-        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA))*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA, c1, c2))*Eigen::Vector3d::Ones(); 
     else
-        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase)*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
     
     if (B_TOUCHED)
-        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB))*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB, c1, c2) )*Eigen::Vector3d::Ones(); 
     else
-        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase)*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
 
     robot->vvvv.block((int) robot->swingL_id_a*3,0,3,1) = robot->leg[(int) robot->swingL_id_a]->wv_leg;   // update vvvv vector of robot 
     robot->vvvv.block((int) robot->swingL_id_b*3,0,3,1) = robot->leg[(int) robot->swingL_id_b]->wv_leg;   // update vvvv vector of robot 
@@ -289,7 +289,7 @@ void LocomotionController::checkTouchDown()
     }
     else
     {
-        if(f_applied_a(2) > 0.01)
+        if(f_applied_a(2) > force_thres)
         {
             A_TOUCHED = true;
             tA = t_phase;
@@ -310,7 +310,7 @@ void LocomotionController::checkTouchDown()
     }
     else 
     {
-        if (f_applied_b(2) > 0.01 )
+        if (f_applied_b(2) > force_thres )
         {
             B_TOUCHED = true;
             tB = t_phase;
@@ -340,7 +340,7 @@ void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_
 void LocomotionController::doubleCLIK(Eigen::Vector3f pd_0frame_A, Eigen::Vector3f dpd_0frame_A, int i)
 {
 
-    Eigen::Vector3f d_q_ = (   robot->R_c* robot->leg[i]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - 64*(robot->leg[i]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
+    Eigen::Vector3f d_q_ = (   robot->R_c*robot->leg[i]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - 64*(robot->leg[i]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
 
     robot->leg[i]->q_out(0) =  d_q_(0)*dt + robot->leg[i]->q_out(0);
     robot->leg[i]->q_out(1) =  d_q_(1)*dt + robot->leg[i]->q_out(1);
@@ -414,7 +414,7 @@ void LocomotionController::computeWeightsSigmoid()
         robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
     }
     /* Added to simuate swing leg weights t inf */ //TODO
-    robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase)*Eigen::Vector3d::Ones(); 
+    robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
     robot->vvvv.block((int) robot->swingL_id*3,0,3,1) = robot->leg[(int) robot->swingL_id]->wv_leg;   // update vvvv vector of robot 
     
     robot->W_inv = (robot->vvvv.asDiagonal()).inverse(); // save as matrix the inverse of diagonal vvvv vector

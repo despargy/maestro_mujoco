@@ -352,8 +352,8 @@ void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bo
         d->ctrl[robot->leg[l]->torque_calf__]  = robot->leg[l]->tau(2);
     }
 
-    // if (A_PD)
-    // {
+    if (A_PD)
+    {
         d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_a]->q_out(0);
         d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_a]->q_out(1);
         d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_a]->q_out(2);
@@ -361,19 +361,19 @@ void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bo
         d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id_a]->dq_out(0);
         d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id_a]->dq_out(1);
         d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id_a]->dq_out(2);
-    // }
-    // else
-    // {
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_a]->q_out(0);
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_a]->q_out(1);
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_a]->q_out(2);
+    }
+    else
+    {
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_a]->q_out(0);
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_a]->q_out(1);
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_a]->q_out(2);
 
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__]   = 0.0;
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__] = 0.0;
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__]  = 0.0;
-    // }
-    // if (B_PD)
-    // {
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_hip__]   = 0.0;
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_thigh__] = 0.0;
+        d->ctrl[robot->leg[(int) robot->swingL_id_a]->cmd_dq_calf__]  = 0.0;
+    }
+    if (B_PD)
+    {
         d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_b]->q_out(0);
         d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_b]->q_out(1);
         d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_b]->q_out(2);
@@ -381,17 +381,17 @@ void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bo
         d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id_b]->dq_out(0);
         d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id_b]->dq_out(1);
         d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id_b]->dq_out(2);
-    // }
-    // else
-    // {
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_b]->q_out(0);
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_b]->q_out(1);
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_b]->q_out(2);
+    }
+    else
+    {
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id_b]->q_out(0);
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id_b]->q_out(1);
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id_b]->q_out(2);
 
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__]   = 0.0;
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__] = 0.0;
-    //     d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__]  = 0.0;
-    // }
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__]   = 0.0;
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__] = 0.0;
+        d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__]  = 0.0;
+    }
 }
 bool Wrapper::change_gains(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
 {

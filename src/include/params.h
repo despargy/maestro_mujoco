@@ -25,7 +25,7 @@
 #define param_slope 0.0001;
 
 #define param_w0 50;
-#define param_w_max 3500;
+#define param_w_max 7000;
 
 #define param_Kp_hip 8;
 #define param_Kp_thing 5; 
@@ -107,11 +107,15 @@
 #define param_b_SGaus_DYNA 10.0;
 #define param_t0_SGaus_DYNA 0.008;
 #define param_Freq_Swing_DYNA 2.0;
-#define param_t0_Swing_DYNA 0.04;
+#define param_t0_Swing_DYNA 0.4;
 #define param_thalf_Swing_DYNA 10.3;
 #define param_slot_Swing_DYNA 10.8;
 #define param_dp_cmd 0.0; // m/s
 #define param_ofset 0.08;
+
+#define param_c1 100;
+#define param_c2 0.4;
+#define param_force_thres 0.1;
 
 // ofset x / t_slot = dp_cmd
 
