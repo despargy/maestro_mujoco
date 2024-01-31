@@ -4,6 +4,21 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+
+double sigmoid(double t, double c1, double c2)
+{
+    return 1/(1 + exp( -c1*(t-c2)) );
+}
+double der_sigmoid(double t, double c1, double c2)
+{
+    return exp( -c1*(t-c2))/std::pow( (1 + exp( -c1*(t-c2)) ), 2);
+} 
+double inverse_sigmoid(double s_t, double c1, double c2)
+{
+    // returns the "Virutal time" of the current sigmoid value s_t
+    return (1/c1*log((1-s_t)/s_t)+c2);
+}
+
 Eigen::Vector3d generateBezier()
 {
     // dot_bCurveX.empty();
@@ -22,11 +37,12 @@ Eigen::Vector3d generateBezier()
     Eigen::Vector3d p0 = Eigen::Vector3d(0.147791, -0.128676, 0.0192237);
 
     Eigen::Vector3d p3 = p0 + ofset;
-    Eigen::Vector3d p1, p2;
+    Eigen::Vector3d p1, p2, p12;
     p1(0) = p0(0) + 0.5*ofset(0);   p2(0) = p0(0) + 0.8*ofset(0);
     p1(1) = p0(1) + 0*ofset(1);     p2(1) = p0(1) + 0*ofset(1);
-    p1(2) = p0(2) + 2.5*ofset(2);   p2(2) = p0(2) + 2.8*ofset(2);
-
+    // p1(2) = p0(2) + 0.8*0.02;   p2(2) = p0(2) + 0.9*0.02; //2.5*ofset(2) ,  2.8*ofset(2)
+    p1(2) = p0(2) + 2/3*(p3(2) - p0(2));   p2(2) = p3(2) - 2/3*(p3(2) - p0(2)); //2.5*ofset(2) ,  2.8*ofset(2)
+    
     std::vector<double> xX{p0(0), p1(0), p2(0), p3(0)}; 
     std::vector<double> yY{p0(1), p1(1), p2(1), p3(1)}; 
     std::vector<double> zZ{p0(2), p1(2), p2(2), p3(2)};
@@ -39,17 +55,22 @@ Eigen::Vector3d generateBezier()
         bCurveXt = std::pow((1 - t), 3) * xX[0] + 3 * std::pow((1 - t), 2) * t * xX[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * xX[2] + std::pow(t, 3) * xX[3];
         bCurveYt = std::pow((1 - t), 3) * yY[0] + 3 * std::pow((1 - t), 2) * t * yY[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * yY[2] + std::pow(t, 3) * yY[3];
         bCurveZt = std::pow((1 - t), 3) * zZ[0] + 3 * std::pow((1 - t), 2) * t * zZ[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * zZ[2] + std::pow(t, 3) * zZ[3];
+        // bCurveZt = std::pow((1 - t), 2) * zZ[0] + 2*(1 - t) * t * zZ[1] + std::pow(t, 2) * zZ[2];
+        // bCurveZt = sin(2*M_PI*freq_swing*t/4);
         // bCurveX.push_back(bCurveXt);
         // bCurveY.push_back(bCurveYt);
         // bCurveZ.push_back(bCurveZt);
         dot_bCurveXt = 3 * std::pow((1 - t), 2) *(xX[1] - xX[0])  + 6 * (1 - t) * t * (xX[2] - xX[1]) + 3 * std::pow(t, 2) * ( xX[3] - xX[2] );
         dot_bCurveYt = 3 * std::pow((1 - t), 2) *(yY[1] - yY[0])  + 6 * (1 - t) * t * (yY[2] - yY[1]) + 3 * std::pow(t, 2) * ( yY[3] - yY[2] );
         dot_bCurveZt = 3 * std::pow((1 - t), 2) *(zZ[1] - zZ[0])  + 6 * (1 - t) * t * (zZ[2] - zZ[1]) + 3 * std::pow(t, 2) * ( zZ[3] - zZ[2] );
+        // dot_bCurveZt = 2 * t *(zZ[0] - 2*zZ[1] + zZ[2])  + 2 * (zZ[1] - zZ[0]) ;
+        // dot_bCurveZt = cos(2*M_PI*freq_swing*t/4);
+
         // dot_bCurveX.push_back(dot_bCurveXt);
         // dot_bCurveY.push_back(dot_bCurveYt);
         // dot_bCurveZ.push_back(dot_bCurveZt);
 
-        std::cout<<t<<" "<<bCurveXt<<" "<<bCurveYt<<" "<<bCurveZt<<" "<<std::endl;
+        std::cout<<t<<" "<<bCurveXt<<" "<<bCurveYt<<" "<<bCurveZt<<" "<<dot_bCurveXt<<" "<<dot_bCurveYt<<" "<<dot_bCurveZt<<std::endl;
 
     }
     return p3;
@@ -184,7 +205,20 @@ void generateSteps()
     
 }
 
+void sigmoid_goaltracker()
+{
+    double t_down = 0.4 + 0.9*1/2.0;
+    double t_phase = 0.85;
+    double c1 = 20,c2 = 0.2;
 
+    double ampli = 0.22 - 0.019 ;
+
+    for(double t = t_down; t < t_down + 1; t += 0.002)
+    {
+        std::cout<<t<<" "<< 0.019 + ampli*(1 - sigmoid( t - t_down , c1, c2)) <<" "<< ampli*(-der_sigmoid(t - t_down , c1, c2) )<<" "<<   ampli*(- (sigmoid(t - t_down, c1, c2)*(1-sigmoid(t - t_down, c1, c2))) )<<std::endl;
+    }
+
+}
 
 
 void generateStepsOld()
@@ -277,8 +311,8 @@ int main()
     // Eigen::Vector3d target = generateBezier();
     // std::cout<<1.0<<" "<<target(0)<<" "<<target(1)<<" "<<target(2)<<" "<<std::endl;
 
-    generateSteps();
-
+    // generateSteps();
+    sigmoid_goaltracker();
     return 0;
 }
 

@@ -126,7 +126,7 @@ void my_controller_walk(const mjModel* m, mjData* d)
     {
         topController->wrapper->update_locomotion(m,d,topController->controller->dt);
         topController->computeDynamic(d->time); // call once
-        topController->wrapper->change_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 
+        topController->wrapper->set_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 
         topController->wrapper->send_torque_pos_Dynamic(m,d,topController->controller->A_PD,topController->controller->B_PD); 
 
     }

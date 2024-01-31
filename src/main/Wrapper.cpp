@@ -4,14 +4,12 @@ Wrapper::Wrapper()
 {
     this->category = "None"; // defines Mujoco or Ros/Real
     once = true;
-    CHANGE_GAINS = false;
 }
 Wrapper::Wrapper(std::string category_, Robot* r_)
 {
     this->category = category_; // defines Mujoco or Ros/Real
     this->robot = r_; // pass robot pointer to wrapper to update robot/legs profile
     once = true;
-    CHANGE_GAINS = false;
 }
 /* De-Constructor*/
 Wrapper::~Wrapper(){}
@@ -393,7 +391,7 @@ void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bo
         d->ctrl[robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__]  = 0.0;
     }
 }
-bool Wrapper::change_gains(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
+bool Wrapper::set_gains(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
 {
 
     for(int i = 0 ; i < robot->n_legs; i++)

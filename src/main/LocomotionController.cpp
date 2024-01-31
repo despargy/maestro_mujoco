@@ -114,12 +114,12 @@ void LocomotionController::computeDynamicWeights()
     }
 
     if (A_TOUCHED)
-        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA, c1, c2))*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA, c1*10, c2/10))*Eigen::Vector3d::Ones(); 
     else
         robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
     
     if (B_TOUCHED)
-        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB, c1, c2) )*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB, c1*10, c2/10) )*Eigen::Vector3d::Ones(); 
     else
         robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
 
@@ -250,7 +250,7 @@ void LocomotionController::inverseTip()
 void LocomotionController::doubleInverseTip()
 {
 
-    // /**************** Bezier curve ***************/ 
+    // /**************** Execute Bezier curve + Sigmoid to target z ***************/ 
     if(t_phase<t0_swing) //  yet there are forces
     {
         bezier_world_a = robot->leg[(int) robot->swingL_id_a]->g_0bo_init.block(0,3,3,1).cast<float>();
@@ -260,7 +260,7 @@ void LocomotionController::doubleInverseTip()
         doubleCLIK(bezier_world_b, Eigen::Vector3f::Zero(), (int) robot->swingL_id_b);
 
     }
-    else if( t_phase>=t0_swing & t_phase<(t0_swing + 1/freq_swing) ) 
+    else if( t_phase>=t0_swing & t_phase<(t0_swing + 0.9*1/freq_swing) ) 
     {
         ++ii;
         bezier_world_a = Eigen::Vector3f(robot->leg[(int) robot->swingL_id_a]->bCurveX[ii],robot->leg[(int) robot->swingL_id_a]->bCurveY[ii],robot->leg[(int) robot->swingL_id_a]->bCurveZ[ii]);
@@ -273,7 +273,24 @@ void LocomotionController::doubleInverseTip()
         B_PD = true; //Run PD mode
     }
     else
+    {
+        double t_down = t0_swing + 0.9*1/freq_swing;
+        double target_ = 0.019;
+        double c1tip = 20, c2tip = 0.2;
+
+        double ampli_A = robot->leg[(int)robot->swingL_id_a]->g_o_world(2,3) - target_;
+        double ampli_B = robot->leg[(int)robot->swingL_id_b]->g_o_world(2,3) - target_;
+
+        bezier_world_a = Eigen::Vector3f( bezier_world_a(0), bezier_world_a(1), target_ + ampli_A*(1 - sigmoid( t_phase - t_down , c1tip, c2tip)));
+        bezier_world_b = Eigen::Vector3f( bezier_world_b(0), bezier_world_b(1), target_ + ampli_B*(1 - sigmoid( t_phase - t_down , c1tip, c2tip)));
+
+        doubleCLIK(bezier_world_a ,Eigen::Vector3f(0.0,0.0,  ampli_A*(-der_sigmoid(t_phase - t_down , c1tip, c2tip) )) ,(int) robot->swingL_id_a );
+        doubleCLIK(bezier_world_b ,Eigen::Vector3f(0.0,0.0,  ampli_B*(-der_sigmoid(t_phase - t_down , c1tip, c2tip) )) ,(int) robot->swingL_id_b );
+
         checkTouchDown();
+
+    }
+
 
 }
 void LocomotionController::checkTouchDown()
@@ -284,49 +301,32 @@ void LocomotionController::checkTouchDown()
     if (A_TOUCHED)
     {
         freezedoubleCLIK((int) robot->swingL_id_a);
-        // if( ( t_phase - tA) >= t0_swing/2) //HERE CHECK IF IT NEEDED
+        if( ( t_phase - tA) >= 2*(c2/10)) //HERE CHECK IF IT NEEDED
             A_PD = false; // Cancel PD 
     }
-    else
+    else if(f_applied_a(2) > force_thres)
     {
-        if(f_applied_a(2) > force_thres)
-        {
-            A_TOUCHED = true;
-            tA = t_phase;
-        }
-        else
-        {
-            bezier_world_a(2) = 0.019 ;
-            doubleCLIK(bezier_world_a , Eigen::Vector3f(0.0,0.0,-0.0001),(int) robot->swingL_id_a ); 
-        }
+        A_TOUCHED = true;
+        tA = t_phase;
     }
 
 
     if(B_TOUCHED)
     {
         freezedoubleCLIK((int) robot->swingL_id_b);
-        // if( (t_phase - tB) >= t0_swing/2) //HERE CHECK IF IT NEEDED
+        if( (t_phase - tB) >= 2*(c2/10)) //HERE CHECK IF IT NEEDED
             B_PD = false; // Cancel PD 
     }
-    else 
+    else  if (f_applied_b(2) > force_thres )
     {
-        if (f_applied_b(2) > force_thres )
-        {
-            B_TOUCHED = true;
-            tB = t_phase;
-        }
-        else
-        {
-            bezier_world_b(2) = 0.019 ;
-            doubleCLIK(bezier_world_b , Eigen::Vector3f(0.0,0.0,-0.0001),(int) robot->swingL_id_b ); 
-        }
-        
+        B_TOUCHED = true;
+        tB = t_phase;
     }
 }
 void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_0frame_)
 {
 
-    Eigen::Vector3f d_q_ = (   robot->R_c* robot->leg[(int)robot->swingL_id]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_ - 16*(robot->leg[(int) robot->swingL_id]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_) );
+    Eigen::Vector3f d_q_ = (   robot->R_c* robot->leg[(int)robot->swingL_id]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_ - 64*(robot->leg[(int) robot->swingL_id]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_) );
     // std::cout<<"leg_mng[(int)robot_->swingL_id].g_o_world.block(0,3,3,1).cast<float>():"<< leg_mng[(int)robot_->swingL_id].g_o_world.block(0,3,3,1).cast<float>().transpose()<<std::endl;
     // std::cout<<"pd_0frame_:"<< pd_0frame_.transpose()<<std::endl;
     // std::cout<<"p--------------------------------------------"<< std::endl;
@@ -340,7 +340,7 @@ void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_
 void LocomotionController::doubleCLIK(Eigen::Vector3f pd_0frame_A, Eigen::Vector3f dpd_0frame_A, int i)
 {
 
-    Eigen::Vector3f d_q_ = (   robot->R_c*robot->leg[i]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - 64*(robot->leg[i]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
+    Eigen::Vector3f d_q_ = (   robot->R_c*robot->leg[i]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - 32*(robot->leg[i]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
 
     robot->leg[i]->q_out(0) =  d_q_(0)*dt + robot->leg[i]->q_out(0);
     robot->leg[i]->q_out(1) =  d_q_(1)*dt + robot->leg[i]->q_out(1);
@@ -523,16 +523,11 @@ void LocomotionController::dynamicBezier(Leg* l)
     l->foothold = p3; 
     Eigen::Vector3d ofset = p3 - p0;
     ofset(2) = 0.019;
-    std::cout<<"p0"<<std::endl;
-    std::cout<<p0<<std::endl;
-    std::cout<<"p3"<<std::endl;
-    std::cout<<p3<<std::endl;
-    std::cout<<"ofset"<<std::endl;
-    std::cout<<ofset<<std::endl;
+
     Eigen::Vector3d p1, p2;
     p1(0) = p0(0) + 0.5*ofset(0);   p2(0) = p0(0) + 0.8*ofset(0);
-    p1(1) = p0(1) + 0.5*ofset(1);     p2(1) = p0(1) + 0.8*ofset(1);
-    p1(2) = p0(2) + 1.5*ofset(2);   p2(2) = p0(2) + 1.8*ofset(2);
+    p1(1) = p0(1) + 0.5*ofset(1);   p2(1) = p0(1) + 0.8*ofset(1);
+    p1(2) = p0(2) + 1.5*ofset(2);   p2(2) = p0(2) + 1.8*ofset(2); // 0.019 1.5 1.8 
 
     std::vector<double> xX{p0(0), p1(0), p2(0), p3(0)}; 
     std::vector<double> yY{p0(1), p1(1), p2(1), p3(1)}; 

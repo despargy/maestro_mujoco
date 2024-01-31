@@ -4,24 +4,53 @@ from matplotlib import pyplot as plt
 from mpl_toolkits import mplot3d
 import os
 
-data = np.genfromtxt("./step.csv", delimiter=" ", skip_header=0)
+
+sig = np.genfromtxt("./sig.csv", delimiter=" ", skip_header=0)
 
 # times
-t_real = data[:,0]
+t_real = sig[:,0]
 # Each swinging tip pos
-p0 = data[:,1]
-p1 = data[:,2]
-p2 = data[:,3]
+p0 = sig[:,1]
+dp0 = sig[:,2]
+dp2 = sig[:,3]
 
 plt.figure()
-plt.plot(t_real,p0,Label="Bez x")
-plt.plot(t_real,p1,Label="Bez y")
-plt.plot(t_real,p2,Label="Bez z")
-
+plt.plot(t_real,p0,Label="Sig")
+plt.plot(t_real,dp0,Label="Vel")
+plt.plot(t_real,dp2,Label="Vel 2")
+plt.axvline(0.15 + 0.85, color='k',label='c2')
 plt.legend()
 plt.xlabel("t_real")
 plt.ylabel("Bez")
 plt.title("Bez - time")
+
+# data = np.genfromtxt("./step.csv", delimiter=" ", skip_header=0)
+
+# # times
+# t_real = data[:,0]
+# # Each swinging tip pos
+# p0 = data[:,1]
+# p1 = data[:,2]
+# p2 = data[:,3]
+
+# dp0 = data[:,4]
+# dp1 = data[:,5]
+# dp2 = data[:,6]
+
+# plt.figure()
+# plt.plot(t_real,p0,Label="Bez x")
+# plt.plot(t_real,p1,Label="Bez y")
+# plt.plot(t_real,p2,Label="Bez z")
+
+# plt.figure()
+# plt.plot(t_real,dp0,Label="Vel Bez x")
+# plt.plot(t_real,dp1,Label="Vel Bez y")
+# plt.plot(t_real,dp2,Label="Vel Bez z")
+
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("Bez")
+# plt.title("Bez - time")
 
 
 # time = data[:,0]

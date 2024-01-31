@@ -13,7 +13,6 @@ class Wrapper
 {
     public:
         std::string category;
-        bool CHANGE_GAINS;
         Robot* robot; // Controller pointer obj.
         double Kp_hip, Kp_thing, Kp_calf;
         double Kv_hip, Kv_thing, Kv_calf;
@@ -29,7 +28,7 @@ class Wrapper
         void send();
         void send(const mjModel* m, mjData* d);
         void send_torque_pos(const mjModel* m, mjData* d);
-        bool change_gains(const mjModel* m, mjData* d, bool A_TOUCHED, bool B_TOUCHED);
+        bool set_gains(const mjModel* m, mjData* d, bool A_TOUCHED, bool B_TOUCHED);
         void send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bool B_PD);
 };
 

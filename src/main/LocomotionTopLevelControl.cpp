@@ -116,7 +116,6 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->swing_t_slot =  param_slot_Swing_DYNA; 
 
     dp_cmd(0) = param_dp_cmd ;
-    controller->ofset = param_ofset;
 
     controller->robot->z = param_robot_z;
     controller->w_max = param_w_max;
@@ -298,7 +297,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             controller->robot->leg[3]->foothold = controller->robot->leg[3]->g_0bo_init.block(0,3,3,1);
                 
         }
-        break; // this break might add 0.002 = dt to time
+        break;
    
     case DYNA_GAIT:
 
@@ -328,11 +327,10 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             controller->dynaErrors(dp_cmd);
             controller->dynaControlSignal();
             controller->doubleInverseTip();
-            // if ( controller->A_TOUCHED & controller->B_TOUCHED)
-            // {
-            //     wrapper ->CHANGE_GAINS_TAU_PD = true; ;
-            //     std::cout<<"COUNT_2"<<std::endl;
-            // }
+            if ( controller->A_TOUCHED & controller->B_TOUCHED & (controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg == 50*Eigen::Vector3d::Ones()) & (controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg == 50*Eigen::Vector3d::Ones()) )
+            {
+                fsm->phase = PH_TARGET;
+            }
 
             break;
         }

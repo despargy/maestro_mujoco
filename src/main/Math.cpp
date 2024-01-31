@@ -28,9 +28,16 @@ Eigen::Matrix3d get_dR_CoM(Eigen::Matrix3d R_CoM_prev,Eigen::Matrix3d R_CoM_cur,
 double sigmoid(double t, double c1, double c2)
 {
     return 1/(1 + exp( -c1*(t-c2)) );
-    // c1 = 1000, c2 = 0.03
 }
- 
+double der_sigmoid(double t, double c1, double c2)
+{
+    return exp( -c1*(t-c2))/std::pow( (1 + exp( -c1*(t-c2)) ), 2);
+} 
+double inverse_sigmoid(double s_t, double c1, double c2)
+{
+    // returns the "Virutal time" of the current sigmoid value s_t
+    return (1/c1*log((1-s_t)/s_t)+c2);
+}
 std::pair<double, double> find_Centroid(std::vector<std::pair<double, double> >& v)
 {
     std::pair<double, double> ans = { 0, 0 };

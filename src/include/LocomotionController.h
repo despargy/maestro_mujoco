@@ -19,7 +19,7 @@ class LocomotionController : public Controller
         int* vp_order;
         int* static_free_gait;
         double kr;
-        double ofset, step_bez;
+        double step_bez;
         bool A_TOUCHED, B_TOUCHED;
         double c1, c2, force_thres;
 
