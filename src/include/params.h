@@ -27,9 +27,9 @@
 #define param_w0 50;
 #define param_w_max 70000;
 
-#define param_Kp_hip 8;
-#define param_Kp_thing 5; 
-#define param_Kp_calf 5;
+#define param_Kp_hip 8; //8
+#define param_Kp_thing 5;  //5
+#define param_Kp_calf 3; //3
 
 #define param_Kv_hip 3.5;
 #define param_Kv_thing 2.0 ;
@@ -95,6 +95,29 @@
 // // SET THIS TO OFFSET Eigen::Vector3d(0.1, controller->robot->leg[(int)controller->robot->swingL_id_a]->pros*0.01, 0.02)
 
 /********************** ******************** *************************/
+#define param_thalf_Swing_DYNA 10.3;
+#define param_slot_Swing_DYNA 10.8;
+#define param_A_SGaus_DYNA 1.0;
+#define param_b_SGaus_DYNA 10.0;
+#define param_t0_SGaus_DYNA 0.008;
+/**********************  DYNAMIC LOCOMOTION  FAST *************************/
+
+// #define param_DYNA_LOCO true;
+// #define param_ko_DYNA 1000; //100
+// #define param_kv_DYNA 20; //20
+
+// #define param_Freq_Swing_DYNA 2.0;
+// #define param_t0_Swing_DYNA 0.2;
+
+// #define param_dp_cmd 0.0; // m/s
+
+// #define param_c1 100;
+// #define param_c2 0.2;
+// #define param_force_thres 0.01;
+
+// ofset x / t_slot = dp_cmd
+
+/********************** ******************** *************************/
 
 /**********************  DYNAMIC LOCOMOTION  FAST *************************/
 
@@ -102,22 +125,16 @@
 #define param_ko_DYNA 1000; //100
 #define param_kv_DYNA 20; //20
 
-#define param_A_SGaus_DYNA 1.0;
-#define param_b_SGaus_DYNA 10.0;
-#define param_t0_SGaus_DYNA 0.008;
 #define param_Freq_Swing_DYNA 2.0;
-#define param_t0_Swing_DYNA 0.4;
-#define param_thalf_Swing_DYNA 10.3;
-#define param_slot_Swing_DYNA 10.8;
+#define param_t0_Swing_DYNA 0.1;
+
 #define param_dp_cmd 0.0; // m/s
 
 #define param_c1 100;
-#define param_c2 0.4;
-#define param_force_thres 0.001;
+#define param_c2 0.1;
+#define param_force_thres 0.01;
 
 // ofset x / t_slot = dp_cmd
 
 /********************** ******************** *************************/
-
-
 #endif

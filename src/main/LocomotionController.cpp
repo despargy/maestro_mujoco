@@ -68,7 +68,6 @@ void LocomotionController::setDynamicPhase()
 
     this->R_T = robot->R_c0 ;
     this->robot->p_c0 = this->robot->p_c;
-    this->robot->R_c0 = this->robot->R_c;
 
     robot->leg[(int)robot->swingL_id_a]->storeInitG(); 
     robot->leg[(int)robot->swingL_id_b]->storeInitG(); 
