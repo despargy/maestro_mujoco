@@ -36,7 +36,10 @@ double der_sigmoid(double t, double c1, double c2)
 double inverse_sigmoid(double s_t, double c1, double c2)
 {
     // returns the "Virutal time" of the current sigmoid value s_t
-    return (1/c1*log((1-s_t)/s_t)+c2);
+    if(s_t > 0.0 & (1-s_t) > 0)
+        return (1/c1*log((1-s_t)/s_t)+c2);
+    else
+        return 0.0;
 }
 std::pair<double, double> find_Centroid(std::vector<std::pair<double, double> >& v)
 {
