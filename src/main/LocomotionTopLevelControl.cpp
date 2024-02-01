@@ -130,6 +130,10 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->c2 = param_c2;
 
     controller->force_thres = param_force_thres;
+
+    controller->c1tip = param_c1tip;
+    controller->c2tip = param_c2tip;
+    controller->tip_target_z = param_tip_target_z;
 }
 
 /* Function to initialize variables and/or call other init functions */
@@ -312,8 +316,8 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             
             controller->setDynamicPhase(); // setphase target etc. 
 
-            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_a]);
-            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_b]);
+            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_a],dp_cmd);
+            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_b],dp_cmd);
 
             fsm->phase = PH_SWING;
 
@@ -324,7 +328,10 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
             // Commanded velocity
             controller->computeDynamicWeights();
-            controller->dynaErrors(dp_cmd);
+            // if(controller->t_real< 0.1)
+            //     controller->dynaErrors(Eigen::Vector3d(0,0,0));
+            // else
+                controller->dynaErrors(dp_cmd);
             controller->dynaControlSignal();
             controller->doubleInverseTip();
             if ( controller->A_TOUCHED & controller->B_TOUCHED & (controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg == 50*Eigen::Vector3d::Ones()) & (controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg == 50*Eigen::Vector3d::Ones()) )

@@ -209,7 +209,7 @@ void sigmoid_goaltracker()
 {
     double t_down = 0.4 + 0.9*1/2.0;
     double t_phase = 0.85;
-    double c1 = 20,c2 = 0.2;
+    double c1 = 200,c2 = 0.05;
 
     double ampli = 0.22 - 0.019 ;
 

@@ -107,12 +107,12 @@
 // #define param_kv_DYNA 20; //20
 
 // #define param_Freq_Swing_DYNA 2.0;
-// #define param_t0_Swing_DYNA 0.2;
+// #define param_t0_Swing_DYNA 0.1;
 
 // #define param_dp_cmd 0.0; // m/s
 
 // #define param_c1 100;
-// #define param_c2 0.2;
+// #define param_c2 0.1;
 // #define param_force_thres 0.01;
 
 // ofset x / t_slot = dp_cmd
@@ -125,7 +125,7 @@
 #define param_ko_DYNA 1000; //100
 #define param_kv_DYNA 20; //20
 
-#define param_Freq_Swing_DYNA 2.0;
+#define param_Freq_Swing_DYNA 4.0;
 #define param_t0_Swing_DYNA 0.1;
 
 #define param_dp_cmd 0.0; // m/s
@@ -133,6 +133,11 @@
 #define param_c1 100;
 #define param_c2 0.1;
 #define param_force_thres 0.01;
+
+
+#define param_c1tip 200;
+#define param_c2tip 0.02;
+#define param_tip_target_z 0.019;
 
 // ofset x / t_slot = dp_cmd
 
