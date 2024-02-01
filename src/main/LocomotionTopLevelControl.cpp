@@ -75,7 +75,7 @@ void LocomotionTopLevelControl::setParams()
     controller->t_half_swing =  param_thalf_Swing ; 
     controller->swing_t_slot =  param_slot_Swing; 
 
-    controller->robot->z = param_robot_z;
+    controller->robot->height_z = param_robot_z;
     controller->w_max = param_w_max;
 
     wrapper->Kp_hip   = param_Kp_hip;
@@ -105,6 +105,7 @@ void LocomotionTopLevelControl::setParamsDynamic()
 
     controller->dt = param_dt; // same as mujoco .xml
 
+    controller->kp = param_kp_DYNA;
     controller->kv = param_kv_DYNA;
     controller->ko = param_ko_DYNA;
     controller->A = param_A_SGaus_DYNA;
@@ -115,9 +116,11 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->t_half_swing =  param_thalf_Swing_DYNA ; 
     controller->swing_t_slot =  param_slot_Swing_DYNA; 
 
-    dp_cmd(0) = param_dp_cmd ;
+    dp_cmd(0) = param_dp_cmd_x ;
+    dp_cmd(1) = param_dp_cmd_y ;
+    dp_cmd(2) = param_dp_cmd_z ;
 
-    controller->robot->z = param_robot_z;
+    controller->robot->height_z = param_robot_z;
     controller->w_max = param_w_max;
     wrapper->Kp_hip   = param_Kp_hip;
     wrapper->Kp_thing = param_Kp_thing;
@@ -127,13 +130,13 @@ void LocomotionTopLevelControl::setParamsDynamic()
     wrapper->Kv_calf  = param_Kv_calf;
 
     controller->c1 = param_c1;
-    controller->c2 = param_c2;
 
     controller->force_thres = param_force_thres;
 
     controller->c1tip = param_c1tip;
     controller->c2tip = param_c2tip;
     controller->tip_target_z = param_tip_target_z;
+    controller->percentage = param_percentage;
 }
 
 /* Function to initialize variables and/or call other init functions */
@@ -168,7 +171,7 @@ void LocomotionTopLevelControl::setParamsExploration()
     // controller->t_half_swing =  param_thalf_Swing ; 
     // controller->swing_t_slot =  param_slot_Swing; 
 
-    controller->robot->z = param_robot_z;
+    controller->robot->height_z = param_robot_z;
 
     controller->w_max = param_w_max;
 
@@ -343,7 +346,9 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
         }
 
         data->save_dyna(controller->t_real,
+                        // controller->e_v(0),controller->e_v(1),controller->e_v(2),
                         controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
+
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
                         controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
                         

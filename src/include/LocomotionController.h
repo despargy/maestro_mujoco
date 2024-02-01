@@ -14,14 +14,14 @@ class LocomotionController : public Controller
         double A, b, t0_superG;
         double freq_swing, t0_swing, t_half_swing, swing_t_slot, tA, tB, t_down;
         double w_max;
-        bool  CHANGE_PHASE, A_PD, B_PD ; ;
+        bool  CHANGE_PHASE, A_PD, B_PD ;
         int ii;
         int* vp_order;
         int* static_free_gait;
         double kr;
         double step_bez;
         bool A_TOUCHED, B_TOUCHED;
-        double c1, c2, force_thres;
+        double c1, force_thres;
 
         std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
         std::vector<double> bCurveY, dot_bCurveY; // Bezier Curve swinging tip
@@ -43,7 +43,7 @@ class LocomotionController : public Controller
         
         Eigen::Vector3f bezier_world, bezier_world_a, bezier_world_b;
         
-        double dist_error, c1tip, c2tip, ampli_A, ampli_B, tip_target_z;
+        double dist_error, c1tip, c2tip, ampli_A, ampli_B, tip_target_z, percentage;
         
         LocomotionController();
         ~LocomotionController();

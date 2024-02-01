@@ -17,7 +17,6 @@
 #define param_pbc_y 0.01;//0.001;//0.0125;
 #define param_pbc_z 0;
 
-#define param_robot_z 0.25;
 
 #define param_dt 0.002;
 
@@ -27,9 +26,9 @@
 #define param_w0 50;
 #define param_w_max 70000;
 
-#define param_Kp_hip 8; //8
-#define param_Kp_thing 5;  //5
-#define param_Kp_calf 3; //3
+#define param_Kp_hip 5; //8
+#define param_Kp_thing 3;  //5
+#define param_Kp_calf 2; //3
 
 #define param_Kv_hip 3.5;
 #define param_Kv_thing 2.0 ;
@@ -122,24 +121,27 @@
 /**********************  DYNAMIC LOCOMOTION  FAST *************************/
 
 #define param_DYNA_LOCO true;
-#define param_ko_DYNA 1000; //100
-#define param_kv_DYNA 20; //20
+#define param_ko_DYNA 500; //1000
+#define param_kv_DYNA 100; //20
+#define param_kp_DYNA 30;
 
 #define param_Freq_Swing_DYNA 4.0;
 #define param_t0_Swing_DYNA 0.1;
 
-#define param_dp_cmd 0.1; // m/s
+#define param_dp_cmd_x 0.2; // m/s
+#define param_dp_cmd_y 0.0; // m/s
+#define param_dp_cmd_z 0.0; // m/s
 
 #define param_c1 100;
-#define param_c2 0.1;
 #define param_force_thres 0.001;
-
 
 #define param_c1tip 200; //200
 #define param_c2tip 0.02; //0.02
 #define param_tip_target_z 0.0192;
 
+#define param_percentage 0.95;
 // ofset x / t_slot = dp_cmd
+#define param_robot_z 0.32;
 
 /********************** ******************** *************************/
 #endif

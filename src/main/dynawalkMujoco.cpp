@@ -231,7 +231,7 @@ int main(int argc, const char** argv)
         glfwGetFramebufferSize(window, &viewport.width, &viewport.height);
 
           // update scene and render
-        // opt.frame = mjFRAME_WORLD;
+        // opt.frame = mjFRAME_WORLD; // Remove this one HERE
         mjv_updateScene(m, d, &opt, NULL, &cam, mjCAT_ALL, &scn);
         mjr_render(viewport, &scn, &con);
         // printf("{%f, %f, %f, %f, %f, %f};\n",cam.azimuth,cam.elevation, cam.distance,cam.lookat[0],cam.lookat[1],cam.lookat[2]);

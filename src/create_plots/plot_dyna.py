@@ -73,15 +73,20 @@ plt.title("Weights  - time")
 
 plt.figure()
 
-
-
-
+plt.plot(t_real,pc_0,Label="pc x")
+plt.plot(t_real,pc_1,Label="pc y")
+plt.plot(t_real,pc_2,Label="pc z")
 
 
 plt.legend()
 plt.xlabel("t_real")
-plt.ylabel("Tip cycle goals")
-plt.title("Footgoals  - time")
+plt.ylabel("Weights position")
+plt.title("Weights  - time")
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM Vel")
+plt.title("vel  - time")
 
 
 plt.figure()
@@ -92,7 +97,7 @@ plt.plot(t_real,w3/10000,Label="weight 3")
 plt.plot(t_real,10*tip_0z,Label="swing tip 0")
 plt.plot(t_real,10*tip_3z,Label="swing tip 3")
 
-plt.plot(t_real,pc_2,Label="z actual")
+# plt.plot(t_real,pc_2,Label="z actual")
 plt.axvline(0.03, color='k',label='t0 swing')
 plt.axvline(10.3, color='b',label='t half swing swinging')
 plt.axvline(10.8, color='r',label='end swinging')

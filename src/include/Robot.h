@@ -16,7 +16,7 @@ class Robot
         Leg **leg; 
         
         double mass, g_gravity;
-        double z; 
+        double height_z; 
         double swingL_id;
         double swingL_id_a, swingL_id_b;
         /* Reference to sensordata ids CoM [.] - Mujoco xml*/

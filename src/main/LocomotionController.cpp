@@ -44,7 +44,7 @@ void LocomotionController::setPhaseTarget()
 
     }
     std::pair<double, double> C = find_Centroid(vp);
-    Eigen::Vector3d target(C.first,C.second,robot->z);
+    Eigen::Vector3d target(C.first,C.second,robot->height_z);
 
     this->p_T =  target;
     this->R_T = robot->R_c0 ;
@@ -113,14 +113,14 @@ void LocomotionController::computeDynamicWeights()
     }
 
     if (A_TOUCHED)
-        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA, c1*10, c2/10))*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA, c1*10, t0_swing/10))*Eigen::Vector3d::Ones(); 
     else
-        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, t0_swing)*Eigen::Vector3d::Ones(); 
     
     if (B_TOUCHED)
-        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB, c1*10, c2/10) )*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB, c1*10, t0_swing/10) )*Eigen::Vector3d::Ones(); 
     else
-        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, t0_swing)*Eigen::Vector3d::Ones(); 
 
     robot->vvvv.block((int) robot->swingL_id_a*3,0,3,1) = robot->leg[(int) robot->swingL_id_a]->wv_leg;   // update vvvv vector of robot 
     robot->vvvv.block((int) robot->swingL_id_b*3,0,3,1) = robot->leg[(int) robot->swingL_id_b]->wv_leg;   // update vvvv vector of robot 
@@ -259,7 +259,7 @@ void LocomotionController::doubleInverseTip()
         doubleCLIK(bezier_world_b, Eigen::Vector3f::Zero(), (int) robot->swingL_id_b);
 
     }
-    else if( t_phase>=t0_swing & t_phase<(t0_swing + 0.95*1/freq_swing) ) 
+    else if( t_phase>=t0_swing & t_phase<(t0_swing + percentage*1/freq_swing) ) 
     {
         ++ii;
         bezier_world_a = Eigen::Vector3f(robot->leg[(int) robot->swingL_id_a]->bCurveX[ii],robot->leg[(int) robot->swingL_id_a]->bCurveY[ii],robot->leg[(int) robot->swingL_id_a]->bCurveZ[ii]);
@@ -271,7 +271,7 @@ void LocomotionController::doubleInverseTip()
         A_PD = true; // Run PD mode
         B_PD = true; //Run PD mode
     }
-    else if(t_phase>=(t0_swing + 0.95*1/freq_swing) & t_phase<(t0_swing + 0.95*1/freq_swing + dt))
+    else if(t_phase>=(t0_swing + percentage*1/freq_swing) & t_phase<(t0_swing + percentage*1/freq_swing + dt))
     {
         ampli_A = robot->leg[(int)robot->swingL_id_a]->g_o_world(2,3) - tip_target_z;
         ampli_B = robot->leg[(int)robot->swingL_id_b]->g_o_world(2,3) - tip_target_z;
@@ -309,7 +309,7 @@ void LocomotionController::checkTouchDown()
     if (A_TOUCHED)
     {
         freezedoubleCLIK((int) robot->swingL_id_a);
-        if( ( t_phase - tA) >= 2*(c2/10)) //HERE CHECK IF IT NEEDED
+        // if( ( t_phase - tA) >= 2*(t0_swing/10)) //HERE CHECK IF IT NEEDED
             A_PD = false; // Cancel PD 
     }
     else if(f_applied_a(2) > force_thres)
@@ -322,7 +322,7 @@ void LocomotionController::checkTouchDown()
     if(B_TOUCHED)
     {
         freezedoubleCLIK((int) robot->swingL_id_b);
-        if( (t_phase - tB) >= 2*(c2/10)) //HERE CHECK IF IT NEEDED
+        // if( (t_phase - tB) >= 2*(t0_swing/10)) //HERE CHECK IF IT NEEDED
             B_PD = false; // Cancel PD 
     }
     else  if (f_applied_b(2) > force_thres )
@@ -422,7 +422,7 @@ void LocomotionController::computeWeightsSigmoid()
         robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
     }
     /* Added to simuate swing leg weights t inf */ //TODO
-    robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, c2)*Eigen::Vector3d::Ones(); 
+    robot->leg[(int) robot->swingL_id]->wv_leg = robot->leg[(int) robot->swingL_id]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, t0_swing)*Eigen::Vector3d::Ones(); 
     robot->vvvv.block((int) robot->swingL_id*3,0,3,1) = robot->leg[(int) robot->swingL_id]->wv_leg;   // update vvvv vector of robot 
     
     robot->W_inv = (robot->vvvv.asDiagonal()).inverse(); // save as matrix the inverse of diagonal vvvv vector
@@ -526,7 +526,7 @@ void LocomotionController::dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd)
     Eigen::Vector3d p0 = l->g_0bo_init.block(0,3,3,1);
 
     // Eigen::Vector2d help_vect = robot->R_c.block(0,0,2,2)*(robot->p_c0.block(0,0,2,1) + l->TIP_EXT) ;
-    Eigen::Vector3d p3(robot->p_c0 + robot->R_c0*l->TIP_EXT + dp_cmd*dt) ;
+    Eigen::Vector3d p3(robot->p_c0 + robot->R_c0*l->TIP_EXT + dp_cmd*(t0_swing + 1/freq_swing + 2*c2tip) ) ;
     p3(2) = p0(2);
     l->foothold = p3; 
     Eigen::Vector3d ofset = p3 - p0;
@@ -588,6 +588,8 @@ void LocomotionController::dynaControlSignal()
     robot->F_c = - kv*e_v + Gbc*robot->gc;
     robot->F_c.block(3,0,3,1) -= ko*e_o;
 
+    robot->F_c(2) -= kp*e_p(2); 
+
     computeSudoGq();
 
     robot->F_a = robot->Gq_sudo*robot->F_c ;
@@ -607,12 +609,10 @@ void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
     ang.fromRotationMatrix(Re);
     e_o = ang.angle()*ang.axis();
     
-    Eigen::Matrix4d g_vel = Eigen::Matrix4d::Identity();
-    g_vel.block(0,0,3,3) = robot->R_c0;
-    g_vel.block(0,3,3,1) = dp_cmd; //robot->R_c0* 
+    e_p(2) = kp*(robot->p_c(2) - robot->height_z);
 
     // HERE change commanded velocity based on the current robots ori??
-    e_v.block(0,0,3,1) = (robot->dp_c - dp_cmd) ; // compute velocity error TODO //robot->R_c0*
+    e_v.block(0,0,3,1) = (robot->dp_c - robot->R_c*dp_cmd) ; // compute velocity error TODO //robot->R_c0*
     e_v.block(3,0,3,1) = robot->w_CoM ; 
     e_v.block(3,0,3,1) = 0.7*this->e_v.block(3,0,3,1) ; 
 }
