@@ -121,7 +121,7 @@
 /**********************  DYNAMIC LOCOMOTION  FAST *************************/
 
 #define param_DYNA_LOCO true;
-#define param_ko_DYNA 500; //1000
+#define param_ko_DYNA 800; //1000
 #define param_kv_DYNA 100; //20
 #define param_kp_DYNA 30;
 
