@@ -273,29 +273,31 @@ void LocomotionController::doubleInverseTip()
     }
     else if(t_phase>=(t0_swing + 0.95*1/freq_swing) & t_phase<(t0_swing + 0.95*1/freq_swing + dt))
     {
-        std::cout<<"IN "<<std::endl;
-
         ampli_A = robot->leg[(int)robot->swingL_id_a]->g_o_world(2,3) - tip_target_z;
         ampli_B = robot->leg[(int)robot->swingL_id_b]->g_o_world(2,3) - tip_target_z;
         freezedoubleCLIK((int)robot->swingL_id_a);
         freezedoubleCLIK((int)robot->swingL_id_b);
-        t_down = t_phase + 2*dt;
-        std::cout<<t_down<<std::endl;
+        t_down = t_phase;
 
     }
     else
     {
+        double t_virtual_A = inverse_sigmoid( 1 - (robot->leg[(int)robot->swingL_id_a]->g_o_world(2,3) - tip_target_z)/ampli_A  ,c1tip ,c2tip ) + t_down;
+        double t_virtual_B = inverse_sigmoid( 1 - (robot->leg[(int)robot->swingL_id_b]->g_o_world(2,3) - tip_target_z)/ampli_B  ,c1tip ,c2tip ) + t_down;
 
+        bezier_world_a = Eigen::Vector3f( bezier_world_a(0), bezier_world_a(1), tip_target_z + ampli_A*(1 - sigmoid( t_virtual_A + dt , c1tip, c2tip)));
+        bezier_world_b = Eigen::Vector3f( bezier_world_b(0), bezier_world_b(1), tip_target_z + ampli_B*(1 - sigmoid( t_virtual_B + dt , c1tip, c2tip)));
 
+        doubleCLIK(bezier_world_a ,Eigen::Vector3f(0.0,0.0,  ampli_A*(-der_sigmoid(t_virtual_A + dt , c1tip, c2tip) )) ,(int) robot->swingL_id_a );
+        doubleCLIK(bezier_world_b ,Eigen::Vector3f(0.0,0.0,  ampli_B*(-der_sigmoid(t_virtual_B + dt , c1tip, c2tip) )) ,(int) robot->swingL_id_b );
 
-        bezier_world_a = Eigen::Vector3f( bezier_world_a(0), bezier_world_a(1), tip_target_z + ampli_A*(1 - sigmoid( t_phase - t_down , c1tip, c2tip)));
-        bezier_world_b = Eigen::Vector3f( bezier_world_b(0), bezier_world_b(1), tip_target_z + ampli_B*(1 - sigmoid( t_phase - t_down , c1tip, c2tip)));
+        // bezier_world_a = Eigen::Vector3f( bezier_world_a(0), bezier_world_a(1), tip_target_z + ampli_A*(1 - sigmoid( t_phase - t_down , c1tip, c2tip)));
+        // bezier_world_b = Eigen::Vector3f( bezier_world_b(0), bezier_world_b(1), tip_target_z + ampli_B*(1 - sigmoid( t_phase - t_down , c1tip, c2tip)));
 
-        doubleCLIK(bezier_world_a ,Eigen::Vector3f(0.0,0.0,  ampli_A*(-der_sigmoid(t_phase - t_down , c1tip, c2tip) )) ,(int) robot->swingL_id_a );
-        doubleCLIK(bezier_world_b ,Eigen::Vector3f(0.0,0.0,  ampli_B*(-der_sigmoid(t_phase - t_down , c1tip, c2tip) )) ,(int) robot->swingL_id_b );
+        // doubleCLIK(bezier_world_a ,Eigen::Vector3f(0.0,0.0,  ampli_A*(-der_sigmoid(t_phase - t_down , c1tip, c2tip) )) ,(int) robot->swingL_id_a );
+        // doubleCLIK(bezier_world_b ,Eigen::Vector3f(0.0,0.0,  ampli_B*(-der_sigmoid(t_phase - t_down , c1tip, c2tip) )) ,(int) robot->swingL_id_b );
 
         checkTouchDown();
-
     }
 
 

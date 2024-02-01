@@ -24,5 +24,6 @@ std::pair<double, double> find_Centroid(std::vector<std::pair<double, double> >&
 double sigmoid(double t, double c1, double c2);
 double superGaussian(double A,double b,double r,double d, double n);
 double der_sigmoid(double t, double c1, double c2);
+double inverse_sigmoid(double s_t, double c1, double c2);
 
 #endif
