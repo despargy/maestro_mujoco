@@ -26,9 +26,7 @@
 #define param_w0 50;
 #define param_w_max 70000;
 
-#define param_Kp_hip 5; //8
-#define param_Kp_thing 3;  //5
-#define param_Kp_calf 2; //3
+
 
 #define param_Kv_hip 3.5;
 #define param_Kv_thing 2.0 ;
@@ -125,10 +123,10 @@
 #define param_kv_DYNA 100; //20
 #define param_kp_DYNA 30;
 
-#define param_Freq_Swing_DYNA 4.0;
-#define param_t0_Swing_DYNA 0.1;
+#define param_Freq_Swing_DYNA 8.0; 
+#define param_t0_Swing_DYNA 0.01;
 
-#define param_dp_cmd_x 0.2; // m/s
+#define param_dp_cmd_x 0.5; // m/s
 #define param_dp_cmd_y 0.0; // m/s
 #define param_dp_cmd_z 0.0; // m/s
 
@@ -140,8 +138,16 @@
 #define param_tip_target_z 0.0192;
 
 #define param_percentage 0.95;
-// ofset x / t_slot = dp_cmd
 #define param_robot_z 0.32;
+
+#define param_Kp_hip 8;    //8, 5 
+#define param_Kp_thing 5;  //5, 3 
+#define param_Kp_calf 3;   //3, 2
 
 /********************** ******************** *************************/
 #endif
+
+// param_Freq_Swing_DYNA 4.0 +  param_dp_cmd_x 0.2;
+// param_Freq_Swing_DYNA 8.0 +  param_dp_cmd_x 0.5;
+// param_Freq_Swing_DYNA 10.0 +  param_dp_cmd_x 0.8;
+// param_Freq_Swing_DYNA 16.0 +  param_dp_cmd_x 1.0;

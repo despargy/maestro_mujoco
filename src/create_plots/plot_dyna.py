@@ -59,6 +59,12 @@ Bez_Bx = data[:,35]
 Bez_By = data[:,36]
 Bez_Bz = data[:,37]
 
+# Each swinging tip pos
+vel_x = data[:,38]
+vel_y = data[:,39]
+vel_z = data[:,40]
+
+
 plt.figure()
 
 plt.plot(t_real,w0,Label="w0 x")
@@ -77,16 +83,10 @@ plt.plot(t_real,pc_0,Label="pc x")
 plt.plot(t_real,pc_1,Label="pc y")
 plt.plot(t_real,pc_2,Label="pc z")
 
-
 plt.legend()
 plt.xlabel("t_real")
-plt.ylabel("Weights position")
-plt.title("Weights  - time")
-
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("CoM Vel")
-plt.title("vel  - time")
+plt.ylabel("CoM Pos")
+plt.title("pos  - time")
 
 
 plt.figure()
@@ -168,6 +168,18 @@ plt.legend()
 plt.xlabel("t_real")
 plt.ylabel("Tip y")
 plt.title("tip y  - time")
+
+plt.figure()
+
+plt.plot(t_real,vel_x,Label="vel x")
+plt.plot(t_real,vel_y,Label="vel y")
+plt.plot(t_real,vel_z,Label="vel z")
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM Vel")
+plt.title("vel  - time")
+
 
 # 3D Plots for Com tips 
 

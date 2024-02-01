@@ -346,7 +346,6 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
         }
 
         data->save_dyna(controller->t_real,
-                        // controller->e_v(0),controller->e_v(1),controller->e_v(2),
                         controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
 
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
@@ -366,7 +365,8 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
                         // controller->f_applied_b(0), controller->f_applied_b(1), controller->f_applied_b(2)
 
                         controller->bezier_world_a(0), controller->bezier_world_a(1), controller->bezier_world_a(2),
-                        controller->bezier_world_b(0), controller->bezier_world_b(1), controller->bezier_world_b(2)
+                        controller->bezier_world_b(0), controller->bezier_world_b(1), controller->bezier_world_b(2),
+                                                controller->e_v(0),controller->e_v(1),controller->e_v(2)
 
                         
                         );

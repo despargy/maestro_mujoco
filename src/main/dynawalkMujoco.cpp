@@ -232,6 +232,7 @@ int main(int argc, const char** argv)
 
           // update scene and render
         // opt.frame = mjFRAME_WORLD; // Remove this one HERE
+        cam.lookat[0] = d->qpos[0] ;
         mjv_updateScene(m, d, &opt, NULL, &cam, mjCAT_ALL, &scn);
         mjr_render(viewport, &scn, &con);
         // printf("{%f, %f, %f, %f, %f, %f};\n",cam.azimuth,cam.elevation, cam.distance,cam.lookat[0],cam.lookat[1],cam.lookat[2]);
