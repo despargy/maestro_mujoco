@@ -50,6 +50,7 @@ mjtNum ctrl;
 
 /* Maestro TopLevelController global pointer definition*/
 LocomotionTopLevelControl* topController;
+bool FIND_PARAMS = true; 
 
 // keyboard callback
 void keyboard(GLFWwindow* window, int key, int scancode, int act, int mods)
@@ -125,6 +126,24 @@ void my_controller_walk(const mjModel* m, mjData* d)
     if( (d->time - topController->t_last_c) >= topController->controller->dt )
     {
         topController->wrapper->update_locomotion(m,d,topController->controller->dt);
+        //Probabilistic Contact Estimation DO NOT NEED TO RUN, ONLY FOR FIRST TIME
+        // if(topController->fsm->state == S3)
+        //     topController->wrapper->find_params_PCE();
+        // else if(FIND_PARAMS & topController->fsm->state == DYNA_GAIT)
+        // {
+        //     for(int i = 0; i<topController->controller->robot->n_legs; i++)
+        //     {
+        //         std::cout<<"LEG "<<i<<std::endl;
+        //         topController->wrapper->pce_obj[i].compute_mean_std();
+        //     }
+        //     FIND_PARAMS = false;
+        // }
+
+        if(topController->fsm->state == S3)
+            topController->wrapper->init_PCE();
+        else if(topController->fsm->state == DYNA_GAIT)
+            topController->wrapper->update_PCE();
+
         topController->computeDynamic(d->time); // call once
         topController->wrapper->set_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 
         topController->wrapper->send_torque_pos_Dynamic(m,d,topController->controller->A_PD,topController->controller->B_PD); 

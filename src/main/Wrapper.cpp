@@ -10,6 +10,9 @@ Wrapper::Wrapper(std::string category_, Robot* r_)
     this->category = category_; // defines Mujoco or Ros/Real
     this->robot = r_; // pass robot pointer to wrapper to update robot/legs profile
     once = true;
+
+    //Set params for mujoco PCE cpp
+    setParamsMujocoPCE();
 }
 /* De-Constructor*/
 Wrapper::~Wrapper(){}
@@ -75,7 +78,7 @@ void Wrapper::initConst()
                 
                 // foot acc and gyro [65 - 88]
                 robot->leg[i]->acc_x__ = 65 + robot->leg[i]->id*6, robot->leg[i]->acc_y__ = 66 + robot->leg[i]->id*6, robot->leg[i]->acc_z__  = 67 + robot->leg[i]->id*6; // tip acc
-                robot->leg[i]->gyro_x__= 68 + robot->leg[i]->id*6, robot->leg[i]->gyro_y__= 69 + robot->leg[i]->id*6, robot->leg[i]->gyro_z__ = 70 + robot->leg[i]->id*6 ;  // tip acc
+                robot->leg[i]->gyro_x__= 68 + robot->leg[i]->id*6, robot->leg[i]->gyro_y__= 69 + robot->leg[i]->id*6, robot->leg[i]->gyro_z__ = 70 + robot->leg[i]->id*6 ;  // tip gyro
                 
                 // foot forces x, y, z  [89 - 100]
                 robot->leg[i]->force_x__ = 89 + robot->leg[i]->id*3; robot->leg[i]->force_y__ = 90 + robot->leg[i]->id*3; robot->leg[i]->force_z__ = 91 + robot->leg[i]->id*3;
@@ -273,6 +276,13 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
         robot->leg[i]->f(0) = d->sensordata[robot->leg[i]->force_x__];
         robot->leg[i]->f(1) = d->sensordata[robot->leg[i]->force_y__];
         robot->leg[i]->f(2) = d->sensordata[robot->leg[i]->force_z__];       
+        // IMU
+        robot->leg[i]->imu(0) = d->sensordata[robot->leg[i]->acc_x__];
+        robot->leg[i]->imu(1) = d->sensordata[robot->leg[i]->acc_y__];
+        robot->leg[i]->imu(2) = d->sensordata[robot->leg[i]->acc_z__];
+        robot->leg[i]->imu(3) = d->sensordata[robot->leg[i]->gyro_x__];
+        robot->leg[i]->imu(4) = d->sensordata[robot->leg[i]->gyro_y__];
+        robot->leg[i]->imu(5) = d->sensordata[robot->leg[i]->gyro_z__];
 
         // tip pose (x,y,z) world frame
         robot->leg[i]->p_i(0) = d->sensordata[robot->leg[i]->tip_x__]; // framepos ref to CoM
@@ -304,9 +314,6 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
         robot->leg[i]->J(1,0) = jacp1[6+3*i+0+nv];   robot->leg[i]->J(1,1) = jacp1[6+3*i+1+nv];   robot->leg[i]->J(1,2) = jacp1[6+3*i+2+nv]; 
         robot->leg[i]->J(2,0) = jacp1[6+3*i+0+2*nv]; robot->leg[i]->J(2,1) = jacp1[6+3*i+1+2*nv]; robot->leg[i]->J(2,2) = jacp1[6+3*i+2+2*nv]; 
     
-        // Probability of Contact Estimation
-        robot->leg[i]->prob_stable = std::fmin(1.0,1.0); // TODO 
-
     }
 }
 void Wrapper::send()
@@ -452,4 +459,85 @@ bool Wrapper::set_gains(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
     }
 
     return false; // this will change the C 
+}
+void Wrapper::init_PCE() // set forts batched and compute the bias
+{
+    for(int i = 0 ; i < robot->n_legs; i++)
+    { 
+        pce_obj[i].init_things(robot->leg[i]->imu);
+        
+    }
+}
+void Wrapper::update_PCE()
+{
+    for(int i = 0 ; i < robot->n_legs; i++)
+    { 
+        // robot->leg[i]->prob_stable = std::fmin(1.0,1.0); // TODO 
+
+        // Probability of Contact Estimation One loop
+        robot->leg[i]->prob_stable = std::fmin(1.0,pce_obj[i].stable_contact_detection(robot->leg[i]->imu)); // TODO 
+        // std::cout<<"prob "<<i<<" "<<pce_obj[i].stable_contact_detection(robot->leg[i]->imu)<<std::endl;
+    }
+}
+void Wrapper::find_params_PCE() // set forts batched and compute the bias
+{
+    for(int i = 0 ; i < robot->n_legs; i++)
+    { 
+        pce_obj[i].store_data(robot->leg[i]->imu);
+    }
+}
+void Wrapper::setParamsMujocoPCE()
+{
+    pce_obj[0].ax_bias =  LEG0_ax_bias;
+    pce_obj[0].ay_bias =  LEG0_ay_bias;
+    pce_obj[0].az_bias =  LEG0_az_bias;
+    pce_obj[0].wx_bias =  LEG0_wx_bias;
+    pce_obj[0].wy_bias =  LEG0_wy_bias;
+    pce_obj[0].wz_bias =  LEG0_wz_bias;
+    pce_obj[0].ax_std =   LEG0_ax_std;
+    pce_obj[0].ay_std =   LEG0_ay_std;
+    pce_obj[0].az_std =   LEG0_az_std;
+    pce_obj[0].wx_std =   LEG0_wx_std;
+    pce_obj[0].wy_std =   LEG0_wy_std;
+    pce_obj[0].wz_std =   LEG0_wz_std;
+
+    pce_obj[1].ax_bias =  LEG1_ax_bias;
+    pce_obj[1].ay_bias =  LEG1_ay_bias;
+    pce_obj[1].az_bias =  LEG1_az_bias;
+    pce_obj[1].wx_bias =  LEG1_wx_bias;
+    pce_obj[1].wy_bias =  LEG1_wy_bias;
+    pce_obj[1].wz_bias =  LEG1_wz_bias;
+    pce_obj[1].ax_std =   LEG1_ax_std;
+    pce_obj[1].ay_std =   LEG1_ay_std;
+    pce_obj[1].az_std =   LEG1_az_std;
+    pce_obj[1].wx_std =   LEG1_wx_std;
+    pce_obj[1].wy_std =   LEG1_wy_std;
+    pce_obj[1].wz_std =   LEG1_wz_std;
+
+    pce_obj[2].ax_bias =  LEG2_ax_bias;
+    pce_obj[2].ay_bias =  LEG2_ay_bias;
+    pce_obj[2].az_bias =  LEG2_az_bias;
+    pce_obj[2].wx_bias =  LEG2_wx_bias;
+    pce_obj[2].wy_bias =  LEG2_wy_bias;
+    pce_obj[2].wz_bias =  LEG2_wz_bias;
+    pce_obj[2].ax_std =   LEG2_ax_std;
+    pce_obj[2].ay_std =   LEG2_ay_std;
+    pce_obj[2].az_std =   LEG2_az_std;
+    pce_obj[2].wx_std =   LEG2_wx_std;
+    pce_obj[2].wy_std =   LEG2_wy_std;
+    pce_obj[2].wz_std =   LEG2_wz_std;
+
+
+    pce_obj[3].ax_bias =  LEG3_ax_bias;
+    pce_obj[3].ay_bias =  LEG3_ay_bias;
+    pce_obj[3].az_bias =  LEG3_az_bias;
+    pce_obj[3].wx_bias =  LEG3_wx_bias;
+    pce_obj[3].wy_bias =  LEG3_wy_bias;
+    pce_obj[3].wz_bias =  LEG3_wz_bias;
+    pce_obj[3].ax_std =   LEG3_ax_std;
+    pce_obj[3].ay_std =   LEG3_ay_std;
+    pce_obj[3].az_std =   LEG3_az_std;
+    pce_obj[3].wx_std =   LEG3_wx_std;
+    pce_obj[3].wy_std =   LEG3_wy_std;
+    pce_obj[3].wz_std =   LEG3_wz_std;
 }

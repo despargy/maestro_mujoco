@@ -1,6 +1,5 @@
 #include <Controller.h>
 
-
 #ifndef _LOCOMOTIONCONTROLLER_H_
 #define _LOCOMOTIONCONTROLLER_H_
 

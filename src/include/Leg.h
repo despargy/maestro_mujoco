@@ -8,7 +8,6 @@
 
 #include <kdl/chainfksolver.hpp>
 
-
 #ifndef _LEG_H_
 #define _LEG_H_
 
@@ -62,6 +61,8 @@ class Leg
 
         Eigen::Vector3d TIP_EXT;
         Eigen::Vector3d foothold;
+        Eigen::VectorXd imu;
+
         Leg();
         ~Leg();
         

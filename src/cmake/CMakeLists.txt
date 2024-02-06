@@ -36,6 +36,8 @@ link_directories(${orocos_kdl_LIBRARY_DIRS})
 
 include_directories(
     /home/despinar/mujoco_ws/maestro_mujoco/src/include
+    /home/despinar/Workspaces/ProbabilisticContactEstimation_cpp/kdepp/include/kdepp
+    /home/despinar/Workspaces/ProbabilisticContactEstimation_cpp/include    
     ${NLOPT_INCLUDE_DIRS}
     ${OROCOS_KDL_INCLUDE_DIRS}
 )
@@ -54,6 +56,7 @@ set(MAESTRO_CPP
     ../main/Wrapper.cpp
     ../main/LocomotionController.cpp
     ../main/TrajController.cpp
+    /home/despinar/Workspaces/ProbabilisticContactEstimation_cpp/src/pce.cpp
 )
 
 add_executable(walk ../main/walkMujoco.cpp ${MAESTRO_CPP})

@@ -277,10 +277,18 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
         break;
 
-    /* Configure init stay down pose for robot */
+    /* Configure StandUp pose for robot */
     case S2:
-
         controller->PD_smooth(controller->robot->leg[0]->sit1, 1000);
+        if(top_time > fsm->t_S3)
+        {
+            fsm->state = S3; // stand up, go to init IMUs measurements
+            std::cout<<"Robot stand up, I will move to init IMUs before locomotion"<<std::endl;
+        }
+        break;
+    case S3:
+    
+        controller->PD_smooth(controller->robot->leg[0]->sit1, 1000); // robot remains
         if(top_time > fsm->t_MC)
         {
             controller->t0 = top_time;  // t0 -> start of tracking
@@ -302,7 +310,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             controller->robot->leg[1]->foothold = controller->robot->leg[1]->g_0bo_init.block(0,3,3,1);
             controller->robot->leg[2]->foothold = controller->robot->leg[2]->g_0bo_init.block(0,3,3,1);
             controller->robot->leg[3]->foothold = controller->robot->leg[3]->g_0bo_init.block(0,3,3,1);
-                
+            
         }
         break;
    
@@ -331,12 +339,10 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
             // Commanded velocity
             controller->computeDynamicWeights();
-            // if(controller->t_real< 0.1)
-            //     controller->dynaErrors(Eigen::Vector3d(0,0,0));
-            // else
-                controller->dynaErrors(dp_cmd);
+            controller->dynaErrors(dp_cmd);
             controller->dynaControlSignal();
             controller->doubleInverseTip();
+            //CHECK THIS condition
             if ( controller->A_TOUCHED & controller->B_TOUCHED & (controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg == 50*Eigen::Vector3d::Ones()) & (controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg == 50*Eigen::Vector3d::Ones()) )
             {
                 fsm->phase = PH_TARGET;
@@ -347,7 +353,8 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
         data->save_dyna(controller->t_real,
                         controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
-
+                        // controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
+                        // controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
                         controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
                         

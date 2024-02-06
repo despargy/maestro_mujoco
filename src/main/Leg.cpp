@@ -20,6 +20,9 @@ Leg::Leg()
 
     dq_out = Eigen::Vector3d::Zero();
 
+    imu.resize(6);
+
+    prob_stable = 1.0; // init as stable contact
 }
 
 /* De-Constructor*/
