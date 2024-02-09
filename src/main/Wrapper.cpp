@@ -515,7 +515,9 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[0].thres_ax = LEG0_thres_ax; 
     pce_obj[0].thres_ay = LEG0_thres_ay; 
     pce_obj[0].thres_az = LEG0_thres_az; 
-
+    pce_obj[0].thres_wx = LEG0_thres_wx; 
+    pce_obj[0].thres_wy = LEG0_thres_wy; 
+    pce_obj[0].thres_wz = LEG0_thres_wz; 
 
     pce_obj[1].ax_bias =  LEG1_ax_bias;
     pce_obj[1].ay_bias =  LEG1_ay_bias;
@@ -534,6 +536,10 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[1].thres_ax = LEG1_thres_ax; 
     pce_obj[1].thres_ay = LEG1_thres_ay; 
     pce_obj[1].thres_az = LEG1_thres_az; 
+    pce_obj[1].thres_wx = LEG1_thres_wx; 
+    pce_obj[1].thres_wy = LEG1_thres_wy; 
+    pce_obj[1].thres_wz = LEG1_thres_wz; 
+
 
     pce_obj[2].ax_bias =  LEG2_ax_bias;
     pce_obj[2].ay_bias =  LEG2_ay_bias;
@@ -552,6 +558,9 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[2].thres_ax = LEG2_thres_ax; 
     pce_obj[2].thres_ay = LEG2_thres_ay; 
     pce_obj[2].thres_az = LEG2_thres_az; 
+    pce_obj[2].thres_wx = LEG2_thres_wx; 
+    pce_obj[2].thres_wy = LEG2_thres_wy; 
+    pce_obj[2].thres_wz = LEG2_thres_wz; 
 
     pce_obj[3].ax_bias =  LEG3_ax_bias;
     pce_obj[3].ay_bias =  LEG3_ay_bias;
@@ -570,4 +579,7 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[3].thres_ax = LEG3_thres_ax; 
     pce_obj[3].thres_ay = LEG3_thres_ay; 
     pce_obj[3].thres_az = LEG3_thres_az; 
+    pce_obj[3].thres_wx = LEG3_thres_wx; 
+    pce_obj[3].thres_wy = LEG3_thres_wy; 
+    pce_obj[3].thres_wz = LEG3_thres_wz; 
 }

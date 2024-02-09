@@ -59,23 +59,35 @@
 #define LEG3_wz_std  1.97416e-05;
 
 // Thressholds Ax,Ay,Az
-#define LEG0_thres_ax  2;//2 
-#define LEG0_thres_ay  2;//2 
-#define LEG0_thres_az  2;//2 
+#define LEG0_thres_ax  3;//2; 
+#define LEG0_thres_ay  3;//2; 
+#define LEG0_thres_az  3;//2; 
+#define LEG1_thres_ax  3;//2;
+#define LEG1_thres_ay  3;//2;
+#define LEG1_thres_az  3;//2;
+#define LEG2_thres_ax  3;//2;
+#define LEG2_thres_ay  3;//2;
+#define LEG2_thres_az  3;//2;
+#define LEG3_thres_ax  3;//2;
+#define LEG3_thres_ay  3;//2;
+#define LEG3_thres_az  3;//2;
 
-#define LEG1_thres_ax  2;//2
-#define LEG1_thres_ay  2;//2
-#define LEG1_thres_az  2;//2
+// Thressholds Wx,Wy,Wz
+#define LEG0_thres_wx  1.0;//0.5
+#define LEG0_thres_wy  1.0;//0.5
+#define LEG0_thres_wz  0.6;//0.5
 
-#define LEG2_thres_ax  2;//1
-#define LEG2_thres_ay  2;//1
-#define LEG2_thres_az  2;//1
+#define LEG1_thres_wx  1.0;//0.5
+#define LEG1_thres_wy  1.0;//0.5
+#define LEG1_thres_wz  0.6;//0.5
 
-#define LEG3_thres_ax  2;//1
-#define LEG3_thres_ay  2;//1
-#define LEG3_thres_az  2;//1
+#define LEG2_thres_wx  1.0; // 0.5
+#define LEG2_thres_wy  1.0;// 0.5
+#define LEG2_thres_wz  0.6;// 0.5
 
-
+#define LEG3_thres_wx  1.0//0.5
+#define LEG3_thres_wy  1.0;//0.4
+#define LEG3_thres_wz  0.6; //0.6
 
 
 #define mujoco_batch_size 50;

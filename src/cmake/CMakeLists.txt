@@ -60,8 +60,8 @@ set(MAESTRO_CPP
     /home/despinar/Workspaces/ProbabilisticContactEstimation_cpp/src/pce.cpp
 )
 
-add_executable(walk ../main/walkMujoco.cpp ${MAESTRO_CPP})
-target_link_libraries(walk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
+# add_executable(walk ../main/walkMujoco.cpp ${MAESTRO_CPP})
+# target_link_libraries(walk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
 
 add_executable(dynawalk ../main/dynawalkMujoco.cpp ${MAESTRO_CPP})
 target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
