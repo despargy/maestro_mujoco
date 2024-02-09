@@ -117,7 +117,7 @@ void scroll(GLFWwindow* window, double xoffset, double yoffset)
     // emulate vertical mouse motion = 5% of window height
     mjv_moveCamera(m, mjMOUSE_ZOOM, 0, -0.05*yoffset, &scn, &cam);
 }
-
+bool ONCE_SAVE = true;
 void my_controller_walk(const mjModel* m, mjData* d)
 {
     // printf("MuJoCo time %f\n ", d->time);
@@ -126,7 +126,7 @@ void my_controller_walk(const mjModel* m, mjData* d)
     if( (d->time - topController->t_last_c) >= topController->controller->dt )
     {
         topController->wrapper->update_locomotion(m,d,topController->controller->dt);
-        //Probabilistic Contact Estimation DO NOT NEED TO RUN, ONLY FOR FIRST TIME
+        //Probabilistic Contact Estimation DO NOT NEED TO RUN, ONLY FOR FIRST TIME of your model
         // if(topController->fsm->state == S3)
         //     topController->wrapper->find_params_PCE();
         // else if(FIND_PARAMS & topController->fsm->state == DYNA_GAIT)
@@ -140,9 +140,21 @@ void my_controller_walk(const mjModel* m, mjData* d)
         // }
 
         if(topController->fsm->state == S3)
+        {
             topController->wrapper->init_PCE();
+            topController->wrapper->pce_obj[0].save_csv();
+        }
+        // Uncomment  those to store IMU data in .csv of one leg before start locomotion
+        // else if(topController->fsm->state == DYNA_GAIT & ONCE_SAVE)
+        // {
+        //     topController->wrapper->pce_obj[3].save_csv();
+        //     ONCE_SAVE = false;
+        // }
         else if(topController->fsm->state == DYNA_GAIT)
+        {
             topController->wrapper->update_PCE();
+            topController->wrapper->pce_obj[0].save_csv();
+        }
 
         topController->computeDynamic(d->time); // call once
         topController->wrapper->set_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 

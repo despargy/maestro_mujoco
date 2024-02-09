@@ -18,11 +18,11 @@
   </asset>
    <worldbody> 
     <light pos="0 0 1.5" dir="0 0 -1" directional="true"/> 
-    <geom name="blue_floor" size="0 0 0.5" type="plane" material="groundplane" condim="3"   friction="0.8 0.6 0.6" /> 
+    <geom name="blue_floor" size="0 0 0.5" type="plane" material="groundplane" condim="3"   friction="1 0.8 0.6" /> 
   <!-- contype="1" conaffinity="1"  -->
-      <!-- <body name="lala" pos="1 0 0.0"> -->
-            <geom name="slippery_surface" size="2 0.5 0.002" type="box" condim="3"   friction="0.0 0.0 0.0" /> 
-      <!-- </body> -->
+      <body name="corridor1" pos="1 0 -0.199">
+            <geom name="slippery_surface" size="2 0.5 0.2" type="box" solimp="0.9 0.95 0.001 0.1 1" /> 
+      </body>
   </worldbody> 
 
 </mujoco>

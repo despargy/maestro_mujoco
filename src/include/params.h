@@ -123,10 +123,10 @@
 #define param_kv_DYNA 100; //20
 #define param_kp_DYNA 30;
 
-#define param_Freq_Swing_DYNA 8.0; 
+#define param_Freq_Swing_DYNA 4.0; 
 #define param_t0_Swing_DYNA 0.01;
 
-#define param_dp_cmd_x 0.5; // m/s
+#define param_dp_cmd_x 0.2; // m/s 0.5
 #define param_dp_cmd_y 0.0; // m/s
 #define param_dp_cmd_z 0.0; // m/s
 
@@ -144,10 +144,12 @@
 #define param_Kp_thing 5;  //5, 3 
 #define param_Kp_calf 3;   //3, 2
 
+#define param_alpha_DYNA 0.0;
+
 /********************** ******************** *************************/
 #endif
 
-// param_Freq_Swing_DYNA 4.0 +  param_dp_cmd_x 0.2;
+// param_Freq_Swing_DYNA 4.0 +  param_dp_cmd_x 0.2; thress 50, 100, 20 20
 // param_Freq_Swing_DYNA 8.0 +  param_dp_cmd_x 0.5;
 // param_Freq_Swing_DYNA 10.0 +  param_dp_cmd_x 0.8;
 // param_Freq_Swing_DYNA 16.0 +  param_dp_cmd_x 1.0;

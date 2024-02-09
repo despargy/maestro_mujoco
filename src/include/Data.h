@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-
+#include <filesystem>
+#include <iostream>
 #ifndef _DATA_H_
 #define _DATA_H_
 
@@ -9,7 +10,7 @@ class Data
 {
     public:
         FILE *fid;
-        char *datafile;
+        const char *datafile;
 
         Data();
         Data(char* file_);
@@ -25,7 +26,7 @@ class Data
 
         void save_exp(double time, double w0, double w1, double w2, double w3, float bx, float by, float bz, float tipx, float tipy, float tipz, double pcx, double pcy, double pcz, double pTx, double pTy, double pTz);
         void init_save_data_exp();
-
+        void save_slip(double time, double pcx, double pcy, double pcz, double w0, double w1, double w2, double w3, double prob0, double prob1, double prob2, double prob3, double wStanceA, double wStanceB, double probStanceA, double probStanceB,double wSwingA, double wSwingB, double probSwingA, double probSwingB, double ev_x, double ev_y, double ev_z, double  imu_x, double imu_y, double imu_z );
 };
 
 #endif

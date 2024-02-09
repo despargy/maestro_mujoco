@@ -478,6 +478,16 @@ void Wrapper::update_PCE()
         robot->leg[i]->prob_stable = std::fmin(1.0,pce_obj[i].stable_contact_detection(robot->leg[i]->imu)); // TODO 
         // std::cout<<"prob "<<i<<" "<<pce_obj[i].stable_contact_detection(robot->leg[i]->imu)<<std::endl;
     }
+    
+    // robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu)); // TODO 
+    // robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu)); // TODO 
+
+    // robot->leg[0]->prob_stable = std::fmin(1.0,pce_obj[0].stable_contact_detection(robot->leg[0]->imu)); // TODO 
+    // robot->leg[1]->prob_stable = std::fmin(1.0,pce_obj[1].stable_contact_detection(robot->leg[1]->imu)); // TODO 
+    // robot->leg[2]->prob_stable = std::fmin(1.0,pce_obj[2].stable_contact_detection(robot->leg[2]->imu)); // TODO 
+    // robot->leg[3]->prob_stable = std::fmin(1.0,pce_obj[3].stable_contact_detection(robot->leg[3]->imu)); // TODO 
+
+
 }
 void Wrapper::find_params_PCE() // set forts batched and compute the bias
 {
@@ -500,6 +510,12 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[0].wx_std =   LEG0_wx_std;
     pce_obj[0].wy_std =   LEG0_wy_std;
     pce_obj[0].wz_std =   LEG0_wz_std;
+    pce_obj[0].batch_size   = mujoco_batch_size;
+    pce_obj[0].eval_samples = mujoco_eval_samples;
+    pce_obj[0].thres_ax = LEG0_thres_ax; 
+    pce_obj[0].thres_ay = LEG0_thres_ay; 
+    pce_obj[0].thres_az = LEG0_thres_az; 
+
 
     pce_obj[1].ax_bias =  LEG1_ax_bias;
     pce_obj[1].ay_bias =  LEG1_ay_bias;
@@ -513,6 +529,11 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[1].wx_std =   LEG1_wx_std;
     pce_obj[1].wy_std =   LEG1_wy_std;
     pce_obj[1].wz_std =   LEG1_wz_std;
+    pce_obj[1].batch_size   = mujoco_batch_size;
+    pce_obj[1].eval_samples = mujoco_eval_samples;
+    pce_obj[1].thres_ax = LEG1_thres_ax; 
+    pce_obj[1].thres_ay = LEG1_thres_ay; 
+    pce_obj[1].thres_az = LEG1_thres_az; 
 
     pce_obj[2].ax_bias =  LEG2_ax_bias;
     pce_obj[2].ay_bias =  LEG2_ay_bias;
@@ -526,7 +547,11 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[2].wx_std =   LEG2_wx_std;
     pce_obj[2].wy_std =   LEG2_wy_std;
     pce_obj[2].wz_std =   LEG2_wz_std;
-
+    pce_obj[2].batch_size   = mujoco_batch_size;
+    pce_obj[2].eval_samples = mujoco_eval_samples;
+    pce_obj[2].thres_ax = LEG2_thres_ax; 
+    pce_obj[2].thres_ay = LEG2_thres_ay; 
+    pce_obj[2].thres_az = LEG2_thres_az; 
 
     pce_obj[3].ax_bias =  LEG3_ax_bias;
     pce_obj[3].ay_bias =  LEG3_ay_bias;
@@ -540,4 +565,9 @@ void Wrapper::setParamsMujocoPCE()
     pce_obj[3].wx_std =   LEG3_wx_std;
     pce_obj[3].wy_std =   LEG3_wy_std;
     pce_obj[3].wz_std =   LEG3_wz_std;
+    pce_obj[3].batch_size   = mujoco_batch_size;
+    pce_obj[3].eval_samples = mujoco_eval_samples;
+    pce_obj[3].thres_ax = LEG3_thres_ax; 
+    pce_obj[3].thres_ay = LEG3_thres_ay; 
+    pce_obj[3].thres_az = LEG3_thres_az; 
 }

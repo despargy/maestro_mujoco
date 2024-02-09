@@ -2,8 +2,12 @@
 /* Constructor*/
 Data::Data()
 {
-
-    datafile = "/home/despinar/mujoco_ws/maestro_mujoco/data/data.csv"; // datafile to save data
+    std::filesystem::path currentPath = std::filesystem::current_path();
+    currentPath = currentPath.parent_path();
+    currentPath = currentPath.parent_path();
+    currentPath = currentPath.parent_path();
+    currentPath /= "data/data.csv";
+    datafile = currentPath.c_str(); // datafile to save data
     fid = fopen(datafile,"w"); // open it for write
 }
 Data::Data(char* file_)
@@ -81,7 +85,7 @@ void Data::save_loc(double time, double p0x, double p0y, double p0z, double w0, 
 /* Function which defines the data/variables we want to save to the csv file*/
 void Data::save_dyna(double time, double pcx, double pcy, double pcz, double w0, double w1, double w2, double w3, double f0x, double f0y, double f0z,double f1x, double f1y, double f1z, double f2x, double f2y, double f2z,double f3x, double f3y, double f3z, double tip0_x,double tip0_y,double tip0_z,double tip1_x,double tip1_y,double tip1_z ,double tip2_x,double tip2_y,double tip2_z,double tip3_x,double tip3_y,double tip3_z , double bA_x,double bA_y,double bA_z,double bB_x,double bB_y,double bB_z, double ev_x, double ev_y, double ev_z )
 {
-    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,pcx,pcy,pcz,w0, w1, w2, w3,f0x, f0y, f0z, f1x, f1y, f1z, f2x, f2y, f2z, f3x, f3y, f3z, tip0_x, tip0_y, tip0_z, tip1_x, tip1_y, tip1_z, tip2_x, tip2_y, tip2_z, tip3_x, tip3_y, tip3_z, bA_x,bA_y,bA_z,bB_x,bB_y,bB_z, ev_x, ev_y, ev_z ); 
+    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,pcx,pcy,pcz,w0, w1, w2, w3,f0x, f0y, f0z, f1x, f1y, f1z, f2x, f2y, f2z, f3x, f3y, f3z, tip0_x, tip0_y, tip0_z, tip1_x, tip1_y, tip1_z, tip2_x, tip2_y, tip2_z, tip3_x, tip3_y, tip3_z, bA_x,bA_y,bA_z,bB_x,bB_y,bB_z, ev_x, ev_y, ev_z ); 
     //move to a newline
     fprintf(fid,"\n");
 }
@@ -100,6 +104,13 @@ void Data::init_save_data_exp()
 void Data::save_exp(double time, double w0, double w1, double w2, double w3, float bx, float by, float bz, float tipx, float tipy, float tipz, double pcx, double pcy, double pcz, double pTx, double pTy, double pTz)
 {
     fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,w0, w1, w2, w3, bx, by, bz, tipx, tipy, tipz, pcx, pcy, pcz, pTx, pTy, pTz); 
+    //move to a newline
+    fprintf(fid,"\n");
+}
+
+void Data::save_slip(double time, double pcx, double pcy, double pcz, double w0, double w1, double w2, double w3, double prob0, double prob1, double prob2, double prob3, double wStanceA, double wStanceB, double probStanceA, double probStanceB,double wSwingA, double wSwingB, double probSwingA, double probSwingB, double ev_x, double ev_y, double ev_z, double imu_x, double imu_y, double imu_z )
+{
+    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,pcx,pcy,pcz,w0, w1, w2, w3, prob0, prob1, prob2, prob3,   wStanceA,  wStanceB,  probStanceA,  probStanceB, wSwingA,  wSwingB,  probSwingA,  probSwingB, ev_x, ev_y, ev_z, imu_x,  imu_y,  imu_z ); 
     //move to a newline
     fprintf(fid,"\n");
 }

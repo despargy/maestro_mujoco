@@ -18,7 +18,7 @@ class Robot
         double mass, g_gravity;
         double height_z; 
         double swingL_id;
-        double swingL_id_a, swingL_id_b;
+        double swingL_id_a, swingL_id_b, stanceL_id_a, stanceL_id_b;
         /* Reference to sensordata ids CoM [.] - Mujoco xml*/
         int acc_x__ , acc_y__ , acc_z__ ; // Body acceleration ids
         int gyro_x__, gyro_y__, gyro_z__; // Body gyro    ids

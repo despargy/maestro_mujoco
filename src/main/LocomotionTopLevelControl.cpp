@@ -95,6 +95,9 @@ void LocomotionTopLevelControl::setParamsDynamic()
     /*  get from params.h */
     controller->ADAPT_A = param_ADAPT_A;
     controller->ADAPT_B = param_ADAPT_B;
+
+    controller->alpha = param_alpha_DYNA; // same as mujoco .xml
+
     controller->robot->KEEP_CONTROL = param_KEEP_CONTROL;
     controller->robot->mass = param_mass; // same as mujoco .xml
     controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
@@ -324,7 +327,9 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             
             controller->robot->swingL_id_a = (int)(++loc_i%2); // change swing leg by free gat order
             controller->robot->swingL_id_b = (int) (3 - controller->robot->swingL_id_a); //( case A.{0,3} , case B.{1,2} )
-            
+            controller->robot->stanceL_id_a = (int)((loc_i+1)%2);
+            controller->robot->stanceL_id_b = (int) (3 - controller->robot->stanceL_id_a);
+
             controller->setDynamicPhase(); // setphase target etc. 
 
             controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_a],dp_cmd);
@@ -351,33 +356,54 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             break;
         }
 
-        data->save_dyna(controller->t_real,
+        // data->save_dyna(controller->t_real,
+        //                 controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
+
+        //                 controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
+        //                 controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
+                        
+        //                 controller->robot->leg[0]->foothold(0),controller->robot->leg[0]->foothold(1),controller->robot->leg[0]->foothold(2),
+        //                 controller->robot->leg[1]->foothold(0),controller->robot->leg[1]->foothold(1),controller->robot->leg[1]->foothold(2),
+        //                 controller->robot->leg[2]->foothold(0),controller->robot->leg[2]->foothold(1),controller->robot->leg[2]->foothold(2),
+        //                 controller->robot->leg[3]->foothold(0),controller->robot->leg[3]->foothold(1),controller->robot->leg[3]->foothold(2),
+
+        //                 controller->robot->leg[0]->g_o_world(0,3),           controller->robot->leg[0]->g_o_world(1,3),           controller->robot->leg[0]->g_o_world(2,3),
+        //                 controller->robot->leg[1]->g_o_world(0,3),           controller->robot->leg[1]->g_o_world(1,3),           controller->robot->leg[1]->g_o_world(2,3),
+        //                 controller->robot->leg[2]->g_o_world(0,3),           controller->robot->leg[2]->g_o_world(1,3),           controller->robot->leg[2]->g_o_world(2,3),
+        //                 controller->robot->leg[3]->g_o_world(0,3),           controller->robot->leg[3]->g_o_world(1,3),           controller->robot->leg[3]->g_o_world(2,3),
+                        
+        //                 // controller->f_applied_a(0), controller->f_applied_a(1), controller->f_applied_a(2),
+        //                 // controller->f_applied_b(0), controller->f_applied_b(1), controller->f_applied_b(2)
+
+        //                 controller->bezier_world_a(0), controller->bezier_world_a(1), controller->bezier_world_a(2),
+        //                 controller->bezier_world_b(0), controller->bezier_world_b(1), controller->bezier_world_b(2),
+        //                                         controller->e_v(0),controller->e_v(1),controller->e_v(2)
+
+                        
+        //                 );
+
+
+        data->save_slip(controller->t_real,
                         controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
-                        // controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
-                        // controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
+
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
                         controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
                         
-                        controller->robot->leg[0]->foothold(0),controller->robot->leg[0]->foothold(1),controller->robot->leg[0]->foothold(2),
-                        controller->robot->leg[1]->foothold(0),controller->robot->leg[1]->foothold(1),controller->robot->leg[1]->foothold(2),
-                        controller->robot->leg[2]->foothold(0),controller->robot->leg[2]->foothold(1),controller->robot->leg[2]->foothold(2),
-                        controller->robot->leg[3]->foothold(0),controller->robot->leg[3]->foothold(1),controller->robot->leg[3]->foothold(2),
-
-                        controller->robot->leg[0]->g_o_world(0,3),           controller->robot->leg[0]->g_o_world(1,3),           controller->robot->leg[0]->g_o_world(2,3),
-                        controller->robot->leg[1]->g_o_world(0,3),           controller->robot->leg[1]->g_o_world(1,3),           controller->robot->leg[1]->g_o_world(2,3),
-                        controller->robot->leg[2]->g_o_world(0,3),           controller->robot->leg[2]->g_o_world(1,3),           controller->robot->leg[2]->g_o_world(2,3),
-                        controller->robot->leg[3]->g_o_world(0,3),           controller->robot->leg[3]->g_o_world(1,3),           controller->robot->leg[3]->g_o_world(2,3),
+                        controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
+                        controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
                         
-                        // controller->f_applied_a(0), controller->f_applied_a(1), controller->f_applied_a(2),
-                        // controller->f_applied_b(0), controller->f_applied_b(1), controller->f_applied_b(2)
+                        controller->robot->leg[(int)controller->robot->stanceL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->stanceL_id_b]->wv_leg(0),
+                        controller->robot->leg[(int)controller->robot->stanceL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->stanceL_id_b]->prob_stable,
 
-                        controller->bezier_world_a(0), controller->bezier_world_a(1), controller->bezier_world_a(2),
-                        controller->bezier_world_b(0), controller->bezier_world_b(1), controller->bezier_world_b(2),
-                                                controller->e_v(0),controller->e_v(1),controller->e_v(2)
+                        controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg(0),
+                        controller->robot->leg[(int)controller->robot->swingL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->swingL_id_b]->prob_stable,
 
-                        
+
+                        controller->e_v(0),controller->e_v(1),controller->e_v(2),
+
+                        controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2)
+
                         );
-
                         
 
         break;    

@@ -67,14 +67,14 @@ vel_z = data[:,40]
 
 plt.figure()
 
-plt.plot(t_real,w0,Label="w0 x")
-plt.plot(t_real,w1,Label="w1 x")
-plt.plot(t_real,w2,Label="w2 x")
-plt.plot(t_real,w3,Label="w3 x")
+plt.plot(t_real,w0,Label="w0")
+plt.plot(t_real,w1,Label="w1")
+plt.plot(t_real,w2,Label="w2")
+plt.plot(t_real,w3,Label="w3")
 
 plt.legend()
 plt.xlabel("t_real")
-plt.ylabel("Weights position")
+plt.ylabel("Weights")
 plt.title("Weights  - time")
 
 plt.figure()
@@ -91,8 +91,8 @@ plt.title("pos  - time")
 
 plt.figure()
 
-plt.plot(t_real,w0/10000,Label="weight 0")
-plt.plot(t_real,w3/10000,Label="weight 3")
+# plt.plot(t_real,w0/10000,Label="weight 0")
+# plt.plot(t_real,w3/10000,Label="weight 3")
 
 plt.plot(t_real,10*tip_0z,Label="swing tip 0")
 plt.plot(t_real,10*tip_3z,Label="swing tip 3")
