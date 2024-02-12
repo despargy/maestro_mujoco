@@ -300,10 +300,10 @@
     </sensor>
     
     <contact>
-        <pair  geom1="FR_tip" geom2="slippery_surface" condim="3" friction="1 0.8 0.2"/> 
-        <pair  geom1="FL_tip" geom2="slippery_surface" condim="3" friction="1 0.8 0.2"/>
-        <pair  geom1="RR_tip" geom2="slippery_surface" condim="3" friction="1 0.8 0.2"/>
-        <pair  geom1="RL_tip" geom2="slippery_surface" condim="3" friction="1 0.8 0.2"/>
+        <pair  geom1="FR_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.2"/> 
+        <pair  geom1="FL_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.2"/>
+        <pair  geom1="RR_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.2"/>
+        <pair  geom1="RL_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.2"/>
     </contact> 
 
 </mujoco>

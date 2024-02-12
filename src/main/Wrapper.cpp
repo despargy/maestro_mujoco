@@ -472,22 +472,12 @@ void Wrapper::update_PCE()
 {
     for(int i = 0 ; i < robot->n_legs; i++)
     { 
-        // robot->leg[i]->prob_stable = std::fmin(1.0,1.0); // TODO 
-
-        // Probability of Contact Estimation One loop
-        robot->leg[i]->prob_stable = std::fmin(1.0,pce_obj[i].stable_contact_detection(robot->leg[i]->imu)); // TODO 
-        // std::cout<<"prob "<<i<<" "<<pce_obj[i].stable_contact_detection(robot->leg[i]->imu)<<std::endl;
+        robot->leg[i]->prob_stable = std::fmin(1.0,pce_obj[i].stable_contact_detection(robot->leg[i]->imu));
     }
+
     
     // robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu)); // TODO 
     // robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu)); // TODO 
-
-    // robot->leg[0]->prob_stable = std::fmin(1.0,pce_obj[0].stable_contact_detection(robot->leg[0]->imu)); // TODO 
-    // robot->leg[1]->prob_stable = std::fmin(1.0,pce_obj[1].stable_contact_detection(robot->leg[1]->imu)); // TODO 
-    // robot->leg[2]->prob_stable = std::fmin(1.0,pce_obj[2].stable_contact_detection(robot->leg[2]->imu)); // TODO 
-    // robot->leg[3]->prob_stable = std::fmin(1.0,pce_obj[3].stable_contact_detection(robot->leg[3]->imu)); // TODO 
-
-
 }
 void Wrapper::find_params_PCE() // set forts batched and compute the bias
 {

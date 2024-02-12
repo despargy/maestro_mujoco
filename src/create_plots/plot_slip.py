@@ -98,8 +98,8 @@ plt.title("Prob  - time")
 
 plt.figure()
 
-plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
-plt.plot(t_real,w_stance_B/50,Label="Stance B weight scaled")
+plt.plot(t_real,w_stance_A/2000,Label="Stance A weight scaled")
+plt.plot(t_real,w_stance_B/2000,Label="Stance B weight scaled")
 plt.plot(t_real,prob_stance_A,Label="Stance A prob")
 plt.plot(t_real,prob_stance_B,Label="Stance B prob")
 
@@ -108,29 +108,29 @@ plt.xlabel("t_real")
 plt.ylabel("Stance")
 plt.title("Stance  - time")
 
-plt.figure()
+# plt.figure()
 
-plt.plot(t_real,w_swing_A/70000,Label="Swing A weight scaled")
-plt.plot(t_real,w_swing_B/70000,Label="Swing B weight scaled")
-plt.plot(t_real,prob_swing_A,Label="Swing A prob")
-plt.plot(t_real,prob_swing_B,Label="Swing B prob")
+# plt.plot(t_real,w_swing_A/70000,Label="Swing A weight scaled")
+# plt.plot(t_real,w_swing_B/70000,Label="Swing B weight scaled")
+# plt.plot(t_real,prob_swing_A,Label="Swing A prob")
+# plt.plot(t_real,prob_swing_B,Label="Swing B prob")
 
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("Swing")
-plt.title("Swing  - time")
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("Swing")
+# plt.title("Swing  - time")
 
 
-plt.figure()
+# plt.figure()
 
-plt.plot(t_real,imu_x,Label="acc x")
-plt.plot(t_real,imu_y,Label="acc y")
-plt.plot(t_real,imu_z,Label="acc z")
+# plt.plot(t_real,imu_x,Label="acc x")
+# plt.plot(t_real,imu_y,Label="acc y")
+# plt.plot(t_real,imu_z,Label="acc z")
 
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("CoM Acc")
-plt.title("acc  - time")
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("CoM Acc")
+# plt.title("acc  - time")
 
 
 plt.show()

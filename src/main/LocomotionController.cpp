@@ -103,14 +103,16 @@ void LocomotionController::computeWeightsSwing()
 void LocomotionController::computeDynamicWeights()
 {
 
-    for(int l = 0; l < robot->n_legs ; l++)
-    {
+    // Stance A weights updated based on probability
+    int l = (int)robot->stanceL_id_a;
         robot->leg[l]->wv_leg(1) = this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt + robot->leg[l]->wv_leg(1) ; // y
         robot->leg[l]->wv_leg(0) = this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt + robot->leg[l]->wv_leg(0); // x
-
-        // update vvvv vector of robot                          // z stays 1.0 do not change
         robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
-    }
+    // Stance B weights updated based on probability
+    l = (int)robot->stanceL_id_b;
+        robot->leg[l]->wv_leg(1) = this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt + robot->leg[l]->wv_leg(1) ; // y
+        robot->leg[l]->wv_leg(0) = this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt + robot->leg[l]->wv_leg(0); // x
+        robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
 
     if (A_TOUCHED)
         robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA, c1*10, t0_swing/10))*Eigen::Vector3d::Ones(); 

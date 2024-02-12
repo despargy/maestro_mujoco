@@ -6,8 +6,10 @@
 #ifndef _PARAMS_H_
 #define _PARAMS_H_
 
+
 #define param_ADAPT_A false;
 #define param_ADAPT_B false;
+
 #define param_KEEP_CONTROL true;
 
 #define param_mass 12.0;
@@ -144,7 +146,7 @@
 #define param_Kp_thing 5;  //5, 3 
 #define param_Kp_calf 3;   //3, 2
 
-#define param_alpha_DYNA 0.0;
+#define param_alpha_DYNA 0.0;//100000.0;
 
 /********************** ******************** *************************/
 #endif
