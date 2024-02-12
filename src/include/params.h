@@ -146,7 +146,7 @@
 #define param_Kp_thing 5;  //5, 3 
 #define param_Kp_calf 3;   //3, 2
 
-#define param_alpha_DYNA 0.0;//100000.0;
+#define param_alpha_DYNA 100000.0;//100000.0;
 
 /********************** ******************** *************************/
 #endif
