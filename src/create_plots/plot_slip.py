@@ -47,28 +47,34 @@ imu_x = data[:,20]
 imu_y = data[:,21]
 imu_z = data[:,22]
 
+fA_x = data[:,23]
+fA_y = data[:,24]
+fA_z = data[:,25]
+fB_x = data[:,26]
+fB_y = data[:,27]
+fB_z = data[:,28]
 
-# plt.figure()
+plt.figure()
 
-# plt.plot(t_real,pc_0,Label="pc x")
-# plt.plot(t_real,pc_1,Label="pc y")
-# plt.plot(t_real,pc_2,Label="pc z")
+plt.plot(t_real,pc_0,Label="pc x")
+plt.plot(t_real,pc_1,Label="pc y")
+plt.plot(t_real,pc_2,Label="pc z")
 
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("CoM Pos")
-# plt.title("pos  - time")
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM Pos")
+plt.title("pos  - time")
 
-# plt.figure()
+plt.figure()
 
-# plt.plot(t_real,vel_x,Label="vel_x")
-# plt.plot(t_real,vel_y,Label="vel_y")
-# plt.plot(t_real,vel_z,Label="vel_z")
+plt.plot(t_real,vel_x,Label="vel_x")
+plt.plot(t_real,vel_y,Label="vel_y")
+plt.plot(t_real,vel_z,Label="vel_z")
 
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("CoM Vel")
-# plt.title("vel  - time")
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM Vel")
+plt.title("vel  - time")
 
 plt.figure()
 
@@ -107,6 +113,23 @@ plt.legend()
 plt.xlabel("t_real")
 plt.ylabel("Stance")
 plt.title("Stance  - time")
+
+
+plt.figure()
+
+plt.plot(t_real,fA_x,Label="fA_x ")
+plt.plot(t_real,fA_y,Label="fA_y ")
+plt.plot(t_real,fA_z,Label="fA_z ")
+
+plt.plot(t_real,fB_x,Label="fB_x ")
+plt.plot(t_real,fB_y,Label="fB_y ")
+plt.plot(t_real,fB_z,Label="fB_z ")
+
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("Forces")
+plt.title("Forces  - time")
 
 # plt.figure()
 

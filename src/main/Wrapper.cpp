@@ -253,7 +253,7 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
     }
 
     // CoM velocity 
-    // robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, dt);  //TODO
+    robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, dt);  //TODO
     robot->dR_CoM = get_dR_CoM(robot->R_CoM_prev, robot->R_c, dt);  //TODO
     robot->w_CoM  = scewSymmetricInverse(robot->dR_CoM*robot->R_c.transpose());
     // store current as prev for the next control cycle 
@@ -474,10 +474,6 @@ void Wrapper::update_PCE()
     { 
         robot->leg[i]->prob_stable = std::fmin(1.0,pce_obj[i].stable_contact_detection(robot->leg[i]->imu));
     }
-
-    
-    // robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu)); // TODO 
-    // robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu)); // TODO 
 }
 void Wrapper::find_params_PCE() // set forts batched and compute the bias
 {

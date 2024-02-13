@@ -58,39 +58,40 @@
 #define LEG3_wy_std  0.00266415;
 #define LEG3_wz_std  1.97416e-05;
 
-// Thressholds Ax,Ay,Az
-#define LEG0_thres_ax  4;//2; 
-#define LEG0_thres_ay  4;//2; 
-#define LEG0_thres_az  4;//2; 
-#define LEG1_thres_ax  4;//2;
-#define LEG1_thres_ay  4;//2;
-#define LEG1_thres_az  4;//2;
-#define LEG2_thres_ax  2;//2;
-#define LEG2_thres_ay  2;//2;
-#define LEG2_thres_az  4;//2;
-#define LEG3_thres_ax  2;//2;
-#define LEG3_thres_ay  2;//2;
-#define LEG3_thres_az  4;//2;
+// Thressholds Ax,Ay,Az  // CASE A.: freq 4.0, d_cmd 0.2
+                         // CASE B.: freq 8.0, d_cmd 0.5
+#define LEG0_thres_ax  4;// CASE A->2; , CASE B->4  
+#define LEG0_thres_ay  4;// CASE A->2; , CASE B->4  
+#define LEG0_thres_az  4;// CASE A->2; , CASE B->4  
+#define LEG1_thres_ax  4;// CASE A->2; , CASE B->4 
+#define LEG1_thres_ay  4;// CASE A->2; , CASE B->4 
+#define LEG1_thres_az  4;// CASE A->2; , CASE B->4 
+#define LEG2_thres_ax  2;// CASE A->2; , CASE B->2 
+#define LEG2_thres_ay  2;// CASE A->2; , CASE B->2 
+#define LEG2_thres_az  4;// CASE A->2; , CASE B->4 
+#define LEG3_thres_ax  2;// CASE A->2; , CASE B->2 
+#define LEG3_thres_ay  2;// CASE A->2; , CASE B->2 
+#define LEG3_thres_az  4;// CASE A->2; , CASE B->4 
 
 // Thressholds Wx,Wy,Wz
-#define LEG0_thres_wx  1.0;//0.5
-#define LEG0_thres_wy  1.0;//0.5
-#define LEG0_thres_wz  0.5;//0.5
+#define LEG0_thres_wx  1.0;//  CASE A-> 0.5 , CASE B->1.0
+#define LEG0_thres_wy  1.0;//  CASE A-> 0.5 , CASE B->1.0
+#define LEG0_thres_wz  0.5;//  CASE A-> 0.5 , CASE B->0.5
 
-#define LEG1_thres_wx  1.0;//0.5
-#define LEG1_thres_wy  1.0;//0.5
-#define LEG1_thres_wz  0.5;//0.5
+#define LEG1_thres_wx  1.0;//  CASE A-> 0.5, CASE B->1.0
+#define LEG1_thres_wy  1.0;//  CASE A-> 0.5, CASE B->1.0
+#define LEG1_thres_wz  0.5;//  CASE A-> 0.5, CASE B->0.5
 
-#define LEG2_thres_wx  1.0; // 0.5
-#define LEG2_thres_wy  1.0;// 0.5
-#define LEG2_thres_wz  0.6;// 0.5
+#define LEG2_thres_wx  1.0;//  CASE A-> 0.5, CASE B->1.0
+#define LEG2_thres_wy  1.0;//  CASE A-> 0.5, CASE B->1.0
+#define LEG2_thres_wz  0.6;//  CASE A-> 0.5, CASE B->0.6
 
-#define LEG3_thres_wx  1.0//0.5
-#define LEG3_thres_wy  1.0;//0.4
-#define LEG3_thres_wz  0.6; //0.6
+#define LEG3_thres_wx  1.0;// CASE A->0.5, CASE B->1.0
+#define LEG3_thres_wy  1.0;// CASE A->0.4, CASE B->1.0
+#define LEG3_thres_wz  0.6;// CASE A->0.6, CASE B->0.6
 
 
-#define mujoco_batch_size 50;
-#define mujoco_eval_samples 300;
+#define mujoco_batch_size 50; //50
+#define mujoco_eval_samples 300; //300
 
 #endif

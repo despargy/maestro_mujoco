@@ -348,7 +348,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             controller->dynaControlSignal();
             controller->doubleInverseTip();
             //CHECK THIS condition
-            if ( controller->A_TOUCHED & controller->B_TOUCHED & (controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg == 50*Eigen::Vector3d::Ones()) & (controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg == 50*Eigen::Vector3d::Ones()) )
+            if ( controller->A_TOUCHED & controller->B_TOUCHED & (controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg == controller->robot->leg[0]->w0*Eigen::Vector3d::Ones()) & (controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg == controller->robot->leg[0]->w0*Eigen::Vector3d::Ones()) )
             {
                 fsm->phase = PH_TARGET;
             }
@@ -401,8 +401,9 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
                         controller->e_v(0),controller->e_v(1),controller->e_v(2),
 
-                        controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2)
-
+                        controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2),
+                        controller->f_stance_a(0), controller->f_stance_a(1), controller->f_stance_a(2),
+                        controller->f_stance_b(0), controller->f_stance_b(1), controller->f_stance_b(2)
                         );
                         
 

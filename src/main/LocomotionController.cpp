@@ -162,6 +162,9 @@ void LocomotionController::computeSudoGq()
     {
         robot->Gq.block(3,l*3,3,3) =  scewSymmetric(robot->R_c*robot->leg[l]->p_i); //eq. 2 //SCEW
     }
+    // std::cout<<"robot->Gq"<<std::endl;
+
+    // std::cout<<robot->Gq<<std::endl;
     // compute Gp_sude eq. 7
     robot->Gq_sudo = robot->W_inv * robot->Gq.transpose()*(robot->Gq*robot->W_inv*robot->Gq.transpose()).inverse() ;
 }
@@ -307,6 +310,10 @@ void LocomotionController::checkTouchDown()
 {
     f_applied_a = robot->leg[(int)robot->swingL_id_a]->R_i.transpose()*robot->leg[(int)robot->swingL_id_a]->f;
     f_applied_b = robot->leg[(int)robot->swingL_id_b]->R_i.transpose()*robot->leg[(int)robot->swingL_id_b]->f;
+
+    f_stance_a = robot->leg[(int)robot->stanceL_id_a]->R_i.transpose()*robot->leg[(int)robot->stanceL_id_a]->f;
+    f_stance_b = robot->leg[(int)robot->stanceL_id_b]->R_i.transpose()*robot->leg[(int)robot->stanceL_id_b]->f;
+
 
     if (A_TOUCHED)
     {
@@ -614,6 +621,7 @@ void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
     e_p(2) = kp*(robot->p_c(2) - robot->height_z);
 
     // HERE change commanded velocity based on the current robots ori??
+    // here robot->dCoM_p
     e_v.block(0,0,3,1) = (robot->dp_c - robot->R_c*dp_cmd) ; // compute velocity error TODO //robot->R_c0*
     e_v.block(3,0,3,1) = robot->w_CoM ; 
     e_v.block(3,0,3,1) = 0.7*this->e_v.block(3,0,3,1) ; 

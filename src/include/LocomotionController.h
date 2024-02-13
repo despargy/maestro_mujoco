@@ -26,7 +26,7 @@ class LocomotionController : public Controller
         std::vector<double> bCurveY, dot_bCurveY; // Bezier Curve swinging tip
         std::vector<double> bCurveZ, dot_bCurveZ; // Bezier Curve swinging tip
 
-        Eigen::Vector3d f_applied, f_applied_a, f_applied_b;
+        Eigen::Vector3d f_applied, f_applied_a, f_applied_b, f_stance_a, f_stance_b;
 
         // vector for target position, inside locomotion mode
         Eigen::Vector3d p_T;
