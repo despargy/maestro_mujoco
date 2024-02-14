@@ -18,6 +18,7 @@ class Wrapper
         Robot* robot; // Controller pointer obj.
         double Kp_hip, Kp_thing, Kp_calf;
         double Kv_hip, Kv_thing, Kv_calf;
+        double Kp_hip_rear, Kp_thing_rear, Kp_calf_rear;
 
         pce pce_obj[4]; 
 

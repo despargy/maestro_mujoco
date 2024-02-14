@@ -131,6 +131,10 @@ void LocomotionTopLevelControl::setParamsDynamic()
     wrapper->Kv_hip   = param_Kv_hip;
     wrapper->Kv_thing = param_Kv_thing;
     wrapper->Kv_calf  = param_Kv_calf;
+    
+    wrapper->Kp_hip_rear   = param_Kp_hip_rear;
+    wrapper->Kp_thing_rear = param_Kp_thing_rear;
+    wrapper->Kp_calf_rear  = param_Kp_calf_rear;
 
     controller->c1 = param_c1;
 
@@ -140,6 +144,8 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->c2tip = param_c2tip;
     controller->tip_target_z = param_tip_target_z;
     controller->percentage = param_percentage;
+
+    controller->k_clik = param_k_clik;
 }
 
 /* Function to initialize variables and/or call other init functions */
@@ -397,7 +403,6 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
                         controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg(0),
                         controller->robot->leg[(int)controller->robot->swingL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->swingL_id_b]->prob_stable,
-
 
                         controller->e_v(0),controller->e_v(1),controller->e_v(2),
 

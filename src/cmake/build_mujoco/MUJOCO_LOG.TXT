@@ -1,0 +1,62 @@
+Wed Feb 14 10:17:21 2024
+ERROR: Load model error: XML Error: Schema violation: unrecognized element
+
+Element 'geom1', line 0
+
+
+Wed Feb 14 10:17:32 2024
+ERROR: Load model error: XML Error: Schema violation: unrecognized element
+
+Element 'geom', line 0
+
+
+Wed Feb 14 10:28:19 2024
+ERROR: Load model error: XML Error: invalid keyword: 'enabled'
+Element 'flag', line 6
+
+
+Wed Feb 14 10:32:36 2024
+ERROR: Load model error: XML Error: Schema violation: unrecognized attribute: 'damping'
+
+Element 'geom', line 0
+
+
+Wed Feb 14 11:51:13 2024
+ERROR: Load model error: Error: geom 'FR_tip' not found in collision 0
+Object name = , id = 0, line = 0, column = -1
+
+Wed Feb 14 11:52:52 2024
+ERROR: Load model error: Error: geom 'FR_tip' not found in collision 0
+Object name = , id = 0, line = 0, column = -1
+
+Wed Feb 14 11:53:34 2024
+ERROR: Load model error: Error: geom 'FR_tip' not found in collision 0
+Object name = , id = 0, line = 0, column = -1
+
+Wed Feb 14 11:57:27 2024
+ERROR: Load model error: Error: geom 'slippery_surface' not found in collision 0
+Object name = , id = 0, line = 0, column = -1
+
+Wed Feb 14 12:48:10 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 3. The simulation is unstable. Time = 13.0360.
+
+Wed Feb 14 12:49:22 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 3. The simulation is unstable. Time = 13.7000.
+
+Wed Feb 14 12:55:11 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 3. The simulation is unstable. Time = 13.1920.
+
+Wed Feb 14 13:32:57 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 3. The simulation is unstable. Time = 14.3200.
+
+Wed Feb 14 14:58:16 2024
+ERROR: Load model error: XML Error: Schema violation: unrecognized attribute: 'rgb1'
+
+Element 'geom', line 23
+
+
+Wed Feb 14 14:58:24 2024
+ERROR: Load model error: XML Error: attribute 'rgba' does not have enough data
+Element 'geom', line 23
+
+

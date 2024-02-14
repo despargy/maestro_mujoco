@@ -16,8 +16,10 @@ class Leg
     public:
         
         double sit0[3] = {0.0, 1.13, -2.7};
-        double sit1[3] = {0.0, 0.87, -1.6};
-        
+
+        // double sit1[3] = {0.0, 0.87, -1.6}; // go1
+        double sit1[3] = {0.0, 0.8, -1.5}; // unitree go1
+
         std::string name;
         int id, n_superV_joints;
         /* Weights*/

@@ -2,7 +2,8 @@
     <compiler angle="radian" meshdir="../meshes/" autolimits="true"/>
     <size njmax="500" nconmax="100" />
     <option iterations='50' solver='Newton' collision="all"/> <!-- dynamic-->
-    <option cone="elliptic" impratio="100"/> <!--  Added for soft foot tips-->
+    <option cone="elliptic" impratio="100"/> <!-- pyramidal -->
+    <!--  Added for soft foot tips-->
 
     <default>
         <!-- <geom contype="1" conaffinity="1" friction="0.6 0.3 0.3" rgba="0.5 0.6 0.7 1" margin="0.001" group="0"/> -->
@@ -64,7 +65,8 @@
                         <geom size="0.1065 0.008 0.008" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0" type="box" rgba="0 0 0 0" />
                         <geom size="0.01" pos="0 0 -0.213" contype="0" conaffinity="0" group="1" rgba="0 0 0 1" />
                         <geom size="0.02" pos="0 0 -0.213" rgba="0 0 0 1"  />
-                        <geom name="FR_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00"  condim="3" solimp="0.9 0.95 0.001 0.1 1"  friction="0.8 0.8 0.2"/> <!-- solimp="0.515 1 0.031"-->
+                        <geom name="FR_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00"  priority="1" solimp="0.915 1 0.031" condim="6"
+            friction="0.8 0.02 0.01"/> 
                         <site name="FR_tip" pos="0 0 -0.213"/> <!-- Add site to attach IMU and/or get tip pos/quat-->
                     </body>
                 </body>
@@ -88,7 +90,8 @@
                         <geom size="0.1065 0.008 0.008" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0" type="box" rgba="0.913725 0.913725 0.847059 0" />
                         <geom size="0.01" pos="0 0 -0.213" contype="0" conaffinity="0" group="1" rgba="1 0 0 1" />
                         <geom size="0.02" pos="0 0 -0.213" rgba="0 0 0 1" />
-                        <geom name="FL_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00" condim="3" solimp="0.9 0.95 0.001 0.1 1"  friction="0.8 0.8 0.2"/> <!-- solimp="0.515 1 0.031"-->
+                        <geom name="FL_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00" priority="1" solimp="0.915 1 0.031" condim="6"
+            friction="0.8 0.02 0.01"/> 
                         <site name="FL_tip" pos="0 0 -0.213"/> <!-- Add site to attach IMU and/or get tip pos/quat-->
                     </body>
                 </body>
@@ -113,7 +116,7 @@
                         <geom size="0.1065 0.008 0.008" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0" type="box" rgba="0 0 0 0" />
                         <geom size="0.01" pos="0 0 -0.213" contype="0" conaffinity="0" group="1" rgba="0 0 0 1" />
                         <geom size="0.02" pos="0 0 -0.213" rgba="0 0 0 1" />
-                        <geom name="RR_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00" condim="3" solimp="0.9 0.95 0.001 0.1 1"  friction="0.8 0.8 0.2"/> <!-- solimp="0.515 1 0.031"-->
+                        <geom name="RR_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00" priority="1" solimp="0.915 1 0.031" condim="6" friction="0.8 0.02 0.01"/> 
                         <site name="RR_tip" pos="0 0 -0.213"  rgba="0 0 0 1"/> <!-- Add site to attach IMU and/or get tip pos/quat-->
                     </body>
                 </body>
@@ -138,7 +141,8 @@
                         <geom size="0.1065 0.008 0.008" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0" type="box" rgba="0 0 0 0" />
                         <geom size="0.01" pos="0 0 -0.213" contype="0" conaffinity="0" group="1" rgba="0 0 0 1" />
                         <geom size="0.02" pos="0 0 -0.213" rgba="0 0 0 1" />
-                        <geom name="RL_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00" condim="3" solimp="0.9 0.95 0.001 0.1 1"  friction="0.8 0.8 0.2"/> <!-- solimp="0.515 1 0.031"-->
+                        <geom name="RL_tip" type="sphere" pos="0 0 -0.213" size=".023" rgba="0 0 0 1" mass="0.00" priority="1" solimp="0.915 1 0.031" condim="6" friction="0.8 0.02 0.01"/>
+
                         <site name="RL_tip" pos="0 0 -0.213" rgba="0 0 0 1"/> <!-- Add site to attach IMU and/or get tip pos/quat-->
                         <!-- solimp="0.015 1 0.031" -->
 
@@ -300,10 +304,11 @@
     </sensor>
     
     <contact>
-        <pair  geom1="FR_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.0"/> 
-        <pair  geom1="FL_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.0"/>
-        <pair  geom1="RR_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.0"/>
-        <pair  geom1="RL_tip" geom2="slippery_surface" condim="3" friction="0.0 0.0 0.0"/>
+        <pair  geom1="FR_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" /> 
+        <pair  geom1="FL_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" />
+        <pair  geom1="RR_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" />
+        <pair  geom1="RL_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" />
     </contact> 
+
 
 </mujoco>

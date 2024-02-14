@@ -357,7 +357,7 @@ void LocomotionController::CLIK(Eigen::Vector3f pd_0frame_, Eigen::Vector3f dpd_
 void LocomotionController::doubleCLIK(Eigen::Vector3f pd_0frame_A, Eigen::Vector3f dpd_0frame_A, int i)
 {
 
-    Eigen::Vector3f d_q_ = (   robot->R_c*robot->leg[i]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - 64*(robot->leg[i]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
+    Eigen::Vector3f d_q_ = (   robot->R_c*robot->leg[i]->J.block<3,3>(0,0)).inverse().cast<float>()*(dpd_0frame_A - k_clik*(robot->leg[i]->g_o_world.block(0,3,3,1).cast<float>() - pd_0frame_A) );
 
     robot->leg[i]->q_out(0) =  d_q_(0)*dt + robot->leg[i]->q_out(0);
     robot->leg[i]->q_out(1) =  d_q_(1)*dt + robot->leg[i]->q_out(1);

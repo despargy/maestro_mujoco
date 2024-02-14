@@ -192,10 +192,6 @@ stdio.h
 stdlib.h
 -
 
-/home/despinar/mujoco_ws/maestro_mujoco/src/main/LocomotionController.cpp
-LocomotionController.h
--
-
 /home/despinar/mujoco_ws/maestro_mujoco/src/main/LocomotionTopLevelControl.cpp
 LocomotionTopLevelControl.h
 -
