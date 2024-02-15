@@ -87,3 +87,19 @@ WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Ti
 Thu Feb 15 16:30:10 2024
 WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 16.0760.
 
+Thu Feb 15 16:54:09 2024
+ERROR: Load model error: XML Error: Schema violation: unrecognized element
+
+Element 'body', line 0
+
+
+Thu Feb 15 16:54:46 2024
+ERROR: Load model error: Error: unrecognized name of sensorized object in sensor 'FR_Pos' (id = 28)
+Object name = FR_Pos, id = 28, line = 0, column = -1
+
+Thu Feb 15 18:15:29 2024
+ERROR: Load model error: XML Error: Schema violation: unrecognized attribute: 'solimp'
+
+Element 'site', line 0
+
+

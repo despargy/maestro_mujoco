@@ -18,9 +18,10 @@ int loop_index = 0;
 
 //Change the path <template_writeData>
 //Change the xml file
-char path[] = "/home/despinar/mujoco_ws/maestro_mujoco/";
-// char xmlfile[] = "xml/go1/xml/extra_scene.xml";//"unitree_go1/scene.xml"; //
-char xmlfile[] = "xml/unitree_go1/scene.xml"; //
+char path[] = "/home/despinar/mujoco_ws/maestro_mujoco/xml/";
+// char xmlfile[] = "go1/xml/extra_scene.xml";
+// char xmlfile[] = "unitree_go1/scene.xml"; //
+char xmlfile[] = "unitree_go2/scene.xml"; //
 
 // MuJoCo data structures
 mjModel* m = NULL;                  // MuJoCo model

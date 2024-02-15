@@ -36,8 +36,6 @@ Robot::Robot()
     g_com = Eigen::Matrix4d::Identity();
     swingL_id = 0; // do not play role
 
-    // double d = 0.128, l1 = 0.17, l2 = 0.19;
-    double d = 0.128, l1 = 0.22, l2 = 0.23;
 
     if (n_legs==4)
     {
@@ -46,10 +44,10 @@ Robot::Robot()
         leg[2]->pros = - 1;
         leg[3]->pros = + 1;
 
-        leg[0]->TIP_EXT = Eigen::Vector3d(+l1, -d, 0.019);
-        leg[2]->TIP_EXT = Eigen::Vector3d(-l2, -d, 0.019);
-        leg[1]->TIP_EXT = Eigen::Vector3d(+l1, +d, 0.019);
-        leg[3]->TIP_EXT = Eigen::Vector3d(-l2, +d, 0.019);
+    //     leg[0]->TIP_EXT = Eigen::Vector3d(+l1, -d, 0.019);
+    //     leg[2]->TIP_EXT = Eigen::Vector3d(-l2, -d, 0.019);
+    //     leg[1]->TIP_EXT = Eigen::Vector3d(+l1, +d, 0.019);
+    //     leg[3]->TIP_EXT = Eigen::Vector3d(-l2, +d, 0.019);
 
     }
 }

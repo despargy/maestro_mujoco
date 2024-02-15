@@ -48,7 +48,7 @@ void LocomotionTopLevelControl::setParams()
     controller->ADAPT_A = param_ADAPT_A;
     controller->ADAPT_B = param_ADAPT_B;
     controller->robot->KEEP_CONTROL = param_KEEP_CONTROL;
-    controller->robot->mass = param_mass; // same as mujoco .xml
+    controller->robot->mass = GO1_param_mass; // same as mujoco .xml
     controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
     controller->robot->gc << 0,0,controller->robot->mass*controller->robot->g_gravity,0,0,0;
     controller->robot->pbc(0) = param_pbc_x;
@@ -75,12 +75,12 @@ void LocomotionTopLevelControl::setParams()
     controller->t_half_swing =  param_thalf_Swing ; 
     controller->swing_t_slot =  param_slot_Swing; 
 
-    controller->robot->height_z = param_robot_z;
+    controller->robot->height_z = GO1_param_robot_z;
     controller->w_max = param_w_max;
 
-    wrapper->Kp_hip   = param_Kp_hip;
-    wrapper->Kp_thing = param_Kp_thing;
-    wrapper->Kp_calf  = param_Kp_calf;
+    wrapper->Kp_hip   = GO1_param_Kp_hip;
+    wrapper->Kp_thing = GO1_param_Kp_thing;
+    wrapper->Kp_calf  = GO1_param_Kp_calf;
     wrapper->Kv_hip   = param_Kv_hip;
     wrapper->Kv_thing = param_Kv_thing;
     wrapper->Kv_calf  = param_Kv_calf;
@@ -92,22 +92,15 @@ void LocomotionTopLevelControl::setParamsDynamic()
     data->init_save_data_dynamic(); // initialization function of Data
     controller->loop_index = 0; // is used to save data in specific loop frequency
     
-    /*  get from params.h */
-    controller->ADAPT_A = param_ADAPT_A;
-    controller->ADAPT_B = param_ADAPT_B;
-
-    controller->alpha = param_alpha_DYNA; // same as mujoco .xml
+                    /*  get from params.h */
 
     controller->robot->KEEP_CONTROL = param_KEEP_CONTROL;
-    controller->robot->mass = param_mass; // same as mujoco .xml
-    controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
-    controller->robot->gc << 0,0,controller->robot->mass*controller->robot->g_gravity,0,0,0;
+
     controller->robot->pbc(0) = param_pbc_x;
     controller->robot->pbc(1) = param_pbc_y;
     controller->robot->pbc(2) = param_pbc_z;
 
     controller->dt = param_dt; // same as mujoco .xml
-
     controller->kp = param_kp_DYNA;
     controller->kv = param_kv_DYNA;
     controller->ko = param_ko_DYNA;
@@ -118,30 +111,112 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->t0_swing =      param_t0_Swing_DYNA;
     controller->t_half_swing =  param_thalf_Swing_DYNA ; 
     controller->swing_t_slot =  param_slot_Swing_DYNA; 
-
-    dp_cmd(0) = param_dp_cmd_x ;
-    dp_cmd(1) = param_dp_cmd_y ;
-    dp_cmd(2) = param_dp_cmd_z ;
-
-    controller->robot->height_z = param_robot_z;
+    controller->ADAPT_A = param_ADAPT_A;
+    controller->ADAPT_B = param_ADAPT_B;
+    controller->alpha = GO1_param_alpha_DYNA; 
     controller->w_max = param_w_max;
-    wrapper->Kp_hip   = param_Kp_hip;
-    wrapper->Kp_thing = param_Kp_thing;
-    wrapper->Kp_calf  = param_Kp_calf;
-    wrapper->Kv_hip   = param_Kv_hip;
-    wrapper->Kv_thing = param_Kv_thing;
-    wrapper->Kv_calf  = param_Kv_calf;
-
     controller->c1 = param_c1;
-
     controller->force_thres = param_force_thres;
-
     controller->c1tip = param_c1tip;
     controller->c2tip = param_c2tip;
     controller->tip_target_z = param_tip_target_z;
     controller->percentage = param_percentage;
 
-    controller->k_clik = param_k_clik;
+    wrapper->Kv_hip   = param_Kv_hip;   // not used
+    wrapper->Kv_thing = param_Kv_thing; // not used
+    wrapper->Kv_calf  = param_Kv_calf;  // not used
+
+
+                    /**** Specified by each model ****/
+    int model_id = param_model;
+    if( model_id == 0)
+    {
+        controller->robot->mass = GO1_param_mass; // same as mujoco .xml
+        controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
+        controller->robot->gc << 0,0,controller->robot->mass*controller->robot->g_gravity,0,0,0;
+
+        controller->robot->leg[0]->sit1[0] = GO1_param_sit1_0;
+        controller->robot->leg[0]->sit1[1] = GO1_param_sit1_1;
+        controller->robot->leg[0]->sit1[2] = GO1_param_sit1_2;
+
+        dp_cmd(0) = GO1_param_dp_cmd_x ;
+        dp_cmd(1) = GO1_param_dp_cmd_y ;
+        dp_cmd(2) = GO1_param_dp_cmd_z ;
+
+        controller->robot->height_z = GO1_param_robot_z;
+
+        wrapper->Kp_hip   = GO1_param_Kp_hip;
+        wrapper->Kp_thing = GO1_param_Kp_thing;
+        wrapper->Kp_calf  = GO1_param_Kp_calf;
+
+        controller->k_clik = GO1_param_k_clik;
+
+        controller->robot->l1 = GO1_param_l1;
+        controller->robot->l2 = GO1_param_l2;
+        controller->robot->d =  GO1_param_d;
+
+    }
+    else if (model_id == 1)
+    {
+        controller->robot->mass = GO1_UNITREE_param_mass; // same as mujoco .xml
+        controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
+        controller->robot->gc << 0,0,controller->robot->mass*controller->robot->g_gravity,0,0,0;
+
+        controller->robot->leg[0]->sit1[0] = GO1_param_sit1_0;
+        controller->robot->leg[0]->sit1[1] = GO1_param_sit1_1;
+        controller->robot->leg[0]->sit1[2] = GO1_param_sit1_2;
+
+        dp_cmd(0) = GO1_UNITREE_param_dp_cmd_x ;
+        dp_cmd(1) = GO1_UNITREE_param_dp_cmd_y ;
+        dp_cmd(2) = GO1_UNITREE_param_dp_cmd_z ;
+
+        controller->robot->height_z = GO1_UNITREE_param_robot_z;
+
+        wrapper->Kp_hip   = GO1_UNITREE_param_Kp_hip;
+        wrapper->Kp_thing = GO1_UNITREE_param_Kp_thing;
+        wrapper->Kp_calf  = GO1_UNITREE_param_Kp_calf;
+
+        controller->k_clik = GO1_UNITREE_param_k_clik;
+
+        controller->robot->l1 = GO1_UNITREE_param_l1;
+        controller->robot->l2 = GO1_UNITREE_param_l2;
+        controller->robot->d =  GO1_param_d;
+
+    }
+    else if (model_id == 2)
+    {
+        controller->robot->mass = GO2_UNITREE_param_mass; // same as mujoco .xml
+        controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
+        controller->robot->gc << 0,0,controller->robot->mass*controller->robot->g_gravity,0,0,0;
+
+        controller->robot->leg[0]->sit1[0] = GO2_UNITREE_param_sit1_0;
+        controller->robot->leg[0]->sit1[1] = GO2_UNITREE_param_sit1_1;
+        controller->robot->leg[0]->sit1[2] = GO2_UNITREE_param_sit1_2;
+
+        dp_cmd(0) = GO2_UNITREE_param_dp_cmd_x ;
+        dp_cmd(1) = GO2_UNITREE_param_dp_cmd_y ;
+        dp_cmd(2) = GO2_UNITREE_param_dp_cmd_z ;
+
+        controller->robot->height_z = GO2_UNITREE_param_robot_z;
+
+        wrapper->Kp_hip   = GO2_UNITREE_param_Kp_hip;
+        wrapper->Kp_thing = GO2_UNITREE_param_Kp_thing;
+        wrapper->Kp_calf  = GO2_UNITREE_param_Kp_calf;
+
+        controller->k_clik = GO2_UNITREE_param_k_clik;
+
+        controller->robot->l1 = GO2_UNITREE_param_l1;
+        controller->robot->l2 = GO2_UNITREE_param_l2;
+        controller->robot->d =  GO2_UNITREE_param_d;  
+    }
+
+    controller->robot->leg[0]->TIP_EXT = Eigen::Vector3d(+controller->robot->l1, -controller->robot->d, 0.019);
+    controller->robot->leg[2]->TIP_EXT = Eigen::Vector3d(-controller->robot->l2, -controller->robot->d, 0.019);
+    controller->robot->leg[1]->TIP_EXT = Eigen::Vector3d(+controller->robot->l1, +controller->robot->d, 0.019);
+    controller->robot->leg[3]->TIP_EXT = Eigen::Vector3d(-controller->robot->l2, +controller->robot->d, 0.019);
+
+
+
 }
 
 /* Function to initialize variables and/or call other init functions */
@@ -154,7 +229,7 @@ void LocomotionTopLevelControl::setParamsExploration()
     // controller->ADAPT_A = param_ADAPT_A;
     // controller->ADAPT_B = param_ADAPT_B;
     // controller->robot->KEEP_CONTROL = param_KEEP_CONTROL;
-    controller->robot->mass = param_mass; // same as mujoco .xml
+    controller->robot->mass = GO1_param_mass; // same as mujoco .xml
     controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
     controller->robot->gc << 0,0,controller->robot->mass*controller->robot->g_gravity,0,0,0;
     controller->robot->pbc(0) = param_pbc_x;
@@ -176,13 +251,13 @@ void LocomotionTopLevelControl::setParamsExploration()
     // controller->t_half_swing =  param_thalf_Swing ; 
     // controller->swing_t_slot =  param_slot_Swing; 
 
-    controller->robot->height_z = param_robot_z;
+    controller->robot->height_z = GO1_param_robot_z;
 
     controller->w_max = param_w_max;
 
-    wrapper->Kp_hip   = param_Kp_hip;
-    wrapper->Kp_thing = param_Kp_thing;
-    wrapper->Kp_calf  = param_Kp_calf;
+    wrapper->Kp_hip   = GO1_param_Kp_hip;
+    wrapper->Kp_thing = GO1_param_Kp_thing;
+    wrapper->Kp_calf  = GO1_param_Kp_calf;
     wrapper->Kv_hip   = param_Kv_hip;
     wrapper->Kv_thing = param_Kv_thing;
     wrapper->Kv_calf  = param_Kv_calf;
@@ -463,7 +538,8 @@ void LocomotionTopLevelControl::init_topControlDynamic(const mjModel* m, mjData*
     /* Maestro - initialize topLevelControl things */
     this->setParamsDynamic();
     this->wrapper->initConst(); // only for Mujoco
-    // this->wrapper->robot->mass = m->body_mass;
+
+
 }
 /* Overload init_topControl Mujoco*/
 void LocomotionTopLevelControl::init_topControlExploration(const mjModel* m, mjData* d)

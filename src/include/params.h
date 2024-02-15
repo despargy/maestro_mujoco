@@ -12,7 +12,12 @@
 
 #define param_KEEP_CONTROL true;
 
-#define param_mass 13.0;
+
+
+#define GO1_param_mass 12.0; // go1
+#define GO1_UNITREE_param_mass 13.0; // go1 unitree  
+#define GO2_UNITREE_param_mass 15.0; // unitree go2 
+
 #define param_g_gravity 9.81;
 
 #define param_pbc_x 0.01;// 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
@@ -27,7 +32,6 @@
 
 #define param_w0 50;
 #define param_w_max 70000;
-
 
 
 #define param_Kv_hip 3.5;
@@ -77,81 +81,96 @@
 #define param_Freq_Swing_EXP 2;
 #define param_t0_Swing_EXP   0.8;//0.3;
 
-/**********************  DYNAMIC LOCOMOTION  FAST *************************/
-
-// #define param_DYNA_LOCO true;
-// #define param_kv_DYNA 20; //20
-// #define param_ko_DYNA 1000; //100
-
-// #define param_A_SGaus_DYNA 1.0;
-// #define param_b_SGaus_DYNA 10.0;
-// #define param_t0_SGaus_DYNA 0.008;
-// #define param_Freq_Swing_DYNA 20.0;
-// #define param_t0_Swing_DYNA 0.02;
-// #define param_thalf_Swing_DYNA 0.05;
-// #define param_slot_Swing_DYNA 0.11;
-// #define param_dp_cmd 2.7;
-// // SET THIS TO OFFSET Eigen::Vector3d(0.1, controller->robot->leg[(int)controller->robot->swingL_id_a]->pros*0.01, 0.02)
-
-/********************** ******************** *************************/
 #define param_thalf_Swing_DYNA 10.3;
 #define param_slot_Swing_DYNA 10.8;
 #define param_A_SGaus_DYNA 1.0;
 #define param_b_SGaus_DYNA 10.0;
 #define param_t0_SGaus_DYNA 0.008;
-/**********************  DYNAMIC LOCOMOTION  FAST *************************/
 
-// #define param_DYNA_LOCO true;
-// #define param_ko_DYNA 1000; //100
-// #define param_kv_DYNA 20; //20
 
-// #define param_Freq_Swing_DYNA 2.0;
-// #define param_t0_Swing_DYNA 0.1;
-
-// #define param_dp_cmd 0.0; // m/s
-
-// #define param_c1 100;
-// #define param_c2 0.1;
-// #define param_force_thres 0.01;
-
-// ofset x / t_slot = dp_cmd
-
-/********************** ******************** *************************/
-
-/**********************  DYNAMIC LOCOMOTION  FAST *************************/
+/********************** DYNAMIC LOCOMOTION  FAST *************************/
 
 #define param_DYNA_LOCO true;
 #define param_ko_DYNA 800; 
 #define param_kv_DYNA 100; 
-#define param_kp_DYNA 100;  // go1 _> 30  increase for z of CoM
+#define param_kp_DYNA 100; 
 
 #define param_Freq_Swing_DYNA 8.0; // 8.0 go1
 #define param_t0_Swing_DYNA 0.01;
-
-#define param_dp_cmd_x 0.75; // go1 m/s 0.5 h 0.6 unitree go1 0.75 h 0.8
-#define param_dp_cmd_y 0.0; // m/s
-#define param_dp_cmd_z 0.0; // m/s
-
 #define param_c1 100;
 #define param_force_thres 0.001; 
-
 #define param_c1tip 200; 
 #define param_c2tip 0.02; 
 #define param_tip_target_z 0.0192;
-
 #define param_percentage 0.95;  
-#define param_robot_z 0.34; // go1 ->0.32, unitree go1  0.34
 
-#define param_Kp_hip 16;     //go1 8,   unitree go1  16
-#define param_Kp_thing 10;   //go1 5,   unitree go1  10
-#define param_Kp_calf 6;   //go1 3,   unitree go1  6
+/********************** DYNAMIC LOCOMOTION  FAST *************************/
 
-#define param_alpha_DYNA 0.0;//  less 0 ->100000;
-#define param_k_clik 96; //go 1 64 
+
+/**********************         MODEL BASED      *************************/
+
+
+#define GO1_param_dp_cmd_x 0.6; // go1 0.5 h 0.6  m/s
+#define GO1_param_dp_cmd_y 0.0; // m/s
+#define GO1_param_dp_cmd_z 0.0; // m/s
+
+#define GO1_UNITREE_param_dp_cmd_x 0.75; //unitree go1 0.75 h 0.8 m/s
+#define GO1_UNITREE_param_dp_cmd_y 0.0; // m/s
+#define GO1_UNITREE_param_dp_cmd_z 0.0; // m/s
+
+#define GO2_UNITREE_param_dp_cmd_x 0.75; //unitree go1 0.75 h 0.8 m/s
+#define GO2_UNITREE_param_dp_cmd_y 0.0; // m/s
+#define GO2_UNITREE_param_dp_cmd_z 0.0; // m/s
+
+
+#define GO1_param_robot_z 0.32; // go1 ->0.32, unitree go1  0.34
+#define GO1_UNITREE_param_robot_z 0.34; // go1 ->0.32, unitree go1  0.34
+#define GO2_UNITREE_param_robot_z 0.4; // go1 ->0.32, unitree go1  0.34
+
+#define GO1_param_Kp_hip 8;     //go1 8
+#define GO1_param_Kp_thing 5;   //go1 5
+#define GO1_param_Kp_calf 3;    //go1 3
+
+#define GO1_UNITREE_param_Kp_hip 16;     //unitree go1  16
+#define GO1_UNITREE_param_Kp_thing 10;   //unitree go1  10
+#define GO1_UNITREE_param_Kp_calf 6;     //unitree go1  6
+
+#define GO2_UNITREE_param_Kp_hip 16;     //unitree go1  16
+#define GO2_UNITREE_param_Kp_thing 10;   //unitree go1  10
+#define GO2_UNITREE_param_Kp_calf 6;     //unitree go1  6
+
+
+#define GO1_param_alpha_DYNA 0.0;//  less 0 ->100000;
+
+#define GO1_param_k_clik 96; //go 1 64 
+#define GO1_UNITREE_param_k_clik 96; //go 1 64 
+#define GO2_UNITREE_param_k_clik 96; //go 1 64 
+
+#define GO1_param_d 0.128;
+#define GO2_UNITREE_param_d 0.128;
+
+#define GO1_param_l1 0.17;
+#define GO1_param_l2 0.19;
+
+#define GO1_UNITREE_param_l1 0.22;
+#define GO1_UNITREE_param_l2 0.23;
+
+#define GO2_UNITREE_param_l1 0.22;
+#define GO2_UNITREE_param_l2 0.23;
+
+#define GO1_param_sit1_0 0.0;
+#define GO1_param_sit1_1 0.8;
+#define GO1_param_sit1_2 -1.5;
+
+#define GO2_UNITREE_param_sit1_0 0.0;
+#define GO2_UNITREE_param_sit1_1 0.8;
+#define GO2_UNITREE_param_sit1_2 -1.5;
+
+#define param_model 2; // 0 -> go1 , 1 -> unitree o1, 2 -> unitree go2
+ 
 
 // double sit1[3] = {0.0, 0.8, -1.5}; // unitree go1
-// #define param_mass 12.0; 13.0
-
+// Robot set as params l1 l2 
 /********************** ******************** *************************/
 #endif
 

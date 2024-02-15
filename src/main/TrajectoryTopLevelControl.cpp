@@ -41,7 +41,7 @@ void TrajectoryTopLevelControl::setParams()
     controller->ADAPT_A = param_ADAPT_A;
     controller->ADAPT_B = param_ADAPT_B;
     controller->robot->KEEP_CONTROL = param_KEEP_CONTROL;
-    controller->robot->mass = param_mass; // same as mujoco .xml
+    controller->robot->mass = GO1_param_mass; // same as mujoco .xml
     controller->robot->g_gravity = param_g_gravity; // same as mujoco .xml
     controller->robot->gc << 0,0,controller->robot->mass*controller->robot->g_gravity,0,0,0;
     controller->robot->pbc(0) = param_pbc_x;
