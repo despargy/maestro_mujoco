@@ -182,7 +182,7 @@
         <position name="pservo_FL_thigh" joint="FL_thigh_joint" kp="0"   />
         <velocity name="vservo_FL_thigh" joint="FL_thigh_joint" kv="3.0" />
         <position name="pservo_FL_calf" joint="FL_calf_joint"   kp="0"   />
-        <velocity name="vservo_FL_calf" joint="FL_calf_joint"   kv="2.0" />
+        <velocity name="vservo_FL_calf" joint="FL_calf_joint"   kv="3.0" />
 
         <position name="pservo_RR_hip" joint="RR_hip_joint"     kp="0"   />
         <velocity name="vservo_RR_hip" joint="RR_hip_joint"     kv="5.5" />
@@ -303,12 +303,13 @@
 
     </sensor>
     
-    <contact>
-        <pair  geom1="FR_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" /> 
-        <pair  geom1="FL_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" />
-        <pair  geom1="RR_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" />
-        <pair  geom1="RL_tip" geom2="slippery_surface" condim="3" friction="0.1 0.08 0.01" />
-    </contact> 
+    <!-- <contact>
+        <pair  geom1="FR_tip" geom2="slippery_surface" condim="3" friction="0.05 0.02 0.01" /> 
+        <pair  geom1="FL_tip" geom2="slippery_surface" condim="3" friction="0.05 0.02 0.01" />
+        <pair  geom1="RR_tip" geom2="slippery_surface" condim="3" friction="0.05 0.02 0.01" />
+        <pair  geom1="RL_tip" geom2="slippery_surface" condim="3" friction="0.05 0.02 0.01" />
+    </contact>  -->
 
 
 </mujoco>
+    

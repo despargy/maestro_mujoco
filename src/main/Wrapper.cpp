@@ -439,20 +439,20 @@ bool Wrapper::set_gains(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
     }
     if(B_PD)
     {
-        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__+0] =  Kp_hip_rear;
-        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__+1] = -Kp_hip_rear;
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__+0] =  Kp_hip;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_hip__+1] = -Kp_hip;
 
         // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__+0] =  Kv_hip;
         // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_hip__+1] = -Kv_hip;
 
-        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__+0] =  Kp_thing_rear;
-        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__+1] = -Kp_thing_rear;
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__+0] =  Kp_thing;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_thigh__+1] = -Kp_thing;
 
         // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__+0] =  Kv_thing;
         // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_thigh__+1] = -Kv_thing;
 
-        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__+0] =  Kp_calf_rear;
-        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__+1] = -Kp_calf_rear;
+        m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__+0] =  Kp_calf;
+        m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_q_calf__+1] = -Kp_calf;
 
         // m->actuator_gainprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__+0] =  Kv_calf;
         // m->actuator_biasprm[10*robot->leg[(int) robot->swingL_id_b]->cmd_dq_calf__+1] = -Kv_calf;

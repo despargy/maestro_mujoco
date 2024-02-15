@@ -131,10 +131,6 @@ void LocomotionTopLevelControl::setParamsDynamic()
     wrapper->Kv_hip   = param_Kv_hip;
     wrapper->Kv_thing = param_Kv_thing;
     wrapper->Kv_calf  = param_Kv_calf;
-    
-    wrapper->Kp_hip_rear   = param_Kp_hip_rear;
-    wrapper->Kp_thing_rear = param_Kp_thing_rear;
-    wrapper->Kp_calf_rear  = param_Kp_calf_rear;
 
     controller->c1 = param_c1;
 
@@ -467,7 +463,7 @@ void LocomotionTopLevelControl::init_topControlDynamic(const mjModel* m, mjData*
     /* Maestro - initialize topLevelControl things */
     this->setParamsDynamic();
     this->wrapper->initConst(); // only for Mujoco
-    
+    // this->wrapper->robot->mass = m->body_mass;
 }
 /* Overload init_topControl Mujoco*/
 void LocomotionTopLevelControl::init_topControlExploration(const mjModel* m, mjData* d)

@@ -19,8 +19,8 @@ int loop_index = 0;
 //Change the path <template_writeData>
 //Change the xml file
 char path[] = "/home/despinar/mujoco_ws/maestro_mujoco/";
-char xmlfile[] = "xml/go1/xml/extra_scene.xml";//"unitree_go1/scene.xml"; //
-// char xmlfile[] = "xml/unitree_go1/scene.xml"; //
+// char xmlfile[] = "xml/go1/xml/extra_scene.xml";//"unitree_go1/scene.xml"; //
+char xmlfile[] = "xml/unitree_go1/scene.xml"; //
 
 // MuJoCo data structures
 mjModel* m = NULL;                  // MuJoCo model
@@ -248,13 +248,13 @@ int main(int argc, const char** argv)
         while( d->time - simstart < 1.0/60.0 )
         {
             mj_step(m, d);
-        }
-        
-        if (d->time>=topController->fsm->t_End)
-        {
-           fclose(topController->data->fid);  
-           break;
-         }
+        }    
+
+        // if (d->time>=topController->fsm->t_End)
+        // {
+        //    fclose(topController->data->fid);  
+        //    break;
+        //  }
 
        // get framebuffer viewport
         mjrRect viewport = {0, 0, 0, 0};

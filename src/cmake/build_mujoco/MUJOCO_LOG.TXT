@@ -60,3 +60,30 @@ ERROR: Load model error: XML Error: attribute 'rgba' does not have enough data
 Element 'geom', line 23
 
 
+Thu Feb 15 12:54:51 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 1. The simulation is unstable. Time = 15.3960.
+
+Thu Feb 15 13:02:07 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 10. The simulation is unstable. Time = 18.4660.
+
+Thu Feb 15 13:25:11 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 15.5660.
+
+Thu Feb 15 13:29:57 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 3. The simulation is unstable. Time = 17.2500.
+
+Thu Feb 15 13:40:29 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 15.6760.
+
+Thu Feb 15 13:52:05 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 18.5060.
+
+Thu Feb 15 16:03:44 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 4. The simulation is unstable. Time = 15.3560.
+
+Thu Feb 15 16:12:18 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 15.8940.
+
+Thu Feb 15 16:30:10 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 16.0760.
+

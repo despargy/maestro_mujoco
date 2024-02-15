@@ -12,7 +12,7 @@
 
 #define param_KEEP_CONTROL true;
 
-#define param_mass 12.0;
+#define param_mass 13.0;
 #define param_g_gravity 9.81;
 
 #define param_pbc_x 0.01;// 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
@@ -121,14 +121,14 @@
 /**********************  DYNAMIC LOCOMOTION  FAST *************************/
 
 #define param_DYNA_LOCO true;
-#define param_ko_DYNA 800; // go1 _> 800 
-#define param_kv_DYNA 100; // go1 _> 100 
-#define param_kp_DYNA 30;  // go1 _> 30  increase for z of CoM
+#define param_ko_DYNA 800; 
+#define param_kv_DYNA 100; 
+#define param_kp_DYNA 100;  // go1 _> 30  increase for z of CoM
 
-#define param_Freq_Swing_DYNA 8.0; 
+#define param_Freq_Swing_DYNA 8.0; // 8.0 go1
 #define param_t0_Swing_DYNA 0.01;
 
-#define param_dp_cmd_x 0.55; // m/s 0.5
+#define param_dp_cmd_x 0.75; // go1 m/s 0.5 h 0.6 unitree go1 0.75 h 0.8
 #define param_dp_cmd_y 0.0; // m/s
 #define param_dp_cmd_z 0.0; // m/s
 
@@ -140,20 +140,15 @@
 #define param_tip_target_z 0.0192;
 
 #define param_percentage 0.95;  
-#define param_robot_z 0.32; // go1 ->0.32, unitree go1  0.34
+#define param_robot_z 0.34; // go1 ->0.32, unitree go1  0.34
 
-#define param_Kp_hip 8;    //go1 8,   unitree go1   
-#define param_Kp_thing 5;  //go1 5,   unitree go1   
-#define param_Kp_calf 3;   //go1 3,   unitree go1  
+#define param_Kp_hip 16;     //go1 8,   unitree go1  16
+#define param_Kp_thing 10;   //go1 5,   unitree go1  10
+#define param_Kp_calf 6;   //go1 3,   unitree go1  6
 
-#define param_Kp_hip_rear 8;    //go1 8,   unitree go1  5 
-#define param_Kp_thing_rear 5;  //go1 5,   unitree go1  3 
-#define param_Kp_calf_rear 3;   //go1 3,   unitree go1  3
+#define param_alpha_DYNA 0.0;//  less 0 ->100000;
+#define param_k_clik 96; //go 1 64 
 
-#define param_alpha_DYNA 100000.0;//100000.0;
-#define param_k_clik 64; // unitree go1 128, go1 -> 64
-
-//   robotline 39  double d = 0.128, l1 = 0.19, l2 = 0.19;
 // double sit1[3] = {0.0, 0.8, -1.5}; // unitree go1
 // #define param_mass 12.0; 13.0
 

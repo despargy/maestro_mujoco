@@ -36,7 +36,8 @@ Robot::Robot()
     g_com = Eigen::Matrix4d::Identity();
     swingL_id = 0; // do not play role
 
-    double d = 0.128, l1 = 0.17, l2 = 0.19;
+    // double d = 0.128, l1 = 0.17, l2 = 0.19;
+    double d = 0.128, l1 = 0.22, l2 = 0.23;
 
     if (n_legs==4)
     {

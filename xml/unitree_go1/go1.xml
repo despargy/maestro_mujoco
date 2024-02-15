@@ -9,7 +9,7 @@
       <joint axis="0 1 0" damping="2" armature="0.01" frictionloss="0.2"/> <!-- damping 2 -->
       <position kp="100" forcerange="-23.7 23.7"/>
       <default class="abduction">
-        <joint axis="1 0 0" damping="1" range="-0.863 0.863"/>
+        <joint axis="1 0 0" damping="1" range="-0.863 0.863"/> <!-- damping 1 -->
         <position ctrlrange="-0.863 0.863"/>
       </default>
       <default class="hip">
@@ -231,33 +231,33 @@
     <motor name="RL_calf"      gear="1" joint="RL_calf_joint"/>
 
 
-    <position class="abduction" name="pservo_FR_hip" joint="FR_hip_joint" kp="0"  />
-    <velocity class="abduction" name="vservo_FR_hip" joint="FR_hip_joint" kv="5.5"/>
-    <position class="hip" name="pservo_FR_thigh" joint="FR_thigh_joint"   kp="0"  />
-    <velocity class="hip" name="vservo_FR_thigh" joint="FR_thigh_joint"   kv="3.0"/>
-    <position class="knee" name="pservo_FR_calf" joint="FR_calf_joint"    kp="0"  />
-    <velocity class="knee" name="vservo_FR_calf" joint="FR_calf_joint"    kv="2.0"/>
+    <position class="abduction" name="pservo_FR_hip" joint="FR_hip_joint" kp="0.0"    />
+    <velocity class="abduction" name="vservo_FR_hip" joint="FR_hip_joint" kv="5.5"  />
+    <position class="hip" name="pservo_FR_thigh" joint="FR_thigh_joint"   kp="0.0"    />
+    <velocity class="hip" name="vservo_FR_thigh" joint="FR_thigh_joint"   kv="3.0"  />
+    <position class="knee" name="pservo_FR_calf" joint="FR_calf_joint"    kp="0.0"    />
+    <velocity class="knee" name="vservo_FR_calf" joint="FR_calf_joint"    kv="2.0"  />
 
-    <position class="abduction" name="pservo_FL_hip" joint="FL_hip_joint" kp="0"  />
-    <velocity class="abduction" name="vservo_FL_hip" joint="FL_hip_joint" kv="5.5"/>
-    <position class="hip" name="pservo_FL_thigh" joint="FL_thigh_joint"   kp="0"  />
-    <velocity class="hip" name="vservo_FL_thigh" joint="FL_thigh_joint"   kv="3.0"/>
-    <position class="knee" name="pservo_FL_calf" joint="FL_calf_joint"    kp="0"  />
-    <velocity class="knee" name="vservo_FL_calf" joint="FL_calf_joint"    kv="2.0"/>
+    <position class="abduction" name="pservo_FL_hip" joint="FL_hip_joint" kp="0.0"    />
+    <velocity class="abduction" name="vservo_FL_hip" joint="FL_hip_joint" kv="5.5"  />
+    <position class="hip" name="pservo_FL_thigh" joint="FL_thigh_joint"   kp="0.0"    />
+    <velocity class="hip" name="vservo_FL_thigh" joint="FL_thigh_joint"   kv="3.0"  />
+    <position class="knee" name="pservo_FL_calf" joint="FL_calf_joint"    kp="0.0"    />
+    <velocity class="knee" name="vservo_FL_calf" joint="FL_calf_joint"    kv="2.0"  />
 
-    <position class="abduction" name="pservo_RR_hip" joint="RR_hip_joint" kp="0"  />
-    <velocity class="abduction" name="vservo_RR_hip" joint="RR_hip_joint" kv="5.5"/>
-    <position class="hip" name="pservo_RR_thigh" joint="RR_thigh_joint"   kp="0"  />
-    <velocity class="hip" name="vservo_RR_thigh" joint="RR_thigh_joint"   kv="3.0"/>
-    <position class="knee" name="pservo_RR_calf" joint="RR_calf_joint"    kp="0"  />
-    <velocity class="knee" name="vservo_RR_calf" joint="RR_calf_joint"    kv="2.0"/>
+    <position class="abduction" name="pservo_RR_hip" joint="RR_hip_joint" kp="0.0"    />
+    <velocity class="abduction" name="vservo_RR_hip" joint="RR_hip_joint" kv="5.5"  />
+    <position class="hip" name="pservo_RR_thigh" joint="RR_thigh_joint"   kp="0.0"    />
+    <velocity class="hip" name="vservo_RR_thigh" joint="RR_thigh_joint"   kv="3.0"  />
+    <position class="knee" name="pservo_RR_calf" joint="RR_calf_joint"    kp="0.0"    />
+    <velocity class="knee" name="vservo_RR_calf" joint="RR_calf_joint"    kv="2.0"  />
 
-    <position class="abduction" name="pservo_RL_hip" joint="RL_hip_joint" kp="0"  />
-    <velocity class="abduction" name="vservo_RL_hip" joint="RL_hip_joint" kv="5.5"/>
-    <position class="hip" name="pservo_RL_thigh" joint="RL_thigh_joint"   kp="0"  />
-    <velocity class="hip" name="vservo_RL_thigh" joint="RL_thigh_joint"   kv="3.0"/>
-    <position class="knee" name="pservo_RL_calf" joint="RL_calf_joint"    kp="0"  />
-    <velocity class="knee" name="vservo_RL_calf" joint="RL_calf_joint"    kv="2.0"/>
+    <position class="abduction" name="pservo_RL_hip" joint="RL_hip_joint" kp="0.0"    />
+    <velocity class="abduction" name="vservo_RL_hip" joint="RL_hip_joint" kv="5.5"  />
+    <position class="hip" name="pservo_RL_thigh" joint="RL_thigh_joint"   kp="0.0"    />
+    <velocity class="hip" name="vservo_RL_thigh" joint="RL_thigh_joint"   kv="3.0"  />
+    <position class="knee" name="pservo_RL_calf" joint="RL_calf_joint"    kp="0.0"    />
+    <velocity class="knee" name="vservo_RL_calf" joint="RL_calf_joint"    kv="2.0"  />
 
   </actuator>
 
