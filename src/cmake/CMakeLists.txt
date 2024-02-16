@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -pthread -Wl,-no-as-needed")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/src/cmake")
 
+set(PCE_CPP ${PCE_CPP} "/home/despinar/Workspaces/ProbabilisticContactEstimation_cpp")
+
 # You may need to adjust the path to Eigen3
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIRS} -I/usr/include/eigen3)
@@ -28,17 +30,17 @@ find_library(NLOPT_LIBRARIES
     HINTS ${PC_NLOPT_LIBDIR})
 
 
+
 # find_package(nlopt REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(kdl_parser REQUIRED)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
-
 include_directories(
-    /home/despinar/mujoco_ws/maestro_mujoco/src/include
-    /home/despinar/Workspaces/ProbabilisticContactEstimation_cpp/kdepp/include/kdepp
-    /home/despinar/Workspaces/ProbabilisticContactEstimation_cpp/include    
+    ../include
+    "${PCE_CPP}/kdepp/include/kdepp/"
+    "${PCE_CPP}/include"    
     ${NLOPT_INCLUDE_DIRS}
     ${OROCOS_KDL_INCLUDE_DIRS}
 )
@@ -57,15 +59,14 @@ set(MAESTRO_CPP
     ../main/Wrapper.cpp
     ../main/LocomotionController.cpp
     ../main/TrajController.cpp
-    /home/despinar/Workspaces/ProbabilisticContactEstimation_cpp/src/pce.cpp
+    "${PCE_CPP}/src/pce.cpp"
 )
 
 # add_executable(walk ../main/walkMujoco.cpp ${MAESTRO_CPP})
 # target_link_libraries(walk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
 
-add_executable(dynawalk ../main/dynawalkMujoco.cpp ${MAESTRO_CPP})
+add_executable(dynawalk ../main/dynawalkMujoco.cpp ${MAESTRO_CPP} )
 target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
-
 
 # add_executable(trajectory ../main/trajMujoco.cpp ${MAESTRO_CPP})
 # target_link_libraries(trajectory ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
