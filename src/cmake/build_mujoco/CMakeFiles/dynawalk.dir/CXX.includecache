@@ -179,6 +179,8 @@ pce.h
 -
 mujoco_pce_params.h
 -
+params.h
+-
 
 /home/despinar/mujoco_ws/maestro_mujoco/src/include/mujoco_pce_params.h
 
@@ -202,6 +204,10 @@ TopLevelControl.h
 
 /home/despinar/mujoco_ws/maestro_mujoco/src/main/TrajectoryTopLevelControl.cpp
 TrajectoryTopLevelControl.h
+-
+
+/home/despinar/mujoco_ws/maestro_mujoco/src/main/Wrapper.cpp
+Wrapper.h
 -
 
 /home/despinar/mujoco_ws/maestro_mujoco/src/main/dynawalkMujoco.cpp

@@ -113,7 +113,7 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->swing_t_slot =  param_slot_Swing_DYNA; 
     controller->ADAPT_A = param_ADAPT_A;
     controller->ADAPT_B = param_ADAPT_B;
-    controller->alpha = GO1_param_alpha_DYNA; 
+
     controller->w_max = param_w_max;
     controller->c1 = param_c1;
     controller->force_thres = param_force_thres;
@@ -155,6 +155,8 @@ void LocomotionTopLevelControl::setParamsDynamic()
         controller->robot->l2 = GO1_param_l2;
         controller->robot->d =  GO1_param_d;
 
+        controller->alpha = GO1_param_alpha_DYNA; 
+
     }
     else if (model_id == 1)
     {
@@ -182,6 +184,8 @@ void LocomotionTopLevelControl::setParamsDynamic()
         controller->robot->l2 = GO1_UNITREE_param_l2;
         controller->robot->d =  GO1_param_d;
 
+        controller->alpha = GO1_UNITREE_param_alpha_DYNA; 
+
     }
     else if (model_id == 2)
     {
@@ -207,7 +211,10 @@ void LocomotionTopLevelControl::setParamsDynamic()
 
         controller->robot->l1 = GO2_UNITREE_param_l1;
         controller->robot->l2 = GO2_UNITREE_param_l2;
-        controller->robot->d =  GO2_UNITREE_param_d;  
+        controller->robot->d =  GO2_UNITREE_param_d; 
+
+        controller->alpha = GO2_UNITREE_param_alpha_DYNA; 
+
     }
 
     controller->robot->leg[0]->TIP_EXT = Eigen::Vector3d(+controller->robot->l1, -controller->robot->d, 0.019);

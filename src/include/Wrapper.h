@@ -7,6 +7,7 @@
 #include <Robot.h>
 #include <pce.h>
 #include <mujoco_pce_params.h>
+#include <params.h>
 
 #ifndef _WRAPPER_H_
 #define _WRAPPER_H_

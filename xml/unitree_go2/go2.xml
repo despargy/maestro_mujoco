@@ -329,10 +329,10 @@
 
 
     <contact>
-        <pair  geom1="FR" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" /> 
-        <pair  geom1="FL" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" />
-        <pair  geom1="RR" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" />
-        <pair  geom1="RL" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" />
+        <pair  geom1="FR" geom2="slippery_surface" condim="3" friction="0.8 0.08 0.02" /> 
+        <pair  geom1="FL" geom2="slippery_surface" condim="3" friction="0.8 0.08 0.02" />
+        <pair  geom1="RR" geom2="slippery_surface" condim="3" friction="0.8 0.08 0.02" />
+        <pair  geom1="RL" geom2="slippery_surface" condim="3" friction="0.8 0.08 0.02" />
     </contact> 
 
 </mujoco>

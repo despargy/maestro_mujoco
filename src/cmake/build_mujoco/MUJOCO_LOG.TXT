@@ -103,3 +103,17 @@ ERROR: Load model error: XML Error: Schema violation: unrecognized attribute: 's
 Element 'site', line 0
 
 
+Fri Feb 16 11:35:19 2024
+ERROR: Load model error: Error: geom 'FR_tip' not found in collision 0
+Object name = , id = 0, line = 0, column = -1
+
+Fri Feb 16 11:36:17 2024
+ERROR: Load model error: Error: geom 'FR_tip' not found in collision 0
+Object name = , id = 0, line = 0, column = -1
+
+Fri Feb 16 11:38:56 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 1. The simulation is unstable. Time = 16.7340.
+
+Fri Feb 16 11:41:35 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 4. The simulation is unstable. Time = 13.9400.
+
