@@ -18,7 +18,7 @@ int loop_index = 0;
 
 //Change the path <template_writeData>
 //Change the xml file
-char path[] = "/home/despinar/mujoco_ws/maestro_mujoco/xml/";
+char path[] = "../../../xml/";
 // char xmlfile[] = "go1/xml/extra_scene.xml";
 // char xmlfile[] = "unitree_go1/scene.xml"; //
 char xmlfile[] = "unitree_go2/scene.xml"; //
