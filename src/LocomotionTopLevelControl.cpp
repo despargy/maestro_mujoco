@@ -129,6 +129,7 @@ void LocomotionTopLevelControl::setParamsDynamic()
 
                     /**** Specified by each model ****/
     int model_id = param_model;
+    std::cout<<model_id<<std::endl;
     if( model_id == 0)
     {
         controller->robot->mass = GO1_param_mass; // same as mujoco .xml

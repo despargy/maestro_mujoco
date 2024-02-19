@@ -123,7 +123,7 @@
 #define GO2_UNITREE_param_dp_cmd_z 0.0; // m/s
 
 
-#define GO1_param_robot_z 0.34; // go1 ->0.32, unitree go1  0.34
+#define GO1_param_robot_z 0.32; // go1 ->0.32, unitree go1  0.34
 #define GO1_UNITREE_param_robot_z 0.34; // go1 ->0.32, unitree go1  0.34
 #define GO2_UNITREE_param_robot_z 0.4; // go1 ->0.32, unitree go1  0.34
 
@@ -140,7 +140,7 @@
 #define GO2_UNITREE_param_Kp_calf 6;     //unitree go1  6
 
 
-#define GO1_param_alpha_DYNA 100000.0;//  less 0 ->100000;
+#define GO1_param_alpha_DYNA 0.0;//  less 0 ->100000;
 #define GO1_UNITREE_param_alpha_DYNA 0.0;//  less 0 ->100000;
 #define GO2_UNITREE_param_alpha_DYNA 1000000.0;//  less 0 ->100000;
 
@@ -168,7 +168,7 @@
 #define GO2_UNITREE_param_sit1_1 0.8;
 #define GO2_UNITREE_param_sit1_2 -1.5;
 
-#define param_model 0; // 0 -> go1 , 1 -> unitree o1, 2 -> unitree go2
+#define param_model 2; // 0 -> go1 , 1 -> unitree o1, 2 -> unitree go2
  
 
 /********************** ******************** *************************/

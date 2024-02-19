@@ -38,7 +38,7 @@ include_directories(${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
 include_directories(
-    ../include
+    ../../include
     "${PCE_CPP}/kdepp/include/kdepp/"
     "${PCE_CPP}/include"    
     ${NLOPT_INCLUDE_DIRS}
@@ -46,26 +46,26 @@ include_directories(
 )
 
 set(MAESTRO_CPP
-    ../main/FSM.cpp
-    ../main/Robot.cpp
-    ../main/Leg.cpp
-    ../main/Controller.cpp
-    ../main/Data.cpp
-    ../main/TopLevelControl.cpp
-    ../main/LocomotionTopLevelControl.cpp
-    ../main/TrajectoryTopLevelControl.cpp
-    ../main/Math.cpp
-    ../main/Trajectory.cpp
-    ../main/Wrapper.cpp
-    ../main/LocomotionController.cpp
-    ../main/TrajController.cpp
+    ../FSM.cpp
+    ../Robot.cpp
+    ../Leg.cpp
+    ../Controller.cpp
+    ../Data.cpp
+    ../TopLevelControl.cpp
+    ../LocomotionTopLevelControl.cpp
+    ../TrajectoryTopLevelControl.cpp
+    ../Math.cpp
+    ../Trajectory.cpp
+    ../Wrapper.cpp
+    ../LocomotionController.cpp
+    ../TrajController.cpp
     "${PCE_CPP}/src/pce.cpp"
 )
 
 # add_executable(walk ../main/walkMujoco.cpp ${MAESTRO_CPP})
 # target_link_libraries(walk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
 
-add_executable(dynawalk ../main/dynawalkMujoco.cpp ${MAESTRO_CPP} )
+add_executable(dynawalk ../dynawalkMujoco.cpp ${MAESTRO_CPP} )
 target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
 
 # add_executable(trajectory ../main/trajMujoco.cpp ${MAESTRO_CPP})
