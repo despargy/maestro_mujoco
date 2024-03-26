@@ -1,12 +1,10 @@
 
 <h1 align="center">
 
-<!-- [![Video Thumbnail](https://img.youtube.com/vi/oXAbSfODVxA/0.jpg)](https://www.youtube.com/watch?v=oXAbSfODVxA) -->
+
 
 [Watch the video ▶️](https://www.youtube.com/watch?v=oXAbSfODVxA)
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/oXAbSfODVxA" frameborder="0" allowfullscreen></iframe>
-
+[![Video Thumbnail](https://img.youtube.com/vi/oXAbSfODVxA/0.jpg)](https://www.youtube.com/watch?v=oXAbSfODVxA)
 
 </h1>
 
