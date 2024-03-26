@@ -12,10 +12,10 @@ Updating  ......
   <br>
 </h1>
 
-<!-- [![Video Thumbnail](https://img.youtube.com/vi/oXAbSfODVxA/0.jpg)](https://www.youtube.com/watch?v=oXAbSfODVxA) -->
+[![Video Thumbnail](https://img.youtube.com/vi/oXAbSfODVxA/0.jpg)](https://www.youtube.com/watch?v=oXAbSfODVxA)
 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/oXAbSfODVxA?autoplay=1" frameborder="0" allowfullscreen></iframe>
+<!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/oXAbSfODVxA?autoplay=1" frameborder="0" allowfullscreen></iframe> -->
 
 
 <h3>Supports: Go1/Go2 for troting locomotion </h3>
