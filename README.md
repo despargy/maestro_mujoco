@@ -5,7 +5,7 @@
 
 
 
-<!-- [![Video Thumbnail](https://img.youtube.com/vi/oXAbSfODVxA/0.jpg)](https://www.youtube.com/watch?v=oXAbSfODVxA) -->
+<!-- [![Video Thumbnail](https://img.youtube.com/vi/tsgJr0Eto9Y/0.jpg)](https://www.youtube.com/watch?v=tsgJr0Eto9Y) -->
 
 </h1>
 
@@ -16,7 +16,7 @@
   Adaptive Quadruped Locomotion for slippery terrains  <a href="https://mujoco.org/" target="_blank">Mujoco</a>
   <br>
 
-  [Watch the video ▶️](https://www.youtube.com/watch?v=oXAbSfODVxA)
+  [Watch the video ▶️](https://www.youtube.com/watch?v=tsgJr0Eto9Y)
 
 </h1>
 
