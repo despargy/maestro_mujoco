@@ -15,7 +15,7 @@ class Controller
         double t_real, t0, tv , d_tv, t_to_use, dt ; // time variables for adaptive tracking
         int loop_index; // for smooth stand up
         bool ADAPT_A, ADAPT_B;
-        double kp, kv, ko, ki;
+        double kp, kv, ko, ki, kw;
         double slope, alpha;
 
         // Error variables

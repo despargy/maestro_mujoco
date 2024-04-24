@@ -104,6 +104,7 @@ void LocomotionTopLevelControl::setParamsDynamic()
     controller->kp = param_kp_DYNA;
     controller->kv = param_kv_DYNA;
     controller->ko = param_ko_DYNA;
+    controller->kw = param_kw_DYNA;
     controller->A = param_A_SGaus_DYNA;
     controller->b = param_b_SGaus_DYNA;
     controller->t0_superG =     param_t0_SGaus_DYNA;
@@ -126,7 +127,8 @@ void LocomotionTopLevelControl::setParamsDynamic()
     wrapper->Kv_thing = param_Kv_thing; // not used
     wrapper->Kv_calf  = param_Kv_calf;  // not used
 
-
+    controller->tau_lim = param_tau_lim;
+    
                     /**** Specified by each model ****/
     int model_id = param_model;
     std::cout<<model_id<<std::endl;
@@ -429,7 +431,8 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
             // Commanded velocity
             controller->computeDynamicWeights();
-            controller->dynaErrors(dp_cmd);
+            Eigen::Vector3d temp_dp_cmd = (controller->t_real < 4.0) ?  (controller->t_real)/4.0*dp_cmd : dp_cmd ;
+            controller->dynaErrors(temp_dp_cmd);
             controller->dynaControlSignal();
             controller->doubleInverseTip();
             //CHECK THIS condition
@@ -440,7 +443,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
             break;
         }
-
+//THIS save_dyna was before
         // data->save_dyna(controller->t_real,
         //                 controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
 
@@ -467,28 +470,34 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
                         
         //                 );
 
-
-        data->save_slip(controller->t_real,
-                        controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
-
+        data->save_compare( controller->t_real, controller->robot->dp_c(0), controller->robot->dp_c(1), controller->robot->p_c(2),
                         controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
                         controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
+                        controller->e_o(0), controller->e_o(1), controller->e_o(2),
+                        controller->e_v(0), controller->e_v(1), controller->e_v(2),
+                        controller->robot->leg[0]->tau.norm(), controller->robot->leg[1]->tau.norm(),controller->robot->leg[2]->tau.norm(),controller->robot->leg[3]->tau.norm());
+
+        // data->save_slip(controller->t_real,
+        //                 controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
+
+        //                 controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
+        //                 controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
                         
-                        controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
-                        controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
+        //                 controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
+        //                 controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
                         
-                        controller->robot->leg[(int)controller->robot->stanceL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->stanceL_id_b]->wv_leg(0),
-                        controller->robot->leg[(int)controller->robot->stanceL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->stanceL_id_b]->prob_stable,
+        //                 controller->robot->leg[(int)controller->robot->stanceL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->stanceL_id_b]->wv_leg(0),
+        //                 controller->robot->leg[(int)controller->robot->stanceL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->stanceL_id_b]->prob_stable,
 
-                        controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg(0),
-                        controller->robot->leg[(int)controller->robot->swingL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->swingL_id_b]->prob_stable,
+        //                 controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg(0),
+        //                 controller->robot->leg[(int)controller->robot->swingL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->swingL_id_b]->prob_stable,
 
-                        controller->e_v(0),controller->e_v(1),controller->e_v(2),
+        //                 controller->e_v(0),controller->e_v(1),controller->e_v(2),
 
-                        controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2),
-                        controller->f_stance_a(0), controller->f_stance_a(1), controller->f_stance_a(2),
-                        controller->f_stance_b(0), controller->f_stance_b(1), controller->f_stance_b(2)
-                        );
+        //                 controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2),
+        //                 controller->f_stance_a(0), controller->f_stance_a(1), controller->f_stance_a(2),
+        //                 controller->f_stance_b(0), controller->f_stance_b(1), controller->f_stance_b(2)
+        //                 );
                         
 
         break;    

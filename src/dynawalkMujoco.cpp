@@ -125,6 +125,7 @@ void my_controller_walk(const mjModel* m, mjData* d)
 
     if( (d->time - topController->t_last_c) >= topController->controller->dt )
     {
+    
         topController->wrapper->update_locomotion(m,d,topController->controller->dt);
         //Probabilistic Contact Estimation DO NOT NEED TO RUN, ONLY FOR FIRST TIME of your model
         // if(topController->fsm->state == S3)
@@ -138,7 +139,6 @@ void my_controller_walk(const mjModel* m, mjData* d)
         //     }
         //     FIND_PARAMS = false;
         // }
-
         if(topController->fsm->state == S3)
         {
             topController->wrapper->init_PCE();
@@ -152,9 +152,9 @@ void my_controller_walk(const mjModel* m, mjData* d)
         // }
         else if(topController->fsm->state == DYNA_GAIT)
         {
-            topController->wrapper->update_PCE();
-            topController->wrapper->pce_obj[0].save_csv();
-        }
+            // topController->wrapper->update_PCE();
+            // topController->wrapper->pce_obj[0].save_csv();
+        }//TODO SOS UNCOMMEND L155-156
 
         topController->computeDynamic(d->time); // call once
         topController->wrapper->set_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 

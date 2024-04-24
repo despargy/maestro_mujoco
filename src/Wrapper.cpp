@@ -215,7 +215,7 @@ void Wrapper::update(const mjModel* m, mjData* d, double dt)
 }
 void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
 {
-
+    
                 /* Robot - CoM */
     // CoM position
     robot->p_c(0) = d->sensordata[robot->com_x__] ;
@@ -252,8 +252,9 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
         once = false;
     }
 
+
     // CoM velocity 
-    robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, dt);  //TODO
+    // robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, static_cast<double>(elapsed_time.count()));  //TODO replase dt with elapsed_time_path
     robot->dR_CoM = get_dR_CoM(robot->R_CoM_prev, robot->R_c, dt);  //TODO
     robot->w_CoM  = scewSymmetricInverse(robot->dR_CoM*robot->R_c.transpose());
     // store current as prev for the next control cycle 

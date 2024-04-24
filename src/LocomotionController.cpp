@@ -494,11 +494,11 @@ void LocomotionController::generateBezier(double step)
     p1(0) = p0(0) + 0.5*ofset(0);   p2(0) = p0(0) + 0.8*ofset(0);
     p1(1) = p0(1) + 0.5*ofset(1);     p2(1) = p0(1) + 0.8*ofset(1);
     p1(2) = p0(2) + 2.5*ofset(2);   p2(2) = p0(2) + 2.8*ofset(2);
-    std::cout<<"swing leg "<<robot->swingL_id<<std::endl;
-    std::cout<<"p0"<<p0(0)<<" "<<p0(1)<<" "<<p0(2)<<std::endl;
-    std::cout<<"p1"<<p1(0)<<" "<<p1(1)<<" "<<p1(2)<<std::endl;
-    std::cout<<"p2"<<p2(0)<<" "<<p2(1)<<" "<<p2(2)<<std::endl;
-    std::cout<<"p3"<<p3(0)<<" "<<p3(1)<<" "<<p3(2)<<std::endl;
+    // std::cout<<"swing leg "<<robot->swingL_id<<std::endl;
+    // std::cout<<"p0"<<p0(0)<<" "<<p0(1)<<" "<<p0(2)<<std::endl;
+    // std::cout<<"p1"<<p1(0)<<" "<<p1(1)<<" "<<p1(2)<<std::endl;
+    // std::cout<<"p2"<<p2(0)<<" "<<p2(1)<<" "<<p2(2)<<std::endl;
+    // std::cout<<"p3"<<p3(0)<<" "<<p3(1)<<" "<<p3(2)<<std::endl;
 
     std::vector<double> xX{p0(0), p1(0), p2(0), p3(0)}; 
     std::vector<double> yY{p0(1), p1(1), p2(1), p3(1)}; 
@@ -535,7 +535,7 @@ void LocomotionController::dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd)
     Eigen::Vector3d p0 = l->g_0bo_init.block(0,3,3,1);
 
     // Eigen::Vector2d help_vect = robot->R_c.block(0,0,2,2)*(robot->p_c0.block(0,0,2,1) + l->TIP_EXT) ;
-    Eigen::Vector3d p3(robot->p_c0 + robot->R_c0*l->TIP_EXT + dp_cmd*(t0_swing + 1/freq_swing + 2*c2tip) ) ;
+    Eigen::Vector3d p3(robot->p_c0 + robot->R_c0*l->TIP_EXT + dp_cmd*(t0_swing + 1/freq_swing + 4*c2tip)  ) ; //2*c2tip + Eigen::Vector3d(0.02,0,0)
     p3(2) = p0(2);
     l->foothold = p3; 
     Eigen::Vector3d ofset = p3 - p0;
@@ -594,10 +594,12 @@ void LocomotionController::dynaControlSignal()
 {
     // robot->F_c.block(0,0,3,1) = - kv*(robot->dp_c - dp_cmd) + Eigen::Vector3d(0,0,robot->mass*robot->g_gravity);
     Gbc.block(3,0,3,3) = scewSymmetric(robot->R_c*robot->pbc);
-    robot->F_c = - kv*e_v + Gbc*robot->gc;
-    robot->F_c.block(3,0,3,1) -= ko*e_o;
+    robot->F_c = Gbc*robot->gc; // gravity
+    robot->F_c.block(0,0,3,1) -= kv*e_v.block(0,0,3,1); // linear vel
+    robot->F_c.block(3,0,3,1) -= kw*e_v.block(3,0,3,1); //angular vel
+    robot->F_c.block(3,0,3,1) -= ko*e_o; // orientation
 
-    robot->F_c(2) -= kp*e_p(2); 
+    robot->F_c(2) -= kp*e_p(2); // z position
 
     computeSudoGq();
 
@@ -607,8 +609,19 @@ void LocomotionController::dynaControlSignal()
     {
         robot->leg[l]->f_cmd = -robot->F_a.block(l*3,0,3,1); // slip Fa eq. 3
         // robot->leg[l]->f_cmd(2) =  std::fmin(robot->leg[l]->f_cmd(2), 0.0);
-        robot->leg[l]->tau =  (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
+        //Instead
+        // robot->leg[l]->tau = (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
+
+        //Tau saturation added
+        request_tau = (robot->R_c*(robot->leg[l]->J.block<3,3>(0,0))).transpose()*robot->leg[l]->f_cmd; // compute eq. 4
+        // std::cout<<request_tau<<std::endl;
+        robot->leg[l]->tau(0) =  std::min( std::max(request_tau(0), -tau_lim), tau_lim);
+        robot->leg[l]->tau(1) =  std::min( std::max(request_tau(1), -tau_lim), tau_lim);
+        robot->leg[l]->tau(2) =  std::min( std::max(request_tau(2), -tau_lim), tau_lim);
+
     }
+    // std::cout<<"p i"<<robot->leg[(int)robot->swingL_id_a]->p_i(2)<<std::endl;
+    // std::cout<<"p i"<<robot->leg[(int)robot->swingL_id_b]->p_i(2)<<std::endl;
 
 }
 void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
@@ -618,7 +631,7 @@ void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
     ang.fromRotationMatrix(Re);
     e_o = ang.angle()*ang.axis();
     
-    e_p(2) = kp*(robot->p_c(2) - robot->height_z);
+    e_p(2) = robot->p_c(2) - robot->height_z;
 
     // HERE change commanded velocity based on the current robots ori??
     // here robot->dCoM_p

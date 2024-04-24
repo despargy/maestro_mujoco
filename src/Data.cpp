@@ -114,3 +114,10 @@ void Data::save_slip(double time, double pcx, double pcy, double pcz, double w0,
     //move to a newline
     fprintf(fid,"\n");
 }
+
+void Data::save_compare(double time, double Vcx, double Vcy, double pcz, double w0, double w1, double w2, double w3,  double eo_x, double eo_y, double eo_z, double ev_x, double ev_y, double ev_z, double t1, double t2, double t3, double t4)
+{
+    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,Vcx,Vcy,pcz,w0, w1, w2, w3,eo_x, eo_y, eo_z, ev_x, ev_y, ev_z, t1, t2, t3, t4); 
+    //move to a newline
+    fprintf(fid,"\n");
+}

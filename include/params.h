@@ -20,8 +20,8 @@
 
 #define param_g_gravity 9.81;
 
-#define param_pbc_x 0.01;// 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
-#define param_pbc_y 0.01;//0.001;//0.0125;
+#define param_pbc_x 0.0;// 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
+#define param_pbc_y 0.0;//0.001;//0.0125;
 #define param_pbc_z 0;
 
 
@@ -31,7 +31,7 @@
 #define param_slope 0.0001;
 
 #define param_w0 50;
-#define param_w_max 70000;
+#define param_w_max 70000; //70000
 
 
 #define param_Kv_hip 3.5;
@@ -91,18 +91,19 @@
 /********************** DYNAMIC LOCOMOTION  FAST *************************/
 
 #define param_DYNA_LOCO true;
-#define param_ko_DYNA 800; 
-#define param_kv_DYNA 100; 
-#define param_kp_DYNA 100; 
+#define param_ko_DYNA 800;  //800
+#define param_kv_DYNA 1000; //100
+#define param_kw_DYNA 70; //100
+#define param_kp_DYNA 1000; //100
 
-#define param_Freq_Swing_DYNA 8.0; // 8.0 go1
-#define param_t0_Swing_DYNA 0.01;
-#define param_c1 100;
-#define param_force_thres 0.001; 
-#define param_c1tip 200; 
+#define param_Freq_Swing_DYNA 8.0; // 8.0
+#define param_t0_Swing_DYNA 0.01; //0.01
+#define param_c1 100; //100
+#define param_force_thres 0.001;  //0.01
+#define param_c1tip 200;  //200
 #define param_c2tip 0.02; 
 #define param_tip_target_z 0.0192;
-#define param_percentage 0.95;  
+#define param_percentage 0.95;  //0.95
 
 /********************** DYNAMIC LOCOMOTION  FAST *************************/
 
@@ -118,7 +119,7 @@
 #define GO1_UNITREE_param_dp_cmd_y 0.0; // m/s
 #define GO1_UNITREE_param_dp_cmd_z 0.0; // m/s
 
-#define GO2_UNITREE_param_dp_cmd_x 0.75; //unitree go1 0.75 h 0.8 m/s
+#define GO2_UNITREE_param_dp_cmd_x 0.8; //unitree go1 0.75 h 0.8 m/s
 #define GO2_UNITREE_param_dp_cmd_y 0.0; // m/s
 #define GO2_UNITREE_param_dp_cmd_z 0.0; // m/s
 
@@ -142,7 +143,7 @@
 
 #define GO1_param_alpha_DYNA 0.0;//  less 0 ->100000;
 #define GO1_UNITREE_param_alpha_DYNA 0.0;//  less 0 ->100000;
-#define GO2_UNITREE_param_alpha_DYNA 1000000.0;//  less 0 ->100000;
+#define GO2_UNITREE_param_alpha_DYNA 1000000.0;//  less 0 ->100000; 1000000.0
 
 #define GO1_param_k_clik 96; //go 1 64 
 #define GO1_UNITREE_param_k_clik 96; //go 1 64 
@@ -158,7 +159,7 @@
 #define GO1_UNITREE_param_l2 0.23;
 
 #define GO2_UNITREE_param_l1 0.17;
-#define GO2_UNITREE_param_l2 0.23;
+#define GO2_UNITREE_param_l2 0.23; // 0.23
 
 #define GO1_param_sit1_0 0.0;
 #define GO1_param_sit1_1 0.8;
@@ -167,6 +168,8 @@
 #define GO2_UNITREE_param_sit1_0 0.0;
 #define GO2_UNITREE_param_sit1_1 0.8;
 #define GO2_UNITREE_param_sit1_2 -1.5;
+
+#define param_tau_lim 200;
 
 #define param_model 2; // 0 -> go1 , 1 -> unitree o1, 2 -> unitree go2
  
@@ -178,3 +181,18 @@
 // param_Freq_Swing_DYNA 8.0 +  param_dp_cmd_x 0.5;
 // param_Freq_Swing_DYNA 10.0 +  param_dp_cmd_x 0.8;
 // param_Freq_Swing_DYNA 16.0 +  param_dp_cmd_x 1.0;
+
+
+// clik was 96 -> 164
+//clik 164,freq swig 16.0, force thress 0.001, param_Freq_Swing_DYNA 16.0 +  param_dp_cmd_x 1.2; kv = 1000 -> 1.1
+//clik 164,freq swig 16.0, force thress 0.001, param_Freq_Swing_DYNA 16.0 +  param_dp_cmd_x 1.0; kv = 1000 -> 0.92
+// param_Freq_Swing_DYNA 8.0 +  param_dp_cmd_x 1.0; kv = 1000 -> 0.92
+
+
+// Simualtion flow idea
+//without PCE, 
+    //clik 164,freq swig 16.0, force thress 0.001, param_Freq_Swing_DYNA 16.0 +  param_dp_cmd_x 1.2; kv = 1000 -> 1.1
+    //clik 164,freq swig 16.0, force thress 0.001, param_Freq_Swing_DYNA 16.0 +  param_dp_cmd_x 0.8; kv = 1000 -> 1.1
+
+//with PCE,
+    //CoM lower, less W so

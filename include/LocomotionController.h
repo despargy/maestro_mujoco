@@ -21,13 +21,13 @@ class LocomotionController : public Controller
         double step_bez;
         bool A_TOUCHED, B_TOUCHED;
         double c1, force_thres, k_clik;
-
+        double tau_lim ;
         std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
         std::vector<double> bCurveY, dot_bCurveY; // Bezier Curve swinging tip
         std::vector<double> bCurveZ, dot_bCurveZ; // Bezier Curve swinging tip
 
         Eigen::Vector3d f_applied, f_applied_a, f_applied_b, f_stance_a, f_stance_b;
-
+        Eigen::Vector3d request_tau;
         // vector for target position, inside locomotion mode
         Eigen::Vector3d p_T;
         // Eigen::Vector3d p0_ofphase; 

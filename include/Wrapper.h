@@ -21,7 +21,7 @@ class Wrapper
         double Kv_hip, Kv_thing, Kv_calf;
 
         pce pce_obj[4]; 
-
+        
         bool once;
         Wrapper();
         Wrapper(std::string category_, Robot* t_);
