@@ -20,7 +20,7 @@
 
 #define param_g_gravity 9.81;
 
-#define param_pbc_x 0.0;// 0.0025;//-0.175;//-0.087; without default geom friction and floor friction 1 1 1 
+#define param_pbc_x 0.03;// 0.11 gia 0.6
 #define param_pbc_y 0.0;//0.001;//0.0125;
 #define param_pbc_z 0;
 
@@ -92,19 +92,19 @@
 
 #define param_DYNA_LOCO true;
 #define param_ko_DYNA 800;  //800
-#define param_kv_DYNA 1000; //100
-#define param_kw_DYNA 70; //100
-#define param_kp_DYNA 1000; //100
+#define param_kv_DYNA 3500; //100
+#define param_kw_DYNA 30; //70
+#define param_kp_DYNA 3500; //100
 
-#define param_Freq_Swing_DYNA 8.0; // 8.0
+#define param_Freq_Swing_DYNA 16.0; // 8.0
 #define param_t0_Swing_DYNA 0.01; //0.01
 #define param_c1 100; //100
 #define param_force_thres 0.001;  //0.01
 #define param_c1tip 200;  //200
 #define param_c2tip 0.02; 
 #define param_tip_target_z 0.0192;
-#define param_percentage 0.95;  //0.95
-
+#define param_percentage 0.98;  //0.95 
+ 
 /********************** DYNAMIC LOCOMOTION  FAST *************************/
 
 
@@ -119,7 +119,7 @@
 #define GO1_UNITREE_param_dp_cmd_y 0.0; // m/s
 #define GO1_UNITREE_param_dp_cmd_z 0.0; // m/s
 
-#define GO2_UNITREE_param_dp_cmd_x 0.8; //unitree go1 0.75 h 0.8 m/s
+#define GO2_UNITREE_param_dp_cmd_x 0.6; //unitree go1 0.75 h 0.8 m/s
 #define GO2_UNITREE_param_dp_cmd_y 0.0; // m/s
 #define GO2_UNITREE_param_dp_cmd_z 0.0; // m/s
 
@@ -147,7 +147,7 @@
 
 #define GO1_param_k_clik 96; //go 1 64 
 #define GO1_UNITREE_param_k_clik 96; //go 1 64 
-#define GO2_UNITREE_param_k_clik 96; //go 1 64 
+#define GO2_UNITREE_param_k_clik 192; //go 1 64 
 
 #define GO1_param_d 0.128;
 #define GO2_UNITREE_param_d 0.128;

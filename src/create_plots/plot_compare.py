@@ -5,12 +5,12 @@ from mpl_toolkits import mplot3d
 import os
 
 os.chdir("../../data/")
-data = np.genfromtxt("./data_kv1000.csv", delimiter=" ", skip_header=1)
-data = data[0:6000,:]
+data = np.genfromtxt("./data_0.9.csv", delimiter=" ", skip_header=1)
+data = data[0:9000,:]
 
-data_slip = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
+data_slip = np.genfromtxt("./data_0.6.csv", delimiter=" ", skip_header=1)
 # data_slip = np.genfromtxt("./data_compare_long.csv", delimiter=" ", skip_header=1)
-data_slip = data_slip[0:6000,:]
+data_slip = data_slip[0:9000,:]
 
 
 
@@ -86,6 +86,8 @@ plt.title("Weights  - time")
 plt.figure()
 plt.plot(t_real,Vcx,Label="Vcx")
 plt.plot(t_real,slip_Vcx,Label="Slip Vcx")
+plt.axhline(y=0.6, color='r', linestyle='-', Label="desired vel")
+plt.axhline(y=0.9, color='r', linestyle='-', Label="desired vel")
 
 plt.legend()
 plt.xlabel("t_real")
@@ -105,6 +107,7 @@ plt.title("Vcy  - time")
 plt.figure()
 plt.plot(t_real,pcz,Label="pcz")
 plt.plot(t_real,slip_pcz,Label="Slip pcz")
+plt.axhline(y=0.4, color='g', linestyle='-', Label="desired z")
 
 plt.legend()
 plt.xlabel("t_real")
