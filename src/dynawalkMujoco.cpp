@@ -153,8 +153,9 @@ void my_controller_walk(const mjModel* m, mjData* d)
         else if(topController->fsm->state == DYNA_GAIT)
         {
             // topController->wrapper->update_PCE();
-            // topController->wrapper->pce_obj[0].save_csv();
-        }//TODO SOS UNCOMMEND L155-156
+            topController->wrapper->update_PCE_forces(topController->controller->f_applied_a(2), topController->controller->f_applied_b(2));
+            topController->wrapper->pce_obj[0].save_csv();
+        }
 
         topController->computeDynamic(d->time); // call once
         topController->wrapper->set_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 

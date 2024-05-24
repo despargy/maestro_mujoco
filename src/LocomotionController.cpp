@@ -253,7 +253,8 @@ void LocomotionController::inverseTip()
 }
 void LocomotionController::doubleInverseTip()
 {
-
+    // TODO inclination add
+    // double global_tip_target_z = tip_target_z ; // Changed the tip target -> generalized by terrain height
     // /**************** Execute Bezier curve + Sigmoid to target z ***************/ 
     if(t_phase<t0_swing) //  yet there are forces
     {
@@ -539,12 +540,12 @@ void LocomotionController::dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd)
     p3(2) = p0(2);
     l->foothold = p3; 
     Eigen::Vector3d ofset = p3 - p0;
-    ofset(2) = 0.019;
+    ofset(2) = 0.021; //TODO ADD INCLINATION //0.019
 
     Eigen::Vector3d p1, p2;
     p1(0) = p0(0) + 0.5*ofset(0);   p2(0) = p0(0) + 0.8*ofset(0);
     p1(1) = p0(1) + 0.5*ofset(1);   p2(1) = p0(1) + 0.8*ofset(1);
-    p1(2) = p0(2) + 1.5*ofset(2);   p2(2) = p0(2) + 1.8*ofset(2); // 0.019 1.5 1.8 
+    p1(2) = p0(2) + 2.5*ofset(2);   p2(2) = p0(2) + 2.8*ofset(2); // 0.019 1.5 1.8 
 
     std::vector<double> xX{p0(0), p1(0), p2(0), p3(0)}; 
     std::vector<double> yY{p0(1), p1(1), p2(1), p3(1)}; 
@@ -631,7 +632,7 @@ void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
     ang.fromRotationMatrix(Re);
     e_o = ang.angle()*ang.axis();
     
-    e_p(2) = robot->p_c(2) - robot->height_z;
+    e_p(2) = robot->p_c(2) - (robot->height_z + terrain_height);
 
     // HERE change commanded velocity based on the current robots ori??
     // here robot->dCoM_p

@@ -21,7 +21,7 @@ class LocomotionController : public Controller
         double step_bez;
         bool A_TOUCHED, B_TOUCHED;
         double c1, force_thres, k_clik;
-        double tau_lim ;
+        double tau_lim, terrain_height ;
         std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
         std::vector<double> bCurveY, dot_bCurveY; // Bezier Curve swinging tip
         std::vector<double> bCurveZ, dot_bCurveZ; // Bezier Curve swinging tip

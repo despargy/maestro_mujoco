@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -pthread -Wl,-no-as-needed")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/src/cmake")
 
-set(PCE_CPP ${PCE_CPP} "/home/despinar/Workspaces/myoriginal_ProbabilisticContactEstimation_cpp")
+set(PCE_CPP ${PCE_CPP} "/home/despinar/Workspaces/ProbabilisticContactEstimation")
 
 # You may need to adjust the path to Eigen3
 find_package(Eigen3 REQUIRED)

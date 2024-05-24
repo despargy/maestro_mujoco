@@ -38,6 +38,7 @@ class Wrapper
         void init_PCE();
         void find_params_PCE(); // Only the first time you need to run it
         void update_PCE();
+        void update_PCE_forces(double fz_swing_a, double fz_swing_b);
         void setParamsMujocoPCE();
 
 };

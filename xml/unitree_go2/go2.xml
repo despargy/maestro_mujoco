@@ -29,8 +29,8 @@
       <default class="collision">
         <geom group="3"/>
         <default class="foot">
-          <geom size="0.022" pos="-0.002 0 -0.213" priority="1" solimp="0.915 1 0.031"  condim="6" 
-            friction="0.8 0.02 0.01"/> <!-- solimp="0.015 1 0.031"-->
+          <geom size="0.022" pos="-0.002 0 -0.213" priority="1" solimp="0.015 1 0.031"  condim="6" 
+            friction="0.8 0.02 0.01"/> <!-- solimp="0.015 1 0.031"--> <!-- solimp="0.915 1 0.031"-->
         </default>
       </default>
     </default>
@@ -328,11 +328,22 @@
     </sensor>
 
 
-    <contact>
-        <pair  geom1="FR" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" /> 
-        <pair  geom1="FL" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" />
-        <pair  geom1="RR" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" />
-        <pair  geom1="RL" geom2="slippery_surface" condim="3" friction="0.8 0.02 0.01" />
+    <contact >
+      
+        <pair  geom1="FR" geom2="slippery_surface" condim="3" friction="0.8 0.2 0.1" /> 
+        <pair  geom1="FL" geom2="slippery_surface" condim="3" friction="0.8 0.2 0.1" />
+        <pair  geom1="RR" geom2="slippery_surface" condim="3" friction="0.8 0.2 0.1" />
+        <pair  geom1="RL" geom2="slippery_surface" condim="3" friction="0.8 0.2 0.1" />
+
+<!-- 0.3 0.2 0.25
+0.15 0.1 0.12
+0.08 0.05 0.07
+0.02 0.01 0.03 -->
+        <pair  geom1="FR" geom2="normal_surface" condim="3" friction="1.0 0.2 0.1" /> 
+        <pair  geom1="FL" geom2="normal_surface" condim="3" friction="1.0 0.2 0.1" />
+        <pair  geom1="RR" geom2="normal_surface" condim="3" friction="1.0 0.2 0.1" />
+        <pair  geom1="RL" geom2="normal_surface" condim="3" friction="1.0 0.2 0.1" />
+
     </contact> 
 
 </mujoco>

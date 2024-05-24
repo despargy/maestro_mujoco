@@ -4,12 +4,14 @@ Wrapper::Wrapper()
 {
     this->category = "None"; // defines Mujoco or Ros/Real
     once = true;
+
 }
-Wrapper::Wrapper(std::string category_, Robot* r_)
+Wrapper::Wrapper(std::string category_, Robot* r_): pce_obj{pce("Mujoco"),pce("Mujoco"),pce("Mujoco"),pce("Mujoco")}
 {
     this->category = category_; // defines Mujoco or Ros/Real
     this->robot = r_; // pass robot pointer to wrapper to update robot/legs profile
     once = true;
+
 
     //Set params for mujoco PCE cpp
     setParamsMujocoPCE();
@@ -470,12 +472,58 @@ void Wrapper::init_PCE() // set forts batched and compute the bias
     }
 }
 void Wrapper::update_PCE()
-{
-    for(int i = 0 ; i < robot->n_legs; i++)
-    { 
-        robot->leg[i]->prob_stable = std::fmin(1.0,pce_obj[i].stable_contact_detection(robot->leg[i]->imu));
-    }
+{   
+    double contact_prob;
+    // for(int i = 0 ; i < robot->n_legs; i++)
+    // { 
+    //     if (robot->leg[i]->f(2) > pce_obj[i].Fz_thresshold)
+    //         contact_prob = pce_obj[i].stable_contact_detection(robot->leg[i]->imu);
+    //     else 
+    //         contact_prob = 1.0;
+    //     robot->leg[i]->prob_stable = std::fmin(1.0,contact_prob);
+    // }
+
+    //Compute PCE stance legs
+    robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));
+    robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu));
+    
+    //Compute PCE swinging legs
+    if (robot->leg[(int)robot->swingL_id_a]->f(2) > pce_obj[(int)robot->swingL_id_a].Fz_thresshold)
+        contact_prob = pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_a]->imu);
+    else 
+        contact_prob = 1.0;
+    robot->leg[(int)robot->swingL_id_a]->prob_stable = std::fmin(1.0,contact_prob);
+    
+    if (robot->leg[(int)robot->swingL_id_b]->f(2) > pce_obj[(int)robot->swingL_id_b].Fz_thresshold)
+        contact_prob = pce_obj[(int)robot->swingL_id_b].stable_contact_detection(robot->leg[(int)robot->swingL_id_b]->imu);
+    else 
+        contact_prob = 1.0;
+    robot->leg[(int)robot->swingL_id_b]->prob_stable = std::fmin(1.0,contact_prob);
+
 }
+void Wrapper::update_PCE_forces(double fz_swing_a, double fz_swing_b)
+{
+    //Compute PCE stance legs
+    robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));
+    robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu));
+    
+    //Compute PCE swinging legs
+    double contact_prob;
+    if ( fz_swing_a > pce_obj[(int)robot->swingL_id_a].Fz_thresshold_A)
+        contact_prob = pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_a]->imu);
+    else 
+        contact_prob = 0.0; // no contact 
+    robot->leg[(int)robot->swingL_id_a]->prob_stable = std::fmin(1.0,contact_prob);
+    
+    if (fz_swing_b > pce_obj[(int)robot->swingL_id_b].Fz_thresshold_B)
+        contact_prob = pce_obj[(int)robot->swingL_id_b].stable_contact_detection(robot->leg[(int)robot->swingL_id_b]->imu);
+    else 
+        contact_prob = 0.0; // no contact
+    robot->leg[(int)robot->swingL_id_b]->prob_stable = std::fmin(1.0,contact_prob);
+
+}
+
+
 void Wrapper::find_params_PCE() // set forts batched and compute the bias
 {
     for(int i = 0 ; i < robot->n_legs; i++)
@@ -597,6 +645,7 @@ void Wrapper::setParamsMujocoPCE()
         pce_obj[0].thres_wx = GO2_LEG0_thres_wx; 
         pce_obj[0].thres_wy = GO2_LEG0_thres_wy; 
         pce_obj[0].thres_wz = GO2_LEG0_thres_wz; 
+        pce_obj[0].Fz_thresshold_A = mujoco_Fz_thresshold_A; 
 
         pce_obj[1].ax_bias =  GO2_LEG1_ax_bias;
         pce_obj[1].ay_bias =  GO2_LEG1_ay_bias;
@@ -618,6 +667,7 @@ void Wrapper::setParamsMujocoPCE()
         pce_obj[1].thres_wx = GO2_LEG1_thres_wx; 
         pce_obj[1].thres_wy = GO2_LEG1_thres_wy; 
         pce_obj[1].thres_wz = GO2_LEG1_thres_wz; 
+        pce_obj[1].Fz_thresshold_A = mujoco_Fz_thresshold_A; 
 
 
         pce_obj[2].ax_bias =  GO2_LEG2_ax_bias;
@@ -640,6 +690,7 @@ void Wrapper::setParamsMujocoPCE()
         pce_obj[2].thres_wx = GO2_LEG2_thres_wx; 
         pce_obj[2].thres_wy = GO2_LEG2_thres_wy; 
         pce_obj[2].thres_wz = GO2_LEG2_thres_wz; 
+        pce_obj[2].Fz_thresshold_B = mujoco_Fz_thresshold_B; 
 
         pce_obj[3].ax_bias =  GO2_LEG3_ax_bias;
         pce_obj[3].ay_bias =  GO2_LEG3_ay_bias;
@@ -660,6 +711,8 @@ void Wrapper::setParamsMujocoPCE()
         pce_obj[3].thres_az = GO2_LEG3_thres_az; 
         pce_obj[3].thres_wx = GO2_LEG3_thres_wx; 
         pce_obj[3].thres_wy = GO2_LEG3_thres_wy; 
-        pce_obj[3].thres_wz = GO2_LEG3_thres_wz;        
+        pce_obj[3].thres_wz = GO2_LEG3_thres_wz;    
+        pce_obj[3].Fz_thresshold_B = mujoco_Fz_thresshold_B; 
+    
     }
 }
