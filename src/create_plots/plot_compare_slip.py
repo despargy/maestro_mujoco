@@ -7,7 +7,7 @@ import os
 os.chdir("../../data/")
 data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
 
-data_slip = np.genfromtxt("./data_batch20.csv", delimiter=" ", skip_header=1)
+data_slip = np.genfromtxt("./data_slip_100_0.01_0.6.csv", delimiter=" ", skip_header=1)
 
 num = np.min( [(len(data)), (len(data_slip))])
 

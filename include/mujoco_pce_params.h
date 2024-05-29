@@ -153,41 +153,42 @@
 #define GO2_LEG3_wz_std 0.00150779;
 
 // Thressholds Wx,Wy,Wz
-#define GO2_LEG0_thres_wx  100.0;//  CASE A-> 0.5 , CASE B->1.0
-#define GO2_LEG0_thres_wy  100.0;//  CASE A-> 0.5 , CASE B->1.0
-#define GO2_LEG0_thres_wz  1;//  CASE A-> 0.5 , CASE B->0.5
+#define GO2_LEG0_thres_wx  5;//  CASE A-> 0.5 , CASE B->1.0
+#define GO2_LEG0_thres_wy  5;//  CASE A-> 0.5 , CASE B->1.0
+#define GO2_LEG0_thres_wz  2;//  CASE A-> 0.5 , CASE B->0.5
 
-#define GO2_LEG1_thres_wx  100.0;//  CASE A-> 0.5, CASE B->1.0
-#define GO2_LEG1_thres_wy  100.0;//  CASE A-> 0.5, CASE B->1.0
-#define GO2_LEG1_thres_wz  1;//  CASE A-> 0.5, CASE B->0.5
+#define GO2_LEG1_thres_wx  5;//  CASE A-> 0.5, CASE B->1.0
+#define GO2_LEG1_thres_wy  5;//  CASE A-> 0.5, CASE B->1.0
+#define GO2_LEG1_thres_wz  2;//  CASE A-> 0.5, CASE B->0.5
 
-#define GO2_LEG2_thres_wx  100.0;//  CASE A-> 0.5, CASE B->1.0
-#define GO2_LEG2_thres_wy  100.0;//  CASE A-> 0.5, CASE B->1.0
-#define GO2_LEG2_thres_wz  100;//  CASE A-> 0.5, CASE B->0.6
+#define GO2_LEG2_thres_wx  5;//  CASE A-> 0.5, CASE B->1.0
+#define GO2_LEG2_thres_wy  5;//  CASE A-> 0.5, CASE B->1.0
+#define GO2_LEG2_thres_wz  2;//  CASE A-> 0.5, CASE B->0.6
 
-#define GO2_LEG3_thres_wx  100.0;// CASE A->0.5, CASE B->1.0
-#define GO2_LEG3_thres_wy  100.0;// CASE A->0.4, CASE B->1.0
-#define GO2_LEG3_thres_wz  100;// CASE A->0.6, CASE B->0.6
+#define GO2_LEG3_thres_wx 5;// CASE A->0.5, CASE B->1.0
+#define GO2_LEG3_thres_wy 5;// CASE A->0.4, CASE B->1.0
+#define GO2_LEG3_thres_wz  2;// CASE A->0.6, CASE B->0.6
 
 
 // Thressholds Ax,Ay,Az  
-#define GO2_LEG0_thres_ax  100;//4; 
-#define GO2_LEG0_thres_ay  100;//4; 
-#define GO2_LEG0_thres_az  100;//4; 
-#define GO2_LEG1_thres_ax  100;//4;
-#define GO2_LEG1_thres_ay  100;//4;
-#define GO2_LEG1_thres_az  100;//4;
-#define GO2_LEG2_thres_ax  100;//2;
-#define GO2_LEG2_thres_ay  100;//2;
-#define GO2_LEG2_thres_az  100;//4;
-#define GO2_LEG3_thres_ax  100;//2;
-#define GO2_LEG3_thres_ay  100;//2;
-#define GO2_LEG3_thres_az  100;//4;
+#define GO2_LEG0_thres_ax  8;//4; 
+#define GO2_LEG0_thres_ay  8;//4; 
+#define GO2_LEG0_thres_az  4;//4; 
+#define GO2_LEG1_thres_ax  8;//4;
+#define GO2_LEG1_thres_ay  8;//4;
+#define GO2_LEG1_thres_az  4;//4;
+#define GO2_LEG2_thres_ax  8;//2;
+#define GO2_LEG2_thres_ay  8;//2;
+#define GO2_LEG2_thres_az  4;//4;
+#define GO2_LEG3_thres_ax  8;//2;
+#define GO2_LEG3_thres_ay  8;//2;
+#define GO2_LEG3_thres_az  4;//4;
 
 
-#define mujoco_batch_size 30; //50
+#define mujoco_batch_size 10; //50 
 #define mujoco_eval_samples 300; //300
-#define mujoco_Fz_thresshold_A -140;
+#define mujoco_Fz_thresshold_A -20; // -20
+
 #define mujoco_Fz_thresshold_B -20;
 
 #endif

@@ -110,27 +110,27 @@ plt.title("pos  - time")
 
 plt.figure()
 
-# plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
+plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
 # plt.plot(t_real,w_stance_B/50,Label="Stance B weight scaled")
 plt.plot(t_real,prob_stance_A,Label="Stance A prob")
+# plt.plot(t_real,prob_stance_B,Label="Stance B prob")
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("Stance")
+plt.title("Stance A - time")
+
+plt.figure()
+
+# plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
+plt.plot(t_real,w_stance_B/50,Label="Stance B weight scaled")
+# plt.plot(t_real,prob_stance_A,Label="Stance A prob")
 plt.plot(t_real,prob_stance_B,Label="Stance B prob")
 
 plt.legend()
 plt.xlabel("t_real")
 plt.ylabel("Stance")
-plt.title("Stance  - time")
-
-plt.figure()
-
-# plt.plot(t_real,w_swing_A/10000000,Label="Swing A weight scaled")
-# plt.plot(t_real,w_swing_B/10000000,Label="Swing B weight scaled")
-plt.plot(t_real,prob_swing_A,Label="Swing A prob")
-plt.plot(t_real,prob_swing_A,Label="Swing B prob")
-
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("Swing")
-plt.title("Swing  - time")
+plt.title("Stance B - time")
 
 plt.figure()
 
@@ -146,7 +146,7 @@ plt.plot(t_real,fB_z,Label="fB_z ")
 plt.legend()
 plt.xlabel("t_real")
 plt.ylabel("Forces")
-plt.title("Forces  - time")
+plt.title("Forces of swinging legs  - time")
 
 
 plt.figure()
@@ -167,7 +167,8 @@ plt.plot(t_real,w_swing_A/10000000,Label="Swing A weight scaled")
 # plt.plot(t_real,w_swing_B/70000,Label="Swing B weight scaled")
 plt.plot(t_real,prob_swing_A,Label="Swing A prob")
 # plt.plot(t_real,prob_swing_B,Label="Swing B prob")
-plt.plot(t_real,fA_z/10,Label="fA_z ")
+plt.plot(t_real,fA_z/10,Label="fA_z/10 ")
+plt.plot(t_real,prob_stance_A,Label="Stance A prob")
 
 plt.legend()
 plt.xlabel("t_real")
@@ -180,7 +181,8 @@ plt.figure()
 plt.plot(t_real,w_swing_B/10000000,Label="Swing B weight scaled")
 # plt.plot(t_real,prob_swing_A,Label="Swing A prob")
 plt.plot(t_real,prob_swing_B,Label="Swing B prob")
-plt.plot(t_real,fB_z/10,Label="fB_z ")
+plt.plot(t_real,fB_z/10,Label="fB_z/10 ")
+plt.plot(t_real,prob_stance_B,Label="Stance B prob")
 
 plt.legend()
 plt.xlabel("t_real")

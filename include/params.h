@@ -92,7 +92,7 @@
 
 #define param_DYNA_LOCO true;
 #define param_ko_DYNA 800;  //800
-#define param_kv_DYNA 1000; //3500
+#define param_kv_DYNA 1500; //3500
 #define param_kw_DYNA 70; //70
 #define param_kp_DYNA 1000; //3000
 

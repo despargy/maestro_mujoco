@@ -632,7 +632,7 @@ void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
     ang.fromRotationMatrix(Re);
     e_o = ang.angle()*ang.axis();
     
-    e_p(2) = robot->p_c(2) - (robot->height_z + terrain_height);
+    e_p(2) = 4*(robot->p_c(2) - (robot->height_z + terrain_height));
 
     // HERE change commanded velocity based on the current robots ori??
     // here robot->dCoM_p
