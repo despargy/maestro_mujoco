@@ -5,9 +5,9 @@ from mpl_toolkits import mplot3d
 import os
 
 os.chdir("../../data/")
-data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
+data = np.genfromtxt("./data_adapt_1.csv", delimiter=" ", skip_header=1)
 
-data_slip = np.genfromtxt("./data_slip_100_0.01_0.6.csv", delimiter=" ", skip_header=1)
+data_slip = np.genfromtxt("./data_slip_1.csv", delimiter=" ", skip_header=1)
 
 num = np.min( [(len(data)), (len(data_slip))])
 
@@ -123,16 +123,41 @@ vz_slip = data_slip[:,31]
 plt.figure()
 
 plt.plot(t_real,pc_0,Label="pc x")
-plt.plot(t_real,pc_1,Label="pc y")
-plt.plot(t_real,pc_2,Label="pc z")
+# plt.plot(t_real,pc_1,Label="pc y")
+# plt.plot(t_real,pc_2,Label="pc z")
 plt.plot(t_real,pc_0_slip,Label="slip pc x")
+# plt.plot(t_real,pc_1_slip,Label="slip pc y")
+# plt.plot(t_real,pc_2_slip,Label="slip pc z")
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM Pos")
+plt.title("pos X - time")
+
+plt.figure()
+
+# plt.plot(t_real,pc_0,Label="pc x")
+plt.plot(t_real,pc_1,Label="pc y")
+# plt.plot(t_real,pc_2,Label="pc z")
+# plt.plot(t_real,pc_0_slip,Label="slip pc x")
 plt.plot(t_real,pc_1_slip,Label="slip pc y")
+# plt.plot(t_real,pc_2_slip,Label="slip pc z")
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("CoM Pos")
+plt.title("pos Y - time")
+
+plt.figure()
+
+# plt.plot(t_real,pc_0,Label="pc x")
+# plt.plot(t_real,pc_1,Label="pc y")
+plt.plot(t_real,pc_2,Label="pc z")
+# plt.plot(t_real,pc_0_slip,Label="slip pc x")
+# plt.plot(t_real,pc_1_slip,Label="slip pc y")
 plt.plot(t_real,pc_2_slip,Label="slip pc z")
 plt.legend()
 plt.xlabel("t_real")
 plt.ylabel("CoM Pos")
-plt.title("pos  - time")
-
+plt.title("pos Z - time")
 # plt.figure()
 
 # plt.plot(t_real,vel_x,Label="vel_x")
@@ -269,20 +294,20 @@ plt.title("w3  - time")
 
 
 
-plt.figure()
+# plt.figure()
 
-plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
-plt.plot(t_real,w_stance_B/50,Label="Stance B weight scaled")
-plt.plot(t_real,prob_stance_A,Label="Stance A prob")
-plt.plot(t_real,prob_stance_B,Label="Stance B prob")
-plt.plot(t_real,w_stance_A_slip/50,Label="slip Stance A weight scaled")
-plt.plot(t_real,w_stance_B_slip/50,Label="slip Stance B weight scaled")
-plt.plot(t_real,prob_stance_A_slip,Label="slip Stance A prob")
-plt.plot(t_real,prob_stance_B_slip,Label="slip Stance B prob")
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("Stance")
-plt.title("Stance  - time")
+# plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
+# plt.plot(t_real,w_stance_B/50,Label="Stance B weight scaled")
+# plt.plot(t_real,prob_stance_A,Label="Stance A prob")
+# plt.plot(t_real,prob_stance_B,Label="Stance B prob")
+# plt.plot(t_real,w_stance_A_slip/50,Label="slip Stance A weight scaled")
+# plt.plot(t_real,w_stance_B_slip/50,Label="slip Stance B weight scaled")
+# plt.plot(t_real,prob_stance_A_slip,Label="slip Stance A prob")
+# plt.plot(t_real,prob_stance_B_slip,Label="slip Stance B prob")
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("Stance")
+# plt.title("Stance  - time")
 
 plt.figure()
 

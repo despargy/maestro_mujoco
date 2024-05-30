@@ -5,7 +5,7 @@ from mpl_toolkits import mplot3d
 import os
 
 os.chdir("../../data/")
-data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
+data = np.genfromtxt("./data_adapt_1.csv", delimiter=" ", skip_header=1)
 
 # times
 t_real = data[:,0]
