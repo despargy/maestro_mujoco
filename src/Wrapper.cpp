@@ -477,7 +477,7 @@ void Wrapper::update_PCE()
     // for(int i = 0 ; i < robot->n_legs; i++)
     // { 
     //     if (robot->leg[i]->f(2) > pce_obj[i].Fz_thresshold)
-    //         contact_prob = pce_obj[i].stable_contact_detection(robot->leg[i]->imu);
+    //         contact_prob = pce_bj[i].stable_contact_detection(robot->leg[i]->imu);
     //     else 
     //         contact_prob = 1.0;
     //     robot->leg[i]->prob_stable = std::fmin(1.0,contact_prob);
@@ -503,6 +503,11 @@ void Wrapper::update_PCE()
 }
 void Wrapper::update_PCE_forces(double fz_swing_a, double fz_swing_b)
 {
+    //     for(int i = 0 ; i < robot->n_legs; i++)
+    // { 
+    //     double contact_prob = 1.0;
+    //     robot->leg[i]->prob_stable = std::fmin(1.0,contact_prob);
+    // }
     //Compute PCE stance legs
     robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));
     robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu));

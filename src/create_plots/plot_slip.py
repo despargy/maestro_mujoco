@@ -5,7 +5,7 @@ from mpl_toolkits import mplot3d
 import os
 
 os.chdir("../../data/")
-data = np.genfromtxt("./data_adapt_1.csv", delimiter=" ", skip_header=1)
+data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
 
 # times
 t_real = data[:,0]
@@ -43,21 +43,17 @@ er_vel_x = data[:,20]
 er_vel_y = data[:,21]
 er_vel_z = data[:,22]
 
-# imu_x = data[:,20]
-# imu_y = data[:,21]
-# imu_z = data[:,22]
+fA_z = data[:,23]
+fB_z = data[:,24]
 
-fA_x = data[:,23]
-fA_y = data[:,24]
-fA_z = data[:,25]
-fB_x = data[:,26]
-fB_y = data[:,27]
-fB_z = data[:,28]
+fA_stance_z = data[:,25]
+fB_stance_z = data[:,26]
+
+vx = data[:,27] 
+vy = data[:,28]
+vz = data[:,29]
 
 
-vx = data[:,29] 
-vy = data[:,30]
-vz = data[:,31]
 
 
 plt.figure()
@@ -108,38 +104,30 @@ plt.title("pos  - time")
 # plt.title("Prob  - time")
 
 
-plt.figure()
+# plt.figure()
 
-plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
-# plt.plot(t_real,w_stance_B/50,Label="Stance B weight scaled")
-plt.plot(t_real,prob_stance_A,Label="Stance A prob")
+# plt.plot(t_real,w_stance_A/max(w_stance_A),Label="Stance A weight scaled")
+# plt.plot(t_real,prob_stance_A,Label="Stance A prob")
+
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("Stance")
+# plt.title("Stance A - time")
+
+# plt.figure()
+
+# plt.plot(t_real,w_stance_B/max(w_stance_B),Label="Stance B weight scaled")
 # plt.plot(t_real,prob_stance_B,Label="Stance B prob")
 
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("Stance")
-plt.title("Stance A - time")
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("Stance")
+# plt.title("Stance B - time")
 
 plt.figure()
 
-# plt.plot(t_real,w_stance_A/50,Label="Stance A weight scaled")
-plt.plot(t_real,w_stance_B/50,Label="Stance B weight scaled")
-# plt.plot(t_real,prob_stance_A,Label="Stance A prob")
-plt.plot(t_real,prob_stance_B,Label="Stance B prob")
 
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("Stance")
-plt.title("Stance B - time")
-
-plt.figure()
-
-# plt.plot(t_real,fA_x,Label="fA_x ")
-# plt.plot(t_real,fA_y,Label="fA_y ")
 plt.plot(t_real,fA_z,Label="fA_z ")
-
-# plt.plot(t_real,fB_x,Label="fB_x ")
-# plt.plot(t_real,fB_y,Label="fB_y ")
 plt.plot(t_real,fB_z,Label="fB_z ")
 
 
@@ -189,6 +177,30 @@ plt.xlabel("t_real")
 plt.ylabel("Swing")
 plt.title("Swing  - time")
 
+
+plt.figure()
+
+
+plt.plot(t_real,fB_z/max(fB_z),Label="fB_z normalized ")
+plt.plot(t_real,prob_stance_B,Label="Stance B prob")
+plt.plot(t_real,w_stance_B/max(w_stance_B),Label="Stance B weight scaled")
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("Stance B")
+plt.title("Stance B  - time")
+
+plt.figure()
+
+
+plt.plot(t_real,fA_z/max(fA_z),Label="fA_z normalized ")
+plt.plot(t_real,prob_stance_A,Label="Stance A prob")
+plt.plot(t_real,w_stance_A/max(w_stance_A),Label="Stance A weight scaled")
+
+plt.legend()
+plt.xlabel("t_real")
+plt.ylabel("Stance A")
+plt.title("Stance  - time")
 
 plt.show()
 plt.waitforbuttonpress(0) # this will wait for indefinite timeplt.close(fig)

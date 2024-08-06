@@ -143,7 +143,7 @@
 
 #define GO1_param_alpha_DYNA 0.0;//  less 0 ->100000;
 #define GO1_UNITREE_param_alpha_DYNA 0.0;//  less 0 ->100000;
-#define GO2_UNITREE_param_alpha_DYNA 0.0;//  less 0 ->100000; 1000000.0 //10000
+#define GO2_UNITREE_param_alpha_DYNA 1000.0;//  less 0 ->100000; 1000000.0 //10000
 
 #define GO1_param_k_clik 96; //go 1 64 
 #define GO1_UNITREE_param_k_clik 96; //go 1 64 

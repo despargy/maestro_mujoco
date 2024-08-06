@@ -108,9 +108,9 @@ void Data::save_exp(double time, double w0, double w1, double w2, double w3, flo
     fprintf(fid,"\n");
 }
 
-void Data::save_slip(double time, double pcx, double pcy, double pcz, double w0, double w1, double w2, double w3, double prob0, double prob1, double prob2, double prob3, double wStanceA, double wStanceB, double probStanceA, double probStanceB,double wSwingA, double wSwingB, double probSwingA, double probSwingB, double ev_x, double ev_y, double ev_z, double fAx, double fAy, double fAz, double fBx, double fBy, double fBz, double vx, double vy, double vz)
+void Data::save_slip(double time, double pcx, double pcy, double pcz, double w0, double w1, double w2, double w3, double prob0, double prob1, double prob2, double prob3, double wStanceA, double wStanceB, double probStanceA, double probStanceB,double wSwingA, double wSwingB, double probSwingA, double probSwingB, double ev_x, double ev_y, double ev_z, double fAz, double fBz, double fAz_stance, double fBz_stance, double vx, double vy, double vz)
 {
-    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,pcx,pcy,pcz,w0, w1, w2, w3, prob0, prob1, prob2, prob3,   wStanceA,  wStanceB,  probStanceA,  probStanceB, wSwingA,  wSwingB,  probSwingA,  probSwingB, ev_x, ev_y, ev_z,  fAx,  fAy, fAz, fBx, fBy, fBz, vx, vy, vz); 
+    fprintf(fid, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",time,pcx,pcy,pcz,w0, w1, w2, w3, prob0, prob1, prob2, prob3,   wStanceA,  wStanceB,  probStanceA,  probStanceB, wSwingA,  wSwingB,  probSwingA,  probSwingB, ev_x, ev_y, ev_z,  fAz, fBz, fAz_stance, fBz_stance, vx, vy, vz); 
     //move to a newline
     fprintf(fid,"\n");
 }

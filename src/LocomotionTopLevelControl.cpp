@@ -498,9 +498,9 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
                         // controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2),
                        
-                        controller->f_applied_a(0), controller->f_applied_a(1), controller->f_applied_a(2),
-                        controller->f_applied_b(0), controller->f_applied_b(1), controller->f_applied_b(2),
-                       
+                        controller->f_applied_a(2),controller->f_applied_b(2),
+                       controller->f_stance_a(2),controller->f_stance_b(2),
+
                         controller->robot->dp_c(0),controller->robot->dp_c(1),controller->robot->dp_c(2)
                         );
                         

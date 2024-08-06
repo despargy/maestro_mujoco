@@ -55,16 +55,15 @@ imu_x = data[:,20]
 imu_y = data[:,21]
 imu_z = data[:,22]
 
-fA_x = data[:,23]
-fA_y = data[:,24]
-fA_z = data[:,25]
-fB_x = data[:,26]
-fB_y = data[:,27]
-fB_z = data[:,28]
+fA_z = data[:,23]
+fB_z = data[:,24]
 
-vx = data[:,29] 
-vy = data[:,30]
-vz = data[:,31]
+fA_stance_z = data[:,25]
+fB_stance_z = data[:,26]
+
+vx = data[:,27] 
+vy = data[:,28]
+vz = data[:,29]
 
 ##################################################################
 
@@ -104,20 +103,15 @@ er_vel_x_slip = data_slip[:,20]
 er_vel_y_slip = data_slip[:,21]
 er_vel_z_slip = data_slip[:,22]
 
-imu_x_slip = data_slip[:,20]
-imu_y_slip = data_slip[:,21]
-imu_z_slip = data_slip[:,22]
 
-fA_x_slip = data_slip[:,23]
-fA_y_slip = data_slip[:,24]
-fA_z_slip = data_slip[:,25]
-fB_x_slip = data_slip[:,26]
-fB_y_slip = data_slip[:,27]
-fB_z_slip = data_slip[:,28]
+fA_z_slip = data_slip[:,23]
+fB_z_slip = data_slip[:,24]
+fA_stance_z_slip = data_slip[:,25]
+fB_stance_z_slip = data_slip[:,26]
 
-vx_slip = data_slip[:,29] 
-vy_slip = data_slip[:,30]
-vz_slip = data_slip[:,31]
+vx_slip = data_slip[:,27] 
+vy_slip = data_slip[:,28]
+vz_slip = data_slip[:,29]
 
 ##################################################################
 plt.figure()
@@ -344,19 +338,10 @@ plt.title("Swing B - time")
 
 plt.figure()
 
-# plt.plot(t_real,fA_x,Label="fA_x ")
-# plt.plot(t_real,fA_y,Label="fA_y ")
-plt.plot(t_real,fA_z,Label="fA_z ")
 
-# plt.plot(t_real,fB_x,Label="fB_x ")
-# plt.plot(t_real,fB_y,Label="fB_y ")
+plt.plot(t_real,fA_z,Label="fA_z ")
 plt.plot(t_real,fB_z,Label="fB_z ")
-# 
-# plt.plot(t_real,fA_x_slip,Label="slip fA_x ")
-# plt.plot(t_real,fA_y_slip,Label="slip fA_y ")
 plt.plot(t_real,fA_z_slip,Label="slip fA_z ")
-# plt.plot(t_real,fB_x_slip,Label="slip fB_x ")
-# plt.plot(t_real,fB_y_slip,Label="slip fB_y ")
 plt.plot(t_real,fB_z_slip,Label="slip fB_z ")
 
 plt.legend()
@@ -380,29 +365,6 @@ plt.xlabel("t_real")
 plt.ylabel("CoM Vel")
 plt.title("Vel  - time")
 
-# plt.figure()
-
-# plt.plot(t_real,w_swing_A/70000,Label="Swing A weight scaled")
-# plt.plot(t_real,w_swing_B/70000,Label="Swing B weight scaled")
-# plt.plot(t_real,prob_swing_A,Label="Swing A prob")
-# plt.plot(t_real,prob_swing_B,Label="Swing B prob")
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Swing")
-# plt.title("Swing  - time")
-
-
-# plt.figure()
-
-# plt.plot(t_real,imu_x,Label="acc x")
-# plt.plot(t_real,imu_y,Label="acc y")
-# plt.plot(t_real,imu_z,Label="acc z")
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("CoM Acc")
-# plt.title("acc  - time")
 
 
 plt.show()
