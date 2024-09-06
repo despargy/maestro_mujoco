@@ -99,7 +99,7 @@
             <geom size="0.011 0.0325" pos="0.02 0 -0.148" quat="0.999688 0 0.0249974 0" type="cylinder" class="collision"/>
             <geom pos="0 0 -0.213" mesh="foot" class="visual" material="black"/>
             <geom name="FR" class="foot"/>
-            <site name="FR" pos="0 0 -0.2" type="sphere" size="0.023" group="3" />
+            <site name="FR" pos="0 0 -0.213" type="sphere" size="0.023" group="3" />
 
           </body>
         </body>
