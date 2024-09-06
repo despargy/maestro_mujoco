@@ -252,6 +252,8 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
         robot->R_CoM_prev = robot->R_c0;
 
         once = false;
+
+        std::cout<<"R_c0 \n"<<robot->R_c0*Eigen::Vector3d(0.68, 0, 0)<<std::endl;
     }
 
 
@@ -507,6 +509,12 @@ void Wrapper::update_PCE_forces(double fz_swing_a, double fz_swing_b)
     // { 
     //     double contact_prob = 1.0;
     //     robot->leg[i]->prob_stable = std::fmin(1.0,contact_prob);
+        
+    //     pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu);
+    //     pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu);
+    //     pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_a]->imu);
+    //     pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_b]->imu);
+    
     // }
     //Compute PCE stance legs
     robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));

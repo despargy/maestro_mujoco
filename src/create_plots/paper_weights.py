@@ -8,12 +8,12 @@ import os
 os.chdir("../../data/")
 # data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
 
-# data_mpc = np.genfromtxt("./data_mpc_1.csv", delimiter=" ", skip_header=1)
+# data_mpc = np.genfromtxt("./data_mpc_2.csv", delimiter=" ", skip_header=1)
 # Initialize an empty list to hold the valid rows
 data_mpc = []
 
 # Open the file and read it line by line
-with open("./data_mpc_1.csv", 'r') as file:
+with open("./data_mpc_3.csv", 'r') as file:
     for line in file:
         columns = line.strip().split(" ")
         if len(columns) == 7:
@@ -27,8 +27,8 @@ with open("./data_mpc_1.csv", 'r') as file:
 # Convert the list to a NumPy array
 data_mpc = np.array(data_mpc)
 
-data = np.genfromtxt("./data_adapt_3.csv", delimiter=" ", skip_header=1)
-data_slip = np.genfromtxt("./data_slip_3.csv", delimiter=" ", skip_header=1)
+data = np.genfromtxt("./data_adapt_5.csv", delimiter=" ", skip_header=1)
+data_slip = np.genfromtxt("./data_slip_5.csv", delimiter=" ", skip_header=1)
 num = np.min( [(len(data)), (len(data_slip))])
 # num2 = np.min( [(len(data)), (len(data_mpc))])
 # num = min(num1, num2)
@@ -145,28 +145,28 @@ vx_slip = data_slip[:,27]
 vy_slip = data_slip[:,28]
 vz_slip = data_slip[:,29]
 
-plt.figure()
+# plt.figure()
 
-plt.plot(t_real_mpc,pc_0_mpc,Label="MPC pc x")
-plt.plot(t_real_mpc,pc_1_mpc,Label="MPC pc y")
-plt.plot(t_real_mpc,pc_2_mpc,Label="MPC pc z")
+# plt.plot(t_real_mpc,pc_0_mpc,Label="MPC pc x")
+# plt.plot(t_real_mpc,pc_1_mpc,Label="MPC pc y")
+# plt.plot(t_real_mpc,pc_2_mpc,Label="MPC pc z")
 
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("CoM Pos")
-plt.title("pos  - time")
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("CoM Pos")
+# plt.title("pos  - time")
 
 
-plt.figure()
+# plt.figure()
 
-plt.plot(t_real_mpc,vx_mpc,Label="MPC vx")
-plt.plot(t_real_mpc,vy_mpc,Label="MPC vy")
-plt.plot(t_real_mpc,vz_mpc,Label="MPC vz")
+# plt.plot(t_real_mpc,vx_mpc,Label="MPC vx")
+# plt.plot(t_real_mpc,vy_mpc,Label="MPC vy")
+# plt.plot(t_real_mpc,vz_mpc,Label="MPC vz")
 
-plt.legend()
-plt.xlabel("t_real")
-plt.ylabel("MPC CoM Vel")
-plt.title("Vel MPC  - time")
+# plt.legend()
+# plt.xlabel("t_real")
+# plt.ylabel("MPC CoM Vel")
+# plt.title("Vel MPC  - time")
 
 
 
@@ -184,7 +184,7 @@ plt.axvline(x=6.374, color='k', linestyle='dashed')
 plt.axvline(x=6.378, color='k', linestyle='dashed')
 
 plt.fill_between(t_real[3025:3200], 10000000, where=w3[3025:3200] > 90, facecolor='red', alpha=.2)
-plt.fill_between(t_real[3025:3200], 10000000, where=w1[3025:3200] > 90, facecolor='green', alpha=.2)
+plt.fill_between(t_real[3025:3200], 10000000, where=w1[3025:3200] > 90, facecolor='gold', alpha=.1)
 
 plt.legend(loc='upper left')
 plt.xlabel("Time (s)")
@@ -192,99 +192,9 @@ plt.ylabel("Weights $x-axis$")
 plt.title("Swinging weights")
 
 
-# plt.figure()
-
-# plt.plot(t_real,prob_0,Label="prob 0")
-# plt.plot(t_real,prob_1,Label="prob 1")
-# plt.plot(t_real,prob_2,Label="prob 2")
-# plt.plot(t_real,prob_3,Label="prob 3")
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Prob")
-# plt.title("Prob  - time")
-
-
-# plt.figure()
-
-# plt.plot(t_real,w_stance_A/max(w_stance_A),Label="Stance A weight scaled")
-# plt.plot(t_real,prob_stance_A,Label="Stance A prob")
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Stance")
-# plt.title("Stance A - time")
-
-# plt.figure()
-
-# plt.plot(t_real,w_stance_B/max(w_stance_B),Label="Stance B weight scaled")
-# plt.plot(t_real,prob_stance_B,Label="Stance B prob")
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Stance")
-# plt.title("Stance B - time")
-
-# plt.figure()
-
-
-# plt.plot(t_real,fA_z,Label="fA_z ")
-# plt.plot(t_real,fB_z,Label="fB_z ")
-
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Forces")
-# plt.title("Forces of swinging legs  - time")
-
-
-
-
-# plt.figure()
-
-# plt.plot(t_real[3025:3600],w_swing_A[3025:3600]/10000000,Label="Swing A weight scaled")
-# plt.plot(t_real[3025:3600],prob_swing_A[3025:3600],Label="Swing A stable prob")
-# plt.plot(t_real[3025:3600],fA_z[3025:3600]/10,Label="fA_z/10 ")
-# # plt.plot(t_real[3025:3600],prob_stance_A[3025:3600],Label="Stance A stable prob")
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Swing")
-# plt.title("Swing A  - time")
-
-# plt.figure()
-
-# plt.plot(t_real[3025:3600],w_swing_B[3025:3600]/10000000,Label="Swing B weight scaled")
-# plt.plot(t_real[3025:3600],prob_swing_B[3025:3600],Label="Swing B prob")
-# plt.plot(t_real[3025:3600],fB_z[3025:3600]/10,Label="fB_z/10 ")
-# # plt.plot(t_real,prob_stance_B,Label="Stance B prob")
-
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Swing")
-# plt.title("Swing B - time")
-
-
-# plt.figure()
-# # plt.plot(t_real,fB_z/max(fB_z),Label="fB_z normalized ")
-# plt.plot(t_real[3025:3600],prob_stance_B[3025:3600],Label="Stance B prob")
-# plt.plot(t_real[3025:3600],w_stance_B[3025:3600]/100,Label="Stance B weight scaled")
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Stance B")
-# plt.title("Stance B  - time")
-
-# plt.figure()
-# # plt.plot(t_real,fA_z/max(fA_z),Label="fA_z normalized ")
-# plt.plot(t_real[3025:3600],prob_stance_A[3025:3600],Label="Stance A prob")
-# plt.plot(t_real[3025:3600],w_stance_A[3025:3600]/100,Label="Stance A weight scaled")
-# plt.legend()
-# plt.xlabel("t_real")
-# plt.ylabel("Stance A")
-# plt.title("Stance  - time")
-
 fig1, axs = plt.subplots(2, 1)
 
+# axs[0].plot(t_real[3025:3600], fA_stance_z[3025:3600]/100, label="fA_stance_z ", color="darkslategrey")
 axs[0].plot(t_real[3025:3600], prob_stance_A[3025:3600], label="Stable prob", color="darkslategrey", linestyle="dashed")
 # axs[0].plot( t_real[3025:3600], w_stance_A[3025:3600]/100, label="Scaled weight", color="darkviolet")
 axs[0].set_xlabel('Time (s)')
@@ -292,6 +202,17 @@ axs[0].set_ylabel('Stable Probability', color="darkslategrey")
 # axs[0].legend(loc='upper right')
 axs[0].tick_params(axis='y', labelcolor='darkslategrey')
 axs[0].set_title("Front foot", loc='left', color='darkslategrey')
+axs[0].axvspan(6.071, 6.243, color='gold', alpha=.1, label="L")
+axs[0].axvspan(6.243, 6.419, color='r', alpha=.2, label="R")
+axs[0].axvspan(6.419, 6.5905, color='gold', alpha=.1)
+axs[0].axvspan(6.5905, 6.7670, color='r', alpha=.2)
+axs[0].axvspan(6.7670, 6.9385, color='gold', alpha=.1)
+axs[0].axvspan(6.9385, 7.115, color='r', alpha=.2)
+axs[0].axvspan(7.115, 7.200, color='gold', alpha=.1)
+# axs[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
+#           ncol=2, fancybox=True, shadow=True)
+# axs[0].fill_between(t_real[3025:3600], 1, where=fA_stance_z[3025:3600] < -400, facecolor='red', alpha=.2)
+# axs[0].fill_between(t_real[3025:3600], 1, where=t_real[3025:3600] > 6.05, facecolor='green', alpha=.2)
 
 #twin axs[0]
 ax2 = axs[0].twinx()
@@ -306,7 +227,13 @@ axs[1].set_ylabel('Stable Probability', color="midnightblue")
 # axs[1].legend(loc='upper right')
 axs[1].tick_params(axis='y', labelcolor='midnightblue')
 axs[1].set_title("Rear foot", loc='left', color="midnightblue")
-
+axs[1].axvspan(6.071, 6.243, color='gold', alpha=.1, label="R")
+axs[1].axvspan(6.243, 6.419, color='r', alpha=.2, label="L")
+axs[1].axvspan(6.419, 6.5905, color='gold', alpha=.1, label="R")
+axs[1].axvspan(6.5905, 6.7670, color='r', alpha=.2, label="L")
+axs[1].axvspan(6.7670, 6.9385, color='gold', alpha=.1, label="R")
+axs[1].axvspan(6.9385, 7.115, color='r', alpha=.2, label="L")
+axs[1].axvspan(7.115, 7.200, color='gold', alpha=.1, label="R")
 #twin axs[1]
 ax3 = axs[1].twinx()
 ax3.plot(t_real[3025:3600], w_stance_B[3025:3600], color='blue', label='Weights')
@@ -319,27 +246,38 @@ fig1.suptitle('Weights Adaptation Based on Stable Contact Probabilty')
 vx_desired = []
 vy_desired = []
 vz_desired = []
-dp_cmd = 0.6
+dp_cmd = 0.68
+dp_cmd_y = 0.0
 for t in t_real:
     if (t < 4.0):
         vx_desired.append(t/4.0*dp_cmd)
+        vy_desired.append(t/4.0*dp_cmd_y)
+
     else:
         vx_desired.append(dp_cmd)
-    vy_desired.append(0)
+        vy_desired.append(dp_cmd_y)
+
+    # vy_desired.append(0)
     vz_desired.append(0)
     
 
 pc0_desired = []
+pc1_desired = []
 # pc0_desired.append(0.0)
 p_prev = 0.0
 for v in vx_desired:
     pc0_desired.append(p_prev + 0.002*v )
     p_prev = p_prev + 0.002*v
 
+p_prev = 0.0
+for v in vy_desired:
+    pc1_desired.append(p_prev + 0.002*v )
+    p_prev = p_prev + 0.002*v
+
 fig2, axs2 = plt.subplots(3, 1)
 
 axs2[0].plot(t_real, pc_0, label="Adapt.", color="mediumblue")
-# axs2[0].plot(t_real_mpc, pc_0_mpc, label="MPC", color="mediumblue")
+# axs2[0].plot(t_real_mpc, pc_0_mpc, label="MPC", color="purple")
 axs2[0].plot(t_real_slip, pc_0_slip, label="Without Adapt.", color="crimson")
 axs2[0].plot(t_real_slip, pc0_desired, label="Desired", color="g")
 axs2[0].set_xlabel('Time (s)')
@@ -353,7 +291,8 @@ axs2[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
 
 axs2[1].plot(t_real, pc_1, label="Adapt.", color="mediumblue")
 axs2[1].plot(t_real_slip, pc_1_slip, label="Without Adapt.", color="crimson")
-axs2[1].plot(t_real_slip, np.zeros(len(pc0_desired)), label="Desired", color="g")
+axs2[1].plot(t_real_slip, pc1_desired, label="Desired", color="g")
+# axs2[1].plot(t_real_mpc, pc_1_mpc, label="MPC", color="purple")
 # axs2[1].axhline(0.0, color='g', label="Desired")
 axs2[1].set_xlabel('Time (s)')
 axs2[1].set_ylabel('$Pos. y-axis(m)$')
@@ -364,6 +303,7 @@ axs2[1].set_xlim(0,33.1)
 axs2[2].plot(t_real, pc_2, label="Adapt.", color="mediumblue")
 axs2[2].plot(t_real_slip, pc_2_slip, label="Without Adapt.", color="crimson")
 axs2[2].plot(t_real_slip, 0.384*np.ones(len(pc0_desired)), label="Desired", color="g")
+# axs2[2].plot(t_real_mpc, pc_2_mpc, label="MPC", color="purple")
 # axs2[2].axhline(0.384, color='g', label="Desired")
 axs2[2].set_xlabel('Time (s)')
 axs2[2].set_ylabel('$Pos. z-axis(m)$')
@@ -398,6 +338,7 @@ fig3, axs3 = plt.subplots(3, 1)
 
 axs3[0].plot(t_real, er_vel_x, label="Adapt.", color="mediumblue")
 axs3[0].plot(t_real_slip, er_vel_x_slip, label="Without Adapt.", color="crimson")
+# axs3[0].plot(t_real_mpc, vx_mpc - 0.68*np.ones(len(t_real_mpc)), label="MPC", color="purple")
 axs3[0].axhline(0.0, color='g', label="Desired-Zero")
 axs3[0].axvspan(10.7, 33.10, color='grey', alpha=.2, label="Slippery surface")
 axs3[0].set_xlim(0,33.1)
@@ -411,6 +352,7 @@ axs3[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
 
 axs3[1].plot(t_real, er_vel_y, label="Adapt.", color="mediumblue")
 axs3[1].plot(t_real_slip, er_vel_y_slip, label="Without Adapt.", color="crimson")
+# axs3[1].plot(t_real_mpc, vy_mpc, label="MPC", color="purple")
 axs3[1].set_xlabel('Time (s)')
 axs3[1].set_ylabel('$y-axis$(m/s)')
 axs3[1].axvspan(10.7, 33.10, color='grey', alpha=.2, label="Slippery surface")
@@ -420,6 +362,7 @@ axs3[1].axhline(0.0, color='g', label="Desired-Zero")
 
 axs3[2].plot(t_real, er_vel_z, label="Adapt.", color="mediumblue")
 axs3[2].plot(t_real_slip, er_vel_z_slip, label="Without Adapt.", color="crimson")
+# axs3[2].plot(t_real_mpc, vz_mpc, label="MPC", color="purple")
 axs3[2].axhline(0.0, color='g', label="Desired-Zero")
 axs3[2].axvspan(10.7, 33.10, color='grey', alpha=.2, label="Slippery surface")
 axs3[2].set_xlim(0,33.1)

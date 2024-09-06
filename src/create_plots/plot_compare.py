@@ -5,9 +5,9 @@ from mpl_toolkits import mplot3d
 import os
 
 os.chdir("../../data/")
-data = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
+data = np.genfromtxt("./data_com3.csv", delimiter=" ", skip_header=1)
 
-data_slip = np.genfromtxt("./data.csv", delimiter=" ", skip_header=1)
+data_slip = np.genfromtxt("./data_com0.csv", delimiter=" ", skip_header=1)
 # data_slip = np.genfromtxt("./data_compare_long.csv", delimiter=" ", skip_header=1)
 
 num = np.min( [(len(data)), (len(data_slip))])

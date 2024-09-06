@@ -21,6 +21,7 @@ int loop_index = 0;
 char path[] = "../../../xml/";
 // char xmlfile[] = "go1/xml/extra_scene.xml";
 // char xmlfile[] = "unitree_go1/scene.xml"; //
+// char xmlfile[] = "unitree_go2/scene.xml"; //
 char xmlfile[] = "unitree_go2/scene.xml"; //
 
 // MuJoCo data structures
