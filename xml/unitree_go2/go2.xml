@@ -1,7 +1,7 @@
 <mujoco model="go2">
   <compiler angle="radian" meshdir="assets" autolimits="true"/>
 
-  <option cone="elliptic" impratio="100"/>
+  <option cone="pyramidal" impratio="100"/>
 
   <default>
     <default class="go2">

@@ -16,12 +16,8 @@
 //related to writing data to a file
 int loop_index = 0;
 
-//Change the path <template_writeData>
 //Change the xml file
 char path[] = "../../../xml/";
-// char xmlfile[] = "go1/xml/extra_scene.xml";
-// char xmlfile[] = "unitree_go1/scene.xml"; //
-// char xmlfile[] = "unitree_go2/scene.xml"; //
 char xmlfile[] = "unitree_go2/scene.xml"; //
 
 // MuJoCo data structures
@@ -121,8 +117,6 @@ void scroll(GLFWwindow* window, double xoffset, double yoffset)
 bool ONCE_SAVE = true;
 void my_controller_walk(const mjModel* m, mjData* d)
 {
-    // printf("MuJoCo time %f\n ", d->time);
-    // printf("topController->t_last_c %f\n", topController->t_last_c);
 
     if( (d->time - topController->t_last_c) >= topController->controller->dt )
     {
@@ -143,7 +137,7 @@ void my_controller_walk(const mjModel* m, mjData* d)
         if(topController->fsm->state == S3)
         {
             topController->wrapper->init_PCE();
-            topController->wrapper->pce_obj[0].save_csv();
+            // topController->wrapper->pce_obj[0].save_csv();
         }
         // Uncomment  those to store IMU data in .csv of one leg before start locomotion
         // else if(topController->fsm->state == DYNA_GAIT & ONCE_SAVE)
@@ -155,7 +149,7 @@ void my_controller_walk(const mjModel* m, mjData* d)
         {
             // topController->wrapper->update_PCE();
             topController->wrapper->update_PCE_forces(topController->controller->f_applied_a(2), topController->controller->f_applied_b(2));
-            topController->wrapper->pce_obj[0].save_csv();
+            // topController->wrapper->pce_obj[0].save_csv();
         }
 
         topController->computeDynamic(d->time); // call once
@@ -169,9 +163,6 @@ void my_controller_walk(const mjModel* m, mjData* d)
 // main function
 int main(int argc, const char** argv)
 {
-
-    // // activate software
-    // mj_activate("mjkey.txt");
 
     char xmlpath[100]={};
 

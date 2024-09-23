@@ -12,11 +12,6 @@ set(PCE_CPP ${PCE_CPP} "/home/despinar/Workspaces/ProbabilisticContactEstimation
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIRS} -I/usr/include/eigen3)
 
-# Include Mujoco if needed
-# find_package(Mujoco REQUIRED)
-# include_directories(${MUJOCO_INCLUDE_DIRS})
-# link_directories(${MUJOCO_LIBRARY_DIRS})
-
 # Include other dependencies
 # Include directories
 find_path(NLOPT_INCLUDE_DIRS
@@ -62,15 +57,5 @@ set(MAESTRO_CPP
     "${PCE_CPP}/src/pce.cpp"
 )
 
-# add_executable(walk ../main/walkMujoco.cpp ${MAESTRO_CPP})
-# target_link_libraries(walk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
-
 add_executable(dynawalk ../dynawalkMujoco.cpp ${MAESTRO_CPP} )
 target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
-
-# add_executable(trajectory ../main/trajMujoco.cpp ${MAESTRO_CPP})
-# target_link_libraries(trajectory ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
-
-
-# add_executable(explore ../main/explorationMujoco.cpp ${MAESTRO_CPP})
-# target_link_libraries(explore ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)

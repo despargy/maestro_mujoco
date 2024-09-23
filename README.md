@@ -11,25 +11,18 @@
 
 <h1 align="center">
   <br>
-  <a href="https://github.com/despargy/maestro_mujoco"><img src="maestro_mujoco.drawio.png" alt="Maestro Mujoco" width="600"></a>
+  <a href="https://github.com/despargy/maestro_mujoco"><img src="Github-logo.png" alt="Maestro Mujoco" width="600"></a>
   <br>
-  Adaptive Quadruped Locomotion for slippery terrains  <a href="https://mujoco.org/" target="_blank">Mujoco</a>
+  Optimal Torque Distribution via Dynamic Adaptation for Quadrupedal Locomotion on Slippery Terrains <a href="https://mujoco.org/" target="_blank">Mujoco</a>
   <br>
 
   [Watch the video ▶️](https://www.youtube.com/watch?v=tsgJr0Eto9Y)
 
 </h1>
 
+<h3 align="center"> A real-time adaptive locomotion controller for quadrupeds, designed to maintain stability and controllability on various surfaces, including highly slippery terrains. </h3> 
 
-
-
-
-
-
-
-<h3>Supports: Go1/Go2 for troting locomotion </h3>
-<h3 align="center"> The locomotion controller involves velocity tracking for quadrupeds, combing torque adaptation based on foot slip probability (PCE).</h3> <h4 align="left"> An analytical solution, coupled with weighted functions, facilitates adaptation in slippery terrains. Additionally, extra body postures without locomotion are available.  </h4> 
-
+<h4>Supports: Unitree's Go2</h4>
 <p align="center">
   <a href="#key-features">Key Features</a> •
   <a href="#releated-packages">Releated Packages</a> •
@@ -41,63 +34,60 @@
 
 ## Key Features
 
-The locomotion controller ilustartes a velocity tracking functionwith the additional feature of adapting to a possible slippage of the stance legs. Perfectly tailored for navigating slippery terrains!
+The proposed approach optimizes control effort distribution based on the probability of slippage (PCE) by utilizing a surface-independent adaptation layer. By balancing the robot's redundant kinematic system through rank relaxation —similar to loosening constraints in optimization problems— this method demonstrates significant performance improvements.
 
-Implementing a trajectory tracking controller featuring a potential weighted control effort distribution and time scaling, specifically designed for slippery terrains.
-
-Proposing a novel analytical solution for locomotion, utilizing a weighted control effort distribution for the swinging leg.
-
+By optimizing the output torques at the legs, the controller prevents foot slippage by securing that the contact forces lie inside the friction cone while at the same time ensuring accurate velocity tracking. 
 ## Releated Packages
 
-Upcoming: PCE for cpp
-          mujoco-ros for real robot locomotion
+Please find the Probabilistic Contact Estimation (PCE) package under the branch <a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation/tree/cpp_main" target="_blank">"cpp_main"</a>.  
 
 
-The current project's package version, developed for Gazebo and/or the Unitree GO1 robot, is available at <a href="https://github.com/despargy/maestro/tree/master" target="_blank">Maestro ROS</a>
+<!-- The current project's package version, developed for Gazebo and/or the Unitree GO1 robot, is available at <a href="https://github.com/despargy/maestro/tree/master" target="_blank">Maestro ROS</a>
 based on previous work for slip detection 
-<a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation" target="_blank">Probabilistic Contact Estimation</a>.
-
-## How To Use
-<!-- #### Specify the local workspace path within the code lines.: 
-   * line 6, src/Data.cpp
-   * line 21, src/trajMujoco.cpp
-   * line 21, src/walkMujoco.cpp -->
+<a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation" target="_blank">Probabilistic Contact Estimation</a>. -->
 
 
-
-Build .
-   ```sh
-   cd maestro_mujoco/src/cmake 
-   mkdir build_mujoco
-   cd build_mujoco
-   cmake ..
-   make
-   ```
-
-
-Dynamic Troting Locomotion execution.
- ```sh
-   cd maestro_mujoco/src/cmake/build_mujoco
-   ./dynawalk # Run troting locomotion
-   cd maestro_mujoco/src/creat_plots
-   python3 plot_slip.py # Vizualize results
-   ```
-
-Trajecotry tracking execution.
- ```sh
-   cd maestro_mujoco/src/cmake/build_mujoco
-   ./traj  # Run trajectory
-   cd maestro_mujoco/src/creat_plots
-   python3 plot_traj.py # Vizualize results
-   ```
-
-
-  
 ## Download
 
    ```sh
    git clone https://github.com/despargy/maestro_mujoco.git
    ```
+
+   ```sh
+   git clone https://github.com/MichaelMarav/ProbabilisticContactEstimation/tree/cpp_main
+   ```
+
+## How To Use
+
+Build 
+   ```sh
+   cd maestro_mujoco/src/cmake 
+   mkdir build_mujoco
+   cd build_mujoco
+   cmake ..
+   make -j16
+   ```
+
+
+Run 
+ ```sh
+   cd maestro_mujoco/src/cmake/build_mujoco
+   ./dynawalk # Run troting locomotion
+   ```
+
+Check the performance Without Adaptation !
+ ```sh
+   Edit maestro_mujoco/src/Wrapper.cpp:
+      Uncomment l. 479-486
+      Comment l. 488 - 503
+   "Re-build and Run"
+   cd maestro_mujoco/src/cmake/build_mujoco
+   make -j16
+   ./dynawalk # Run troting locomotion
+   ```
+
+  
+
 
 ## Contact
    Despina-Ekaterini Argiropoulos - despinar@ics.forth.gr         
