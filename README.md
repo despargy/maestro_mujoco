@@ -13,10 +13,12 @@
   <br>
   <a href="https://github.com/despargy/maestro_mujoco"><img src="Github-logo.png" alt="Maestro Mujoco" width="600"></a>
   <br>
-  Optimal Torque Distribution via Dynamic Adaptation for Quadrupedal Locomotion on Slippery Terrains <a href="https://mujoco.org/" target="_blank">Mujoco</a>
+  Optimal Torque Distribution via Dynamic Adaptation for Quadrupedal Locomotion on Slippery Terrains
   <br>
 
-  [Watch the video ▶️](https://www.youtube.com/watch?v=tsgJr0Eto9Y)
+  <video width="600" controls>
+  <source src="https://github.com/despargy/maestro_mujoco/AdaptationPerformance.mp4" type="video/mp4">
+</video>
 
 </h1>
 
