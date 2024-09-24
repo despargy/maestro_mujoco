@@ -13,15 +13,12 @@
   <br>
   <a href="https://github.com/despargy/maestro_mujoco"><img src="Github-logo.png" alt="Maestro Mujoco" width="600"></a>
   <br>
-  Optimal Torque Distribution via Dynamic Adaptation for Quadrupedal Locomotion on Slippery Terrains
+  Optimal Torque Distribution via Dynamic Adaptation for Quadrupedal Locomotion on Slippery Terrains 
   <br>
 
-
+  [Watch the video ▶️](https://youtu.be/IdBc0sNo3lQ)
 
 </h1>
-  <video autoplay loop style="width:100%; height: auto; position:absolute; z-index: -1;">
-  <source src="https://github.com/despargy/maestro_mujoco/AdaptationPerformance.mp4" type="video/mp4">
-</video>
 
 <h3 align="center"> A real-time adaptive locomotion controller for quadrupeds, designed to maintain stability and controllability on various surfaces, including highly slippery terrains. </h3> 
 
