@@ -44,7 +44,7 @@ Please find the Probabilistic Contact Estimation (PCE) package under the branch 
 
 <!-- The current project's package version, developed for Gazebo and/or the Unitree GO1 robot, is available at <a href="https://github.com/despargy/maestro/tree/master" target="_blank">Maestro ROS</a>
 based on previous work for slip detection 
-<a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation" target="_blank">Probabilistic Contact Estimation</a>. -->
+<a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation/tree/cpp_main" target="_blank">Probabilistic Contact Estimation</a>. -->
 
 
 ## Download
@@ -56,7 +56,8 @@ based on previous work for slip detection
    ```sh
    git clone https://github.com/MichaelMarav/ProbabilisticContactEstimation/tree/cpp_main
    ```
-
+## Install Related pkg
+  Follow "Install" instructions of the cpp_main branch of <a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation/tree/cpp_main" target="_blank">Probabilistic Contact Estimation</a> to build the package. Replace the path at line 9 of maestro_mujoco/src/cmake/CMakeLists.txt to your path that you just set up ProbabilisticContactEstimation, as your_path/ProbabilisticContactEstimation".
 ## How To Use
 
 Build 
