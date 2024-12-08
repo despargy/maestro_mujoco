@@ -54,7 +54,7 @@ based on previous work for slip detection
    ```
 
    ```sh
-   git clone https://github.com/MichaelMarav/ProbabilisticContactEstimation/tree/cpp_main
+   git clone --branch cpp_main https://github.com/MichaelMarav/ProbabilisticContactEstimation
    ```
 ## Install Related pkg
   Follow "Install" instructions of the cpp_main branch of <a href="https://github.com/MichaelMarav/ProbabilisticContactEstimation/tree/cpp_main" target="_blank">Probabilistic Contact Estimation</a> to build the package. Replace the path at line 9 of maestro_mujoco/src/cmake/CMakeLists.txt to your path that you just set up ProbabilisticContactEstimation, as your_path/ProbabilisticContactEstimation".
