@@ -86,7 +86,14 @@ Check the performance Without Adaptation !
    make -j16
    ./dynawalk # Run troting locomotion
    ```
+  
+* If the system's response differs from the tested one, tuning parameter a might be necessary to adjust the adaptaption mechanism; include/params.h line 146 (e.g. increase 1000 -> 100000 for faster adaptaption).
 
+
+
+##  System 
+*  Ubuntu 20.04 (tested)
+  
   
 
 
