@@ -79,8 +79,8 @@ Run
 Check the performance Without Adaptation !
  ```sh
    Edit maestro_mujoco/src/Wrapper.cpp:
-      Uncomment l. 479-486
-      Comment l. 488 - 503
+      Uncomment l. 508-518
+      Comment l. 519 - 538
    "Re-build and Run"
    cd maestro_mujoco/src/cmake/build_mujoco
    make -j16
