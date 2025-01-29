@@ -121,3 +121,45 @@ void Data::save_compare(double time, double Vcx, double Vcy, double pcz, double 
     //move to a newline
     fprintf(fid,"\n");
 }
+
+void Data::save_opt(double time, Eigen::VectorXd vvvv_, Eigen::MatrixXd G_sudo_)
+{
+    fprintf(fid, "%f ", time);
+    for(int i=0;i<12;i++)
+        fprintf(fid, "%f ", vvvv_(i));
+    for(int i=0;i<12;i++)
+        for(int j=0;j<6;j++)
+            fprintf(fid, "%f ", G_sudo_(i,j));
+    fprintf(fid,"\n");
+}
+
+void Data::save_tau(double time, Eigen::Vector3d tau_l1, Eigen::Vector3d tau_l2,Eigen::Vector3d tau_l3,Eigen::Vector3d tau_l4 )
+{
+    fprintf(fid, "%f ", time);
+    for(int i=0;i<3;i++)
+        fprintf(fid, "%f ", tau_l1(i));
+    for(int i=0;i<3;i++)
+        fprintf(fid, "%f ", tau_l2(i));
+    for(int i=0;i<3;i++)
+        fprintf(fid, "%f ", tau_l3(i));
+    for(int i=0;i<3;i++)
+        fprintf(fid, "%f ", tau_l4(i));
+    fprintf(fid,"\n");
+}
+
+
+void Data::save_Fa(double time, Eigen::VectorXd Fa )
+{
+    fprintf(fid, "%f ", time);
+    for(int i=0;i<12;i++)
+        fprintf(fid, "%f ", Fa(i));
+    fprintf(fid,"\n");
+}
+
+void Data::save_Fc(double time, Eigen::VectorXd Fc )
+{
+    fprintf(fid, "%f ", time);
+    for(int i=0;i<6;i++)
+        fprintf(fid, "%f ", Fc(i));
+    fprintf(fid,"\n");
+}

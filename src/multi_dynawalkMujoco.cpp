@@ -18,7 +18,7 @@ int loop_index = 0;
 
 //Change the xml file
 char path[] = "../../../xml/";
-char xmlfile[] = "unitree_go2/scene.xml"; //
+char xmlfile[] = "unitree_go2/scene_multi.xml"; //
 
 // MuJoCo data structures
 mjModel* m = NULL;                  // MuJoCo model

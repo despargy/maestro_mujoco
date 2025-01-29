@@ -59,6 +59,12 @@ void LocomotionController::setPhaseTarget()
 }
 void LocomotionController::setDynamicPhase()
 {
+
+    // // New additions
+    // double theta_d_phase = robot->theta_c + robot->w_d(2)*(t0_swing + 1/freq_swing + 4*c2tip); // next Dtheta: given current ori
+    // Eigen::Matrix3d R_yaw = Eigen::AngleAxisd(theta_d_phase, Eigen::Vector3d::UnitZ()).toRotationMatrix(); 
+    robot->R_d_phase = robot->R_c0;//*R_yaw;  // Final R after phase ends
+
     robot->leg[(int) robot->swingL_id_a]->initQout(); // set all q_out as current value
     robot->leg[(int) robot->swingL_id_b]->initQout(); // set all q_out as current value
 
@@ -66,7 +72,7 @@ void LocomotionController::setDynamicPhase()
     this->t0_phase = t_real; // when that phase started relatve to real time
     this->ii = -1; // counter for bezier execution
 
-    this->R_T = robot->R_c0 ;
+    this->R_T = robot->R_c ; // PREV : this->R_T = robot->R_c0
     this->robot->p_c0 = this->robot->p_c;
 
     robot->leg[(int)robot->swingL_id_a]->storeInitG(); 
@@ -534,10 +540,14 @@ void LocomotionController::dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd)
     l->bCurveZ.clear();
 
     Eigen::Vector3d p0 = l->g_0bo_init.block(0,3,3,1);
+    //New addition :  + robot->w_d*(t0_swing + 1/freq_swing + 4*c2tip) PREV: robot->R_c*l->TIP_EXT 
+    Eigen::Vector3d p3( robot->p_c0 + robot->R_c*l->TIP_EXT + dp_cmd*(t0_swing + 1/freq_swing + 4*c2tip) ) ; 
+    // CHECK maybe delete *(t0_,...)
+    Eigen::Vector3d p_rotational = robot->w_d.cross(robot->R_d_phase * l->TIP_EXT);//*(t0_swing + 1/freq_swing + 4*c2tip);
 
-    // Eigen::Vector2d help_vect = robot->R_c.block(0,0,2,2)*(robot->p_c0.block(0,0,2,1) + l->TIP_EXT) ;
-    Eigen::Vector3d p3(robot->p_c0 + robot->R_c0*l->TIP_EXT + dp_cmd*(t0_swing + 1/freq_swing + 4*c2tip)  ) ; //2*c2tip + Eigen::Vector3d(0.02,0,0)
+    p3 += p_rotational;
     p3(2) = p0(2);
+
     l->foothold = p3; 
     Eigen::Vector3d ofset = p3 - p0;
     ofset(2) = 0.021; //TODO ADD INCLINATION //0.019
@@ -627,16 +637,21 @@ void LocomotionController::dynaControlSignal()
 }
 void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
 {
+    // // New additions
+    // robot->theta_d = robot->theta_c + robot->w_d(2)*dt; 
+    // Eigen::Matrix3d R_yaw = Eigen::AngleAxisd(robot->theta_d, Eigen::Vector3d::UnitZ()).toRotationMatrix(); 
+    // robot->R_d_now = robot->R_c0*R_yaw;  // Based on initial rotation + yaw.
+
     // compute orientation ERROR
-    Re = robot->R_c*robot->R_c0.transpose();
+    // PREV: Re = robot->R_c*robot->R_c0.transpose(); R_d_phase
+    Re = robot->R_c*robot->R_c0.transpose(); // prev
     ang.fromRotationMatrix(Re);
     e_o = ang.angle()*ang.axis();
     
     e_p(2) = 4*(robot->p_c(2) - (robot->height_z + terrain_height));
 
-    // HERE change commanded velocity based on the current robots ori??
-    // here robot->dCoM_p
+    // New additions: - robot->w_d
     e_v.block(0,0,3,1) = (robot->dp_c - robot->R_c*dp_cmd) ; // compute velocity error TODO //robot->R_c0*
-    e_v.block(3,0,3,1) = robot->w_CoM ; 
+    e_v.block(3,0,3,1) = robot->w_CoM - robot->w_d;  
     e_v.block(3,0,3,1) = 0.7*this->e_v.block(3,0,3,1) ; 
 }

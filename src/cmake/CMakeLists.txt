@@ -59,3 +59,6 @@ set(MAESTRO_CPP
 
 add_executable(dynawalk ../dynawalkMujoco.cpp ${MAESTRO_CPP} )
 target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
+
+add_executable(multi_dynawalk ../multi_dynawalkMujoco.cpp ${MAESTRO_CPP} )
+target_link_libraries(multi_dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)

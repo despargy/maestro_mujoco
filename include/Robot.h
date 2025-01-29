@@ -29,10 +29,10 @@ class Robot
         int vel_x__, vel_y__, vel_z__; // Body velocity ids(x,y,z)
 
         /* Pose CoM */
-        Eigen::Vector3d p_c, p_c0; Eigen::Matrix3d R_c, R_c0;
+        Eigen::Vector3d p_c, p_c0; Eigen::Matrix3d R_c, R_c0, R_d, R_d_phase, R_d_now;
         Eigen::Vector3d dp_c; // Just added
         Eigen::Vector3d com_p_prev, dCoM_p;
-        Eigen::Vector3d w_CoM;
+        Eigen::Vector3d w_CoM, w_d;
         Eigen::Matrix3d R_CoM_prev, dR_CoM;
 
         Eigen::MatrixXd Gq, Gq_sudo, H_c, C_c;
@@ -43,7 +43,7 @@ class Robot
         Eigen::Vector3d pbc ;
 
         Eigen::Matrix4d g_com ;
-
+        double theta_d, theta_c;
         bool KEEP_CONTROL;
         // KDL::Tree robot_kin;
 

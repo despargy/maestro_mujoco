@@ -119,9 +119,13 @@
 #define GO1_UNITREE_param_dp_cmd_y 0.0; // m/s
 #define GO1_UNITREE_param_dp_cmd_z 0.0; // m/s
 
-#define GO2_UNITREE_param_dp_cmd_x 0.68; //unitree go1 0.75 h 0.8 m/s
+#define GO2_UNITREE_param_dp_cmd_x 0.68; //0.68
 #define GO2_UNITREE_param_dp_cmd_y 0.0; // m/s
 #define GO2_UNITREE_param_dp_cmd_z 0.0; // m/s
+
+#define GO2_UNITREE_param_w_cmd_x 0.0; //rad/s
+#define GO2_UNITREE_param_w_cmd_y 0.0; // rad/s
+#define GO2_UNITREE_param_w_cmd_z 0.0; // rad/s
 
 
 #define GO1_param_robot_z 0.32; // go1 ->0.32, unitree go1  0.34

@@ -265,6 +265,9 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
     robot->com_p_prev = robot->p_c;
     robot->R_CoM_prev = robot->R_c;
 
+    Eigen::AngleAxisd ang2;
+    ang2.fromRotationMatrix(robot->R_c);
+    robot->theta_c = ang2.angle()*ang2.axis()(2);
 
                 /* Legs */
     for(int i = 0 ; i <  robot->n_legs ; i++)
@@ -519,7 +522,10 @@ void Wrapper::update_PCE_forces(double fz_swing_a, double fz_swing_b)
     //Compute PCE stance legs
     robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));
     robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu));
-    
+    // DELETE THE MANUAL ASSING OF 1
+    // robot->leg[(int)robot->stanceL_id_a]->prob_stable = 1;
+    // robot->leg[(int)robot->stanceL_id_b]->prob_stable = 1;
+
     //Compute PCE swinging legs
     double contact_prob;
     if ( fz_swing_a > pce_obj[(int)robot->swingL_id_a].Fz_thresshold_A)

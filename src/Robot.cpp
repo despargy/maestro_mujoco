@@ -36,6 +36,7 @@ Robot::Robot()
     g_com = Eigen::Matrix4d::Identity();
     swingL_id = 0; // do not play role
 
+    theta_d = 0.0;
 
     if (n_legs==4)
     {

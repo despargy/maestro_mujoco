@@ -220,14 +220,16 @@ void LocomotionTopLevelControl::setParamsDynamic()
 
         controller->alpha = GO2_UNITREE_param_alpha_DYNA; 
 
+        controller->robot->w_d(0) = GO2_UNITREE_param_w_cmd_x ;
+        controller->robot->w_d(1) = GO2_UNITREE_param_w_cmd_y ;
+        controller->robot->w_d(2) = GO2_UNITREE_param_w_cmd_z ;
+
     }
 
     controller->robot->leg[0]->TIP_EXT = Eigen::Vector3d(+controller->robot->l1, -controller->robot->d, 0.019);
     controller->robot->leg[2]->TIP_EXT = Eigen::Vector3d(-controller->robot->l2, -controller->robot->d, 0.019);
     controller->robot->leg[1]->TIP_EXT = Eigen::Vector3d(+controller->robot->l1, +controller->robot->d, 0.019);
     controller->robot->leg[3]->TIP_EXT = Eigen::Vector3d(-controller->robot->l2, +controller->robot->d, 0.019);
-
-
 
 }
 
@@ -374,9 +376,18 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
         controller->PD_smooth(controller->robot->leg[0]->sit1, 1000);
         if(top_time > fsm->t_S3)
         {
+            std::cout<< " New packet"<<std::endl;
+            for(int l=0; l< controller->robot->n_legs; l++)
+            {
+                std::cout<<controller->robot->leg[l]->tau(0)<<" , "<<
+                controller->robot->leg[l]->tau(1)<<" , "<<
+                controller->robot->leg[l]->tau(2)<<std::endl;
+            }
+            
             fsm->state = S3; // stand up, go to init IMUs measurements
             std::cout<<"Robot stand up, I will move to init IMUs before locomotion"<<std::endl;
         }
+        
         break;
     case S3:
     
@@ -478,32 +489,37 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
         //                 controller->e_o(0), controller->e_o(1), controller->e_o(2),
         //                 controller->e_v(0), controller->e_v(1), controller->e_v(2),
         //                 controller->robot->leg[0]->tau.norm(), controller->robot->leg[1]->tau.norm(),controller->robot->leg[2]->tau.norm(),controller->robot->leg[3]->tau.norm());
+// UNCOMMENT SAVE_SLIP //
+        // data->save_slip(controller->t_real,
+        //                 controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
 
-        data->save_slip(controller->t_real,
-                        controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
-
-                        controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
-                        controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
+        //                 controller->robot->leg[0]->wv_leg(0),controller->robot->leg[1]->wv_leg(0),
+        //                 controller->robot->leg[2]->wv_leg(0), controller->robot->leg[3]->wv_leg(0),
                         
-                        controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
-                        controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
+        //                 controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
+        //                 controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
                         
-                        controller->robot->leg[(int)controller->robot->stanceL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->stanceL_id_b]->wv_leg(0),
-                        controller->robot->leg[(int)controller->robot->stanceL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->stanceL_id_b]->prob_stable,
+        //                 controller->robot->leg[(int)controller->robot->stanceL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->stanceL_id_b]->wv_leg(0),
+        //                 controller->robot->leg[(int)controller->robot->stanceL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->stanceL_id_b]->prob_stable,
 
-                        controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg(0),
-                        controller->robot->leg[(int)controller->robot->swingL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->swingL_id_b]->prob_stable,
+        //                 controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg(0),controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg(0),
+        //                 controller->robot->leg[(int)controller->robot->swingL_id_a]->prob_stable,controller->robot->leg[(int)controller->robot->swingL_id_b]->prob_stable,
 
-                        controller->e_v(0),controller->e_v(1),controller->e_v(2),
+        //                 controller->e_v(0),controller->e_v(1),controller->e_v(2),
 
-                        // controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2),
+        //                 // controller->robot->leg[0]->imu(0),controller->robot->leg[0]->imu(1),controller->robot->leg[0]->imu(2),
                        
-                        controller->f_applied_a(2),controller->f_applied_b(2),
-                       controller->f_stance_a(2),controller->f_stance_b(2),
+        //                 controller->f_applied_a(2),controller->f_applied_b(2),
+        //                controller->f_stance_a(2),controller->f_stance_b(2),
 
-                        controller->robot->dp_c(0),controller->robot->dp_c(1),controller->robot->dp_c(2)
-                        );
+        //                 controller->robot->dp_c(0),controller->robot->dp_c(1),controller->robot->dp_c(2)
+        //                 );
                         
+        data->save_opt(controller->t_real, controller->robot->vvvv,controller->robot->Gq);
+        // data->save_tau(controller->t_real, controller->robot->leg[0]->tau, controller->robot->leg[1]->tau, controller->robot->leg[2]->tau, controller->robot->leg[3]->tau);
+        
+        // data->save_Fa(controller->t_real, controller->robot->F_a);
+        // data->save_Fc(controller->t_real, controller->robot->F_c);
 
         break;    
 
