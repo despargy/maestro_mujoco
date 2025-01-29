@@ -1,13 +1,7 @@
 #include <TopLevelControl.h>
 /* Construtor */
-TopLevelControl::TopLevelControl()
-{
-
-}
-TopLevelControl::TopLevelControl(std::string category_)
-{
-
-}
+TopLevelControl::TopLevelControl(){}
+TopLevelControl::TopLevelControl(std::string category_){}
 /* De-Constructor */
 TopLevelControl::~TopLevelControl(){}
 void TopLevelControl::init_topControl(){}

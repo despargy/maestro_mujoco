@@ -1,6 +1,5 @@
 #include <Robot.h>
 #include <Math.h>
-#include <Trajectory.h>
 
 #ifndef _CONTROLLER_H_
 #define _CONTROLLER_H_

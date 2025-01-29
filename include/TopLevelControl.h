@@ -1,6 +1,5 @@
 #include <FSM.h>
 #include <Controller.h>
-#include <TrajController.h>
 #include <LocomotionController.h>
 #include <Data.h>
 #include <Wrapper.h>

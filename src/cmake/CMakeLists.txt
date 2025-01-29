@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(maestro_mujoco)
-add_compile_options(-std=c++11 -lorocos-kdl)
+add_compile_options(-std=c++11 -lorocos)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -pthread -Wl,-no-as-needed")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/src/cmake")
@@ -28,7 +28,6 @@ find_library(NLOPT_LIBRARIES
 
 # find_package(nlopt REQUIRED)
 find_package(orocos_kdl REQUIRED)
-find_package(kdl_parser REQUIRED)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
@@ -48,17 +47,14 @@ set(MAESTRO_CPP
     ../Data.cpp
     ../TopLevelControl.cpp
     ../LocomotionTopLevelControl.cpp
-    ../TrajectoryTopLevelControl.cpp
     ../Math.cpp
-    ../Trajectory.cpp
     ../Wrapper.cpp
     ../LocomotionController.cpp
-    ../TrajController.cpp
     "${PCE_CPP}/src/pce.cpp"
 )
 
 add_executable(dynawalk ../dynawalkMujoco.cpp ${MAESTRO_CPP} )
-target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
+target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} m mujoco glfw)
 
 add_executable(multi_dynawalk ../multi_dynawalkMujoco.cpp ${MAESTRO_CPP} )
-target_link_libraries(multi_dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} ${kdl_parser_LIBRARIES} m mujoco glfw)
+target_link_libraries(multi_dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} m mujoco glfw)

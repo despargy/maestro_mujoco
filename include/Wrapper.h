@@ -27,11 +27,7 @@ class Wrapper
         Wrapper(std::string category_, Robot* t_);
         ~Wrapper();
         void initConst();
-        void update();
         void update_locomotion(const mjModel* m, mjData* d, double dt);
-        void update(const mjModel* m, mjData* d, double dt);
-        void send();
-        void send(const mjModel* m, mjData* d);
         void send_torque_pos(const mjModel* m, mjData* d);
         bool set_gains(const mjModel* m, mjData* d, bool A_TOUCHED, bool B_TOUCHED);
         void send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bool B_PD);

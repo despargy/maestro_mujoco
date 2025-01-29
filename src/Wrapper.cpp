@@ -115,106 +115,6 @@ void Wrapper::initConst()
         }
     }
 }
-void Wrapper::update()
-{
-    // TODO
-    printf("Default update \n");
-}
-void Wrapper::update(const mjModel* m, mjData* d, double dt)
-{
-
-                /* Robot - CoM */
-    // CoM position
-    robot->p_c(0) = d->sensordata[robot->com_x__] ;
-    robot->p_c(1) = d->sensordata[robot->com_y__] ;
-    robot->p_c(2) = d->sensordata[robot->com_z__] ;
-    if (once)
-    {
-
-        /* init CoM zero position */
-        robot->p_c0(0) = d->sensordata[robot->com_x__] ;
-        robot->p_c0(1) = d->sensordata[robot->com_y__] ;
-        robot->p_c0(2) = d->sensordata[robot->com_z__] ;    
-        robot->com_p_prev =  robot->p_c0; // set init value to prev CoM position
-
-        Eigen::Quaterniond cur_c(d->sensordata[robot->quat_w__], d->sensordata[robot->quat_x__], d->sensordata[robot->quat_y__], d->sensordata[robot->quat_z__]); // init CoM zero orientation 
-        cur_c.normalize();
-        robot->R_c0 = cur_c.toRotationMatrix(); 
-        robot->R_CoM_prev = robot->R_c0;
-
-        once = false;
-    }
-    // CoM orientation
-    Eigen::Quaterniond cur_c(d->sensordata[robot->quat_w__], d->sensordata[robot->quat_x__], d->sensordata[robot->quat_y__], d->sensordata[robot->quat_z__]);
-    cur_c.normalize();
-    robot->R_c = cur_c.toRotationMatrix(); 
-
-    robot->g_com.block(0,0,3,3) = robot->R_c;
-    robot->g_com.block(0,3,3,1) = robot->p_c;
-
-    // CoM velocity 
-    robot->dCoM_p = get_dp_CoM(robot->com_p_prev, robot->p_c, dt);  //TODO
-    robot->dR_CoM = get_dR_CoM(robot->R_CoM_prev, robot->R_c, dt);  //TODO
-    robot->w_CoM  = scewSymmetricInverse(robot->dR_CoM*robot->R_c.transpose());
-    // store current as prev for the next control cycle 
-    robot->com_p_prev = robot->p_c;
-    robot->R_CoM_prev = robot->R_c;
-
-                /* Legs */
-    for(int i = 0 ; i <  robot->n_legs ; i++)
-    {
-        // q of Joints per leg (hip,thigh,calf)
-        robot->leg[i]->q(0) = d->sensordata[robot->leg[i]->q_hip__];
-        robot->leg[i]->q(1) = d->sensordata[robot->leg[i]->q_thigh__];
-        robot->leg[i]->q(2) = d->sensordata[robot->leg[i]->q_calf__];
-        // dq of Joints per leg (hip,thigh,calf)
-        robot->leg[i]->dq(0) = d->sensordata[robot->leg[i]->dq_hip__];
-        robot->leg[i]->dq(1) = d->sensordata[robot->leg[i]->dq_thigh__];
-        robot->leg[i]->dq(2) = d->sensordata[robot->leg[i]->dq_calf__];
-        // foot Force on tip 'current' (x,y,z)
-        robot->leg[i]->f(0) = d->sensordata[robot->leg[i]->force_x__];
-        robot->leg[i]->f(1) = d->sensordata[robot->leg[i]->force_y__];
-        robot->leg[i]->f(2) = d->sensordata[robot->leg[i]->force_z__];       
-
-        // tip pose (x,y,z)
-        robot->leg[i]->p_i(0) = d->sensordata[robot->leg[i]->tip_x__];
-        robot->leg[i]->p_i(1) = d->sensordata[robot->leg[i]->tip_y__];
-        robot->leg[i]->p_i(2) = d->sensordata[robot->leg[i]->tip_z__];    
-
-
-        Eigen::Quaterniond Q_i(d->sensordata[robot->leg[i]->quat_w__], d->sensordata[robot->leg[i]->quat_x__], d->sensordata[robot->leg[i]->quat_y__], d->sensordata[robot->leg[i]->quat_z__]);
-        Q_i.normalize();
-        robot->leg[i]->R_i = Q_i.toRotationMatrix(); 
-
-
-        robot->leg[i]->g_o.block(0,0,3,3) = robot->leg[i]->R_i; // framepos ref to CoM
-        robot->leg[i]->g_o.block(0,3,3,1) = robot->leg[i]->p_i; // framequat ref to CoM
-
-        robot->leg[i]->g_o_world = robot->g_com*robot->leg[i]->g_o; //
-    }
-
-    for(int i = 0 ; i <  robot->n_legs ; i++)
-    {
-        int nv = m->nv;
-        double jacp1[3*nv];
-        // double point[3] = {d->sensordata[robot->leg[i]->tip_x__],d->sensordata[robot->leg[i]->tip_y__],d->sensordata[robot->leg[i]->tip_z__]};
-        // mj_jac(m,d,jacp1,NULL,point,robot->leg[i]->body__);
-        double point[3] = {robot->leg[i]->g_o_world(0,3),robot->leg[i]->g_o_world(1,3),robot->leg[i]->g_o_world(2,3)};
-        mj_jac(m,d,jacp1,NULL,point,robot->leg[i]->body__);
-
-        // mj_jacSite(m,d,jacp1,NULL,robot->leg[i]->site__);
-
-
-        robot->leg[i]->J(0,0) = jacp1[6+3*i+0];      robot->leg[i]->J(0,1) = jacp1[6+3*i+1];      robot->leg[i]->J(0,2) = jacp1[6+3*i+2]; 
-        robot->leg[i]->J(1,0) = jacp1[6+3*i+0+nv];   robot->leg[i]->J(1,1) = jacp1[6+3*i+1+nv];   robot->leg[i]->J(1,2) = jacp1[6+3*i+2+nv]; 
-        robot->leg[i]->J(2,0) = jacp1[6+3*i+0+2*nv]; robot->leg[i]->J(2,1) = jacp1[6+3*i+1+2*nv]; robot->leg[i]->J(2,2) = jacp1[6+3*i+2+2*nv]; 
-    
-        // Probability of Contact Estimation
-        robot->leg[i]->prob_stable = std::fmin(1.0,1.0); // TODO 
-
-    }
-
-}
 void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
 {
     
@@ -323,38 +223,6 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
         robot->leg[i]->J(2,0) = jacp1[6+3*i+0+2*nv]; robot->leg[i]->J(2,1) = jacp1[6+3*i+1+2*nv]; robot->leg[i]->J(2,2) = jacp1[6+3*i+2+2*nv]; 
     
     }
-}
-void Wrapper::send()
-{
-    // TODO send not mujoco
-    printf("Default Wrapper \n");
-}
-// Torque control
-void Wrapper::send(const mjModel* m, mjData* d)
-{
-    for(int l=0; l< robot->n_legs; l++)
-    {
-        d->ctrl[robot->leg[l]->torque_hip__]   = robot->leg[l]->tau(0);
-        d->ctrl[robot->leg[l]->torque_thigh__] = robot->leg[l]->tau(1);
-        d->ctrl[robot->leg[l]->torque_calf__]  = robot->leg[l]->tau(2);
-    }
-}
-void Wrapper::send_torque_pos(const mjModel* m, mjData* d)
-{
-    for(int l=0; l< robot->n_legs; l++)
-    {
-        d->ctrl[robot->leg[l]->torque_hip__]   = robot->leg[l]->tau(0);
-        d->ctrl[robot->leg[l]->torque_thigh__] = robot->leg[l]->tau(1);
-        d->ctrl[robot->leg[l]->torque_calf__]  = robot->leg[l]->tau(2);
-    }
-    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_hip__]   = robot->leg[(int) robot->swingL_id]->q_out(0);
-    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_thigh__] = robot->leg[(int) robot->swingL_id]->q_out(1);
-    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_q_calf__]  = robot->leg[(int) robot->swingL_id]->q_out(2);
-
-    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_hip__]   = robot->leg[(int) robot->swingL_id]->dq_out(0);
-    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_thigh__] = robot->leg[(int) robot->swingL_id]->dq_out(1);
-    d->ctrl[robot->leg[(int) robot->swingL_id]->cmd_dq_calf__]  = robot->leg[(int) robot->swingL_id]->dq_out(2);
-
 }
 void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
 {
@@ -541,8 +409,6 @@ void Wrapper::update_PCE_forces(double fz_swing_a, double fz_swing_b)
     robot->leg[(int)robot->swingL_id_b]->prob_stable = std::fmin(1.0,contact_prob);
 
 }
-
-
 void Wrapper::find_params_PCE() // set forts batched and compute the bias
 {
     for(int i = 0 ; i < robot->n_legs; i++)

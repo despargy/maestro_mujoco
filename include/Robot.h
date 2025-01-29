@@ -45,7 +45,6 @@ class Robot
         Eigen::Matrix4d g_com ;
         double theta_d, theta_c;
         bool KEEP_CONTROL;
-        // KDL::Tree robot_kin;
 
         Robot();
         ~Robot();
