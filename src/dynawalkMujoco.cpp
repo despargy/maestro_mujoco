@@ -149,7 +149,9 @@ void my_controller_walk(const mjModel* m, mjData* d)
         else if(topController->fsm->state == DYNA_GAIT)
         {
             // topController->wrapper->update_PCE();
-            topController->wrapper->update_PCE_forces(topController->controller->f_applied_a(2), topController->controller->f_applied_b(2));
+            // topController->wrapper->update_PCE_forces(topController->controller->f_applied_a(2), topController->controller->f_applied_b(2));
+            topController->wrapper->update_PCE_onlystance();
+
             // topController->wrapper->pce_obj[0].save_csv();
         }
 
@@ -227,7 +229,7 @@ int main(int argc, const char** argv)
     /* Maestro - new TopLevelControl of the global pointer */
     topController = new LocomotionTopLevelControl("Mujoco") ; // later define gait for walk : gait type 2
     topController->init_topControlDynamic(m,d); // call once
-
+    topController->controller->INCLINATION = false; // Remove is dynamicalMujoco is the main
     // install control callback
     mjcb_control = my_controller_walk;  // set the myTopLevel instead of the default Mujoco's one
 

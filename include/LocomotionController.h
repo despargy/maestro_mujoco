@@ -20,6 +20,7 @@ class LocomotionController : public Controller
         double kr;
         double step_bez;
         bool A_TOUCHED, B_TOUCHED;
+        bool INCLINATION;
         double c1, force_thres, k_clik;
         double tau_lim, terrain_height ;
         std::vector<double> bCurveX, dot_bCurveX; // Bezier Curve swinging tip
@@ -41,7 +42,7 @@ class LocomotionController : public Controller
         Eigen::Vector3f d_tip_vel;
         
         Eigen::Vector3f bezier_world, bezier_world_a, bezier_world_b;
-        
+        double dz_offset, incl_a;
         double dist_error, c1tip, c2tip, ampli_A, ampli_B, tip_target_z, percentage;
         
         LocomotionController();
@@ -59,6 +60,8 @@ class LocomotionController : public Controller
         void PIDwithSat();
         void fComputations();
         void dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd);
+        void dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd, double dz_incl);
+
         void doubleInverseTip();
 
         void inverseTip();
@@ -73,9 +76,12 @@ class LocomotionController : public Controller
         void dynaErrors(Eigen::Vector3d dp_cmd);
         void dynaControlSignal();
         void computeDynamicWeights();
+        void computeDynamicWeights(double incl_a);
         void initWeights();
         void freezedoubleCLIK(int i);
         void checkTouchDown();
+        void change_Rd(Eigen::Vector3d euler_angle);
+        void updateInclination(Eigen::Vector3d dp_cmd);
 
 };
 

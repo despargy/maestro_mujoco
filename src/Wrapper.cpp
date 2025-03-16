@@ -224,6 +224,7 @@ void Wrapper::update_locomotion(const mjModel* m, mjData* d, double dt)
     
     }
 }
+
 void Wrapper::send_torque_pos_Dynamic(const mjModel* m, mjData* d, bool A_PD, bool B_PD)
 {
     for(int l=0; l< robot->n_legs; l++)
@@ -347,19 +348,14 @@ void Wrapper::init_PCE() // set forts batched and compute the bias
 void Wrapper::update_PCE()
 {   
     double contact_prob;
-    // for(int i = 0 ; i < robot->n_legs; i++)
-    // { 
-    //     if (robot->leg[i]->f(2) > pce_obj[i].Fz_thresshold)
-    //         contact_prob = pce_bj[i].stable_contact_detection(robot->leg[i]->imu);
-    //     else 
-    //         contact_prob = 1.0;
-    //     robot->leg[i]->prob_stable = std::fmin(1.0,contact_prob);
-    // }
 
     //Compute PCE stance legs
     robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));
     robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu));
     
+    // robot->leg[(int)robot->stanceL_id_a]->prob_stable = 1.0;
+    // robot->leg[(int)robot->stanceL_id_b]->prob_stable = 1.0;
+
     //Compute PCE swinging legs
     if (robot->leg[(int)robot->swingL_id_a]->f(2) > pce_obj[(int)robot->swingL_id_a].Fz_thresshold)
         contact_prob = pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_a]->imu);
@@ -376,17 +372,7 @@ void Wrapper::update_PCE()
 }
 void Wrapper::update_PCE_forces(double fz_swing_a, double fz_swing_b)
 {
-    //     for(int i = 0 ; i < robot->n_legs; i++)
-    // { 
-    //     double contact_prob = 1.0;
-    //     robot->leg[i]->prob_stable = std::fmin(1.0,contact_prob);
-        
-    //     pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu);
-    //     pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu);
-    //     pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_a]->imu);
-    //     pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_b]->imu);
-    
-    // }
+
     //Compute PCE stance legs
     robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));
     robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu));
@@ -394,21 +380,33 @@ void Wrapper::update_PCE_forces(double fz_swing_a, double fz_swing_b)
     // robot->leg[(int)robot->stanceL_id_a]->prob_stable = 1;
     // robot->leg[(int)robot->stanceL_id_b]->prob_stable = 1;
 
-    //Compute PCE swinging legs
-    double contact_prob;
-    if ( fz_swing_a > pce_obj[(int)robot->swingL_id_a].Fz_thresshold_A)
-        contact_prob = pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_a]->imu);
-    else 
-        contact_prob = 0.0; // no contact 
-    robot->leg[(int)robot->swingL_id_a]->prob_stable = std::fmin(1.0,contact_prob);
+    // //Compute PCE swinging legs
+    // double contact_prob;
+    // if ( fz_swing_a > pce_obj[(int)robot->swingL_id_a].Fz_thresshold_A)
+    //     contact_prob = pce_obj[(int)robot->swingL_id_a].stable_contact_detection(robot->leg[(int)robot->swingL_id_a]->imu);
+    // else 
+    //     contact_prob = 0.0; // no contact 
+    // robot->leg[(int)robot->swingL_id_a]->prob_stable = std::fmin(1.0,contact_prob);
     
-    if (fz_swing_b > pce_obj[(int)robot->swingL_id_b].Fz_thresshold_B)
-        contact_prob = pce_obj[(int)robot->swingL_id_b].stable_contact_detection(robot->leg[(int)robot->swingL_id_b]->imu);
-    else 
-        contact_prob = 0.0; // no contact
-    robot->leg[(int)robot->swingL_id_b]->prob_stable = std::fmin(1.0,contact_prob);
+    // if (fz_swing_b > pce_obj[(int)robot->swingL_id_b].Fz_thresshold_B)
+    //     contact_prob = pce_obj[(int)robot->swingL_id_b].stable_contact_detection(robot->leg[(int)robot->swingL_id_b]->imu);
+    // else 
+    //     contact_prob = 0.0; // no contact
+    // robot->leg[(int)robot->swingL_id_b]->prob_stable = std::fmin(1.0,contact_prob);
 
 }
+void Wrapper::update_PCE_onlystance()
+{
+
+    //Compute PCE stance legs
+    robot->leg[(int)robot->stanceL_id_a]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_a].stable_contact_detection(robot->leg[(int)robot->stanceL_id_a]->imu));
+    robot->leg[(int)robot->stanceL_id_b]->prob_stable = std::fmin(1.0,pce_obj[(int)robot->stanceL_id_b].stable_contact_detection(robot->leg[(int)robot->stanceL_id_b]->imu));
+    // DELETE THE MANUAL ASSING OF 1
+    // robot->leg[(int)robot->stanceL_id_a]->prob_stable = 1;
+    // robot->leg[(int)robot->stanceL_id_b]->prob_stable = 1;
+
+}
+
 void Wrapper::find_params_PCE() // set forts batched and compute the bias
 {
     for(int i = 0 ; i < robot->n_legs; i++)

@@ -31,10 +31,13 @@ class Data
         void save_slip(double time, double pcx, double pcy, double pcz, double w0, double w1, double w2, double w3, double prob0, double prob1, double prob2, double prob3, double wStanceA, double wStanceB, double probStanceA, double probStanceB,double wSwingA, double wSwingB, double probSwingA, double probSwingB, double ev_x, double ev_y, double ev_z, double fAz, double fBz, double fAz_stance, double fBz_stance, double vx, double vy, double vz);
         void save_compare(double time, double Vcx, double Vcy, double pcz, double w0, double w1, double w2, double w3,  double eo_x, double eo_y, double eo_z, double ev_x, double ev_y, double ev_z, double t1, double t2, double t3, double t4);
         void save_opt(double time, Eigen::VectorXd vvvv_, Eigen::MatrixXd G_sudo_);
-        void save_tau(double time, Eigen::Vector3d tau_l1, Eigen::Vector3d tau_l2,Eigen::Vector3d tau_l3,Eigen::Vector3d tau_l4 );
+        void save_tau(double time, int phase_id, Eigen::Vector3d tau_l1, Eigen::Vector3d tau_l2,Eigen::Vector3d tau_l3,Eigen::Vector3d tau_l4 );
         void save_Fa(double time, Eigen::VectorXd Fa );
-        void save_Fc(double time, Eigen::VectorXd Fc );
+        void save_Fc(double time, int phase_id, Eigen::VectorXd Fc );
 
+        void save_joints(double time, int phase_id, double l0_0, double l0_1, double l0_2, double l1_0, double l1_1, double l1_2, double l2_0, double l2_1, double l2_2, double l3_0, double l3_1, double l3_2 );
+        void save_PP(double time, int phase_id, double p0, double p1, double p2, double p3,  Eigen::VectorXd vv);
+        void save_CoM(double time, int phase_id, double pc0, double pc1, double pc2, double dpc0, double dpc1, double dpc2);
 
 };
 

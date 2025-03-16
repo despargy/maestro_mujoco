@@ -16,6 +16,7 @@ const int M0 = 2; const int MC = 3;
 const int TARGET0 = 4; const int TARGET1 = 5; 
 const int STATIC_GAIT = 6;
 const int DYNA_GAIT = 7;
+const int INCLINED_DYNA_GAIT = 10;
 
 /* when state = LOC: phase can be */
 const int PH_TARGET = 0;  // SUPPORT 4 LEGS

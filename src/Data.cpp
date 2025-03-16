@@ -133,9 +133,9 @@ void Data::save_opt(double time, Eigen::VectorXd vvvv_, Eigen::MatrixXd G_sudo_)
     fprintf(fid,"\n");
 }
 
-void Data::save_tau(double time, Eigen::Vector3d tau_l1, Eigen::Vector3d tau_l2,Eigen::Vector3d tau_l3,Eigen::Vector3d tau_l4 )
+void Data::save_tau(double time, int phase_id, Eigen::Vector3d tau_l1, Eigen::Vector3d tau_l2,Eigen::Vector3d tau_l3,Eigen::Vector3d tau_l4 )
 {
-    fprintf(fid, "%f ", time);
+    fprintf(fid, "%f %d ", time, phase_id);
     for(int i=0;i<3;i++)
         fprintf(fid, "%f ", tau_l1(i));
     for(int i=0;i<3;i++)
@@ -156,10 +156,37 @@ void Data::save_Fa(double time, Eigen::VectorXd Fa )
     fprintf(fid,"\n");
 }
 
-void Data::save_Fc(double time, Eigen::VectorXd Fc )
+void Data::save_Fc(double time, int phase_id, Eigen::VectorXd Fc )
 {
-    fprintf(fid, "%f ", time);
+    fprintf(fid, "%f %d ", time, phase_id);
     for(int i=0;i<6;i++)
         fprintf(fid, "%f ", Fc(i));
     fprintf(fid,"\n");
 }
+
+void Data::save_joints(double time, int phase_id, double l0_0, double l0_1, double l0_2, double l1_0, double l1_1, double l1_2, double l2_0, double l2_1, double l2_2, double l3_0, double l3_1, double l3_2 )
+{
+    fprintf(fid, "%f %d ", time, phase_id);
+    fprintf(fid, "%f %f %f ", l0_0, l0_1, l0_2);
+    fprintf(fid, "%f %f %f ", l1_0, l1_1, l1_2);
+    fprintf(fid, "%f %f %f ", l2_0, l2_1, l2_2);
+    fprintf(fid, "%f %f %f ", l3_0, l3_1, l3_2);
+    fprintf(fid,"\n");
+}
+
+void Data::save_PP(double time, int phase_id, double p0, double p1, double p2, double p3,  Eigen::VectorXd vv)
+{
+    fprintf(fid, "%f %d ", time, phase_id);
+    fprintf(fid, "%f %f %f %f ", p0, p1, p2, p3);
+    for(int i=0;i<12;i++)
+        fprintf(fid, "%f ", vv(i));
+    fprintf(fid,"\n");
+}
+
+void Data::save_CoM(double time, int phase_id, double pc0, double pc1, double pc2, double dpc0, double dpc1, double dpc2)
+{
+    fprintf(fid, "%f %d ", time, phase_id);
+    fprintf(fid, "%f %f %f ", pc0, pc1, pc2);
+    fprintf(fid, "%f %f %f ", dpc0, dpc1, dpc2);
+    fprintf(fid,"\n");
+}                        

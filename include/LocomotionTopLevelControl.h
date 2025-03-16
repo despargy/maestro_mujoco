@@ -11,7 +11,7 @@ class LocomotionTopLevelControl : public TopLevelControl
     public:
         LocomotionController* controller; // LocomotionController pointer obj.
 
-        int loc_i, foothold_id;
+        int loc_i, foothold_id, phase_id;
         bool DYNA_LOCO, A_PD, B_PD ;
         Eigen::Vector3d dp_cmd;
         LocomotionTopLevelControl();

@@ -364,10 +364,10 @@
         <pair  geom1="RR" geom2="surf4" condim="4" friction="0.09 0.09 0.1" />
         <pair  geom1="RL" geom2="surf4" condim="4" friction="0.09 0.09 0.1" />
 
-        <pair  geom1="FR" geom2="surf5" condim="4" friction="0.09 0.09 0.1" /> 
-        <pair  geom1="FL" geom2="surf5" condim="4" friction="0.09 0.09 0.1" />
-        <pair  geom1="RR" geom2="surf5" condim="4" friction="0.09 0.09 0.1" />
-        <pair  geom1="RL" geom2="surf5" condim="4" friction="0.09 0.09 0.1" />
+        <pair  geom1="FR" geom2="surf5" condim="4" friction="0.03 0.05 0.07" /> 
+        <pair  geom1="FL" geom2="surf5" condim="4" friction="0.03 0.05 0.07" />
+        <pair  geom1="RR" geom2="surf5" condim="4" friction="0.03 0.05 0.07" />
+        <pair  geom1="RL" geom2="surf5" condim="4" friction="0.03 0.05 0.07" />
        
         <pair  geom1="FR" geom2="surf6" condim="4" friction="0.2 0.3 0.1" /> 
         <pair  geom1="FL" geom2="surf6" condim="4" friction="0.2 0.3 0.1" />
@@ -379,6 +379,18 @@
         <pair  geom1="RR" geom2="surf7" condim="4" friction="0.9 0.9 0.5" />
         <pair  geom1="RL" geom2="surf7" condim="4" friction="0.9 0.9 0.5" />
 
+        <pair  geom1="FR" geom2="ramp_inc" condim="4" friction="0.01 0.15 0.1" /> 
+        <pair  geom1="FL" geom2="ramp_inc" condim="4" friction="0.01 0.15 0.1" /> 
+        <pair  geom1="RR" geom2="ramp_inc" condim="4" friction="0.01 0.15 0.1" /> 
+        <pair  geom1="RL" geom2="ramp_inc" condim="4" friction="0.01 0.15 0.1" /> 
+
+        <pair  geom1="FR" geom2="ramp_decr" condim="4" friction="0.01 0.15 0.1" /> 
+        <pair  geom1="FL" geom2="ramp_decr" condim="4" friction="0.01 0.15 0.1" />
+        <pair  geom1="RR" geom2="ramp_decr" condim="4" friction="0.01 0.15 0.1" />
+        <pair  geom1="RL" geom2="ramp_decr" condim="4" friction="0.01 0.15 0.1" />
+
+<!-- 0.3 0.2 0.25  -->
+<!-- 0.8 0.2 0.2 -->
     </contact> 
 
 </mujoco>

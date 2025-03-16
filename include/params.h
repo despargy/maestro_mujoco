@@ -97,7 +97,7 @@
 #define param_kp_DYNA 1000; //3000
 
 #define param_Freq_Swing_DYNA 8.0; // 8.0
-#define param_t0_Swing_DYNA 0.01; //0.01
+#define param_t0_Swing_DYNA 0.01; //0.01 HERE SOS
 #define param_c1 100; //100
 #define param_force_thres -10;//0.01;  //0.01
 #define param_c1tip 500;  //200
@@ -179,6 +179,7 @@
 
 #define param_terrain_height 0.01; 
 
+#define param_INCLINATION true;
 /********************** ******************** *************************/
 #endif
 

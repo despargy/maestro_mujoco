@@ -128,7 +128,7 @@ void LocomotionTopLevelControl::setParamsDynamic()
     wrapper->Kv_calf  = param_Kv_calf;  // not used
 
     controller->tau_lim = param_tau_lim;
-    
+    controller->INCLINATION = param_INCLINATION
                     /**** Specified by each model ****/
     int model_id = param_model;
     std::cout<<model_id<<std::endl;
@@ -376,13 +376,13 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
         controller->PD_smooth(controller->robot->leg[0]->sit1, 1000);
         if(top_time > fsm->t_S3)
         {
-            std::cout<< " New packet"<<std::endl;
-            for(int l=0; l< controller->robot->n_legs; l++)
-            {
-                std::cout<<controller->robot->leg[l]->tau(0)<<" , "<<
-                controller->robot->leg[l]->tau(1)<<" , "<<
-                controller->robot->leg[l]->tau(2)<<std::endl;
-            }
+            // std::cout<< " New packet"<<std::endl;
+            // for(int l=0; l< controller->robot->n_legs; l++)
+            // {
+            //     std::cout<<controller->robot->leg[l]->tau(0)<<" , "<<
+            //     controller->robot->leg[l]->tau(1)<<" , "<<
+            //     controller->robot->leg[l]->tau(2)<<std::endl;
+            // }
             
             fsm->state = S3; // stand up, go to init IMUs measurements
             std::cout<<"Robot stand up, I will move to init IMUs before locomotion"<<std::endl;
@@ -398,6 +398,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             controller->t_real = 0.0; //time_now - t0;
             controller->t_phase = 0.0;
 
+            controller->robot->R_d = controller->robot->R_c;
             controller->robot->R_c0 = controller->robot->R_c;
             controller->robot->p_c0 = controller->robot->p_c;
 
@@ -408,6 +409,10 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
             fsm->state = DYNA_GAIT;
             fsm->phase = PH_TARGET;
+
+            // Change state if you need inclination adaptation
+            if (controller->INCLINATION)
+                fsm->state = INCLINED_DYNA_GAIT;
 
             controller->robot->leg[0]->foothold = controller->robot->leg[0]->g_0bo_init.block(0,3,3,1);
             controller->robot->leg[1]->foothold = controller->robot->leg[1]->g_0bo_init.block(0,3,3,1);
@@ -420,6 +425,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
     case DYNA_GAIT:
 
         controller->t_real = top_time - controller->t0; //update time
+        // std::cout<<"Time : "<< controller->t_real <<std::endl;
         // //Dyna Locomotion
         switch (fsm->phase )
         {
@@ -429,7 +435,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
             controller->robot->swingL_id_b = (int) (3 - controller->robot->swingL_id_a); //( case A.{0,3} , case B.{1,2} )
             controller->robot->stanceL_id_a = (int)((loc_i+1)%2);
             controller->robot->stanceL_id_b = (int) (3 - controller->robot->stanceL_id_a);
-
+            phase_id = (int )controller->robot->swingL_id_a;
             controller->setDynamicPhase(); // setphase target etc. 
 
             controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_a],dp_cmd);
@@ -437,7 +443,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
             fsm->phase = PH_SWING;
 
-    
+   
         case PH_SWING:
 
             controller->t_phase = controller->t_real - controller->t0_phase;
@@ -456,6 +462,7 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
 
             break;
         }
+   
 //THIS save_dyna was before
         // data->save_dyna(controller->t_real,
         //                 controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
@@ -515,14 +522,73 @@ void LocomotionTopLevelControl::computeDynamic(double top_time)
         //                 controller->robot->dp_c(0),controller->robot->dp_c(1),controller->robot->dp_c(2)
         //                 );
                         
-        data->save_opt(controller->t_real, controller->robot->vvvv,controller->robot->Gq);
-        // data->save_tau(controller->t_real, controller->robot->leg[0]->tau, controller->robot->leg[1]->tau, controller->robot->leg[2]->tau, controller->robot->leg[3]->tau);
-        
+        // data->save_opt(controller->t_real, controller->robot->vvvv,controller->robot->Gq);       
         // data->save_Fa(controller->t_real, controller->robot->F_a);
-        // data->save_Fc(controller->t_real, controller->robot->F_c);
+        // data->save_Fc(controller->t_real, phase_id, controller->robot->F_c);
+//////////////  Learning  /////////////
+        // data->save_joints(controller->t_real, phase_id,
+        //                     controller->robot->leg[0]->q_out(0), controller->robot->leg[0]->q_out(1), controller->robot->leg[0]->q_out(2),
+        //                     controller->robot->leg[1]->q_out(0), controller->robot->leg[1]->q_out(1), controller->robot->leg[1]->q_out(2),
+        //                     controller->robot->leg[2]->q_out(0), controller->robot->leg[2]->q_out(1), controller->robot->leg[2]->q_out(2),
+        //                     controller->robot->leg[3]->q_out(0), controller->robot->leg[3]->q_out(1), controller->robot->leg[3]->q_out(2));
+        // data->save_tau(controller->t_real, phase_id, controller->robot->leg[0]->tau, controller->robot->leg[1]->tau, controller->robot->leg[2]->tau, controller->robot->leg[3]->tau);
+        // data->save_PP(controller->t_real, phase_id,
+        //                 controller->robot->leg[0]->prob_stable,controller->robot->leg[1]->prob_stable,
+        //                 controller->robot->leg[2]->prob_stable, controller->robot->leg[3]->prob_stable,
+        //                 controller->robot->vvvv );
 
+        data->save_CoM(controller->t_real, phase_id, 
+                        controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
+                        controller->robot->dp_c(0),controller->robot->dp_c(1),controller->robot->dp_c(2));
         break;    
 
+    case INCLINED_DYNA_GAIT:
+
+
+        controller->t_real = top_time - controller->t0; //update time
+        // std::cout<<"Time : "<< controller->t_real <<std::endl;
+        // //Dyna Locomotion
+        switch (fsm->phase )
+        {
+        case PH_TARGET:
+
+            //HERE define dynamically the change in inclination
+            controller->updateInclination(dp_cmd);
+
+            controller->robot->swingL_id_a = (int)(++loc_i%2); // change swing leg by free gat order
+            controller->robot->swingL_id_b = (int) (3 - controller->robot->swingL_id_a); //( case A.{0,3} , case B.{1,2} )
+            controller->robot->stanceL_id_a = (int)((loc_i+1)%2);
+            controller->robot->stanceL_id_b = (int) (3 - controller->robot->stanceL_id_a);
+            phase_id = (int )controller->robot->swingL_id_a;
+            controller->setDynamicPhase(); // setphase target etc. 
+
+            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_a],dp_cmd, controller->dz_offset); //HERE: define dynamic dz_offset
+            controller->dynamicBezier(controller->robot->leg[(int)controller->robot->swingL_id_b],dp_cmd, controller->dz_offset); //HERE: define dynamic dz_offset
+
+            fsm->phase = PH_SWING;
+
+        case PH_SWING:
+
+            controller->t_phase = controller->t_real - controller->t0_phase;
+
+            // Commanded velocity
+            controller->computeDynamicWeights(controller->incl_a); //controller->incl_a
+            Eigen::Vector3d temp_dp_cmd = (controller->t_real < 4.0) ?  (controller->t_real)/4.0*dp_cmd : dp_cmd ;
+            controller->dynaErrors(temp_dp_cmd);
+            controller->dynaControlSignal();
+            controller->doubleInverseTip();
+            //CHECK THIS condition
+            if ( controller->A_TOUCHED & controller->B_TOUCHED & (controller->robot->leg[(int)controller->robot->swingL_id_a]->wv_leg == controller->robot->leg[0]->w0*Eigen::Vector3d::Ones()) & (controller->robot->leg[(int)controller->robot->swingL_id_b]->wv_leg == controller->robot->leg[0]->w0*Eigen::Vector3d::Ones()) )
+            {
+                fsm->phase = PH_TARGET;
+            }
+
+            break;
+        }
+        data->save_CoM(controller->t_real, phase_id, 
+            controller->robot->p_c(0),controller->robot->p_c(1),controller->robot->p_c(2),
+            controller->robot->dp_c(0),controller->robot->dp_c(1),controller->robot->dp_c(2));
+        break;  
     }
 
     t_last_c += controller->dt;

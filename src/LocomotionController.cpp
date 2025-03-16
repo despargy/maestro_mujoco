@@ -23,6 +23,9 @@ LocomotionController::LocomotionController()
 
     A_PD = false;
     B_PD = false;
+    
+    dz_offset = 0.0;
+    incl_a = 0.0;
 }
 LocomotionController::~LocomotionController(){}
 void LocomotionController::setPhaseTarget()
@@ -136,6 +139,39 @@ void LocomotionController::computeDynamicWeights()
     robot->W_inv = (robot->vvvv.asDiagonal()).inverse(); // save as matrix the inverse of diagonal vvvv vector
 
 }
+void LocomotionController::computeDynamicWeights(double incl_a)
+{
+
+    // Stance A weights updated based on probability
+    int l = (int)robot->stanceL_id_a;
+    // HERE
+        robot->leg[l]->wv_leg(1) = (this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt) + robot->leg[l]->wv_leg(1) ; // y
+        robot->leg[l]->wv_leg(0) = (this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt) + robot->leg[l]->wv_leg(0); // x
+        robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
+    // Stance B weights updated based on probability
+    l = (int)robot->stanceL_id_b;
+        robot->leg[l]->wv_leg(1) = (this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt) + robot->leg[l]->wv_leg(1) ; // y
+        robot->leg[l]->wv_leg(0) = (this->alpha*(1.0 - robot->leg[l]->prob_stable)*dt) + robot->leg[l]->wv_leg(0); // x
+        robot->vvvv.block(l*3,0,3,1) = robot->leg[l]->wv_leg;   
+
+    if (A_TOUCHED)
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tA, c1*10, t0_swing/10))*Eigen::Vector3d::Ones(); 
+    else
+        robot->leg[(int) robot->swingL_id_a]->wv_leg = robot->leg[(int) robot->swingL_id_a]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, t0_swing)*Eigen::Vector3d::Ones(); 
+    
+    if (B_TOUCHED)
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*(1 - sigmoid(t_phase - tB, c1*10, t0_swing/10) )*Eigen::Vector3d::Ones(); 
+    else
+        robot->leg[(int) robot->swingL_id_b]->wv_leg = robot->leg[(int) robot->swingL_id_b]->w0*Eigen::Vector3d::Ones() + w_max*sigmoid(t_phase, c1, t0_swing)*Eigen::Vector3d::Ones(); 
+
+    robot->vvvv.block((int) robot->swingL_id_a*3,0,3,1) = robot->leg[(int) robot->swingL_id_a]->wv_leg;   // update vvvv vector of robot 
+    robot->vvvv.block((int) robot->swingL_id_b*3,0,3,1) = robot->leg[(int) robot->swingL_id_b]->wv_leg;   // update vvvv vector of robot 
+
+    robot->W_inv = (robot->vvvv.asDiagonal()).inverse(); // save as matrix the inverse of diagonal vvvv vector
+
+}
+
+
 void LocomotionController::initWeights()
 {
 
@@ -581,6 +617,57 @@ void LocomotionController::dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd)
     }
     
 }
+void LocomotionController::dynamicBezier(Leg* l, Eigen::Vector3d dp_cmd, double dz_incl)
+{
+    l->dot_bCurveX.clear();
+    l->dot_bCurveY.clear();
+    l->dot_bCurveZ.clear();
+    l->bCurveX.clear();
+    l->bCurveY.clear();
+    l->bCurveZ.clear();
+
+    Eigen::Vector3d p0 = l->g_0bo_init.block(0,3,3,1);
+    //New addition :  + robot->w_d*(t0_swing + 1/freq_swing + 4*c2tip) PREV: robot->R_c*l->TIP_EXT 
+    Eigen::Vector3d p3( robot->p_c0 + robot->R_c*l->TIP_EXT + dp_cmd*(t0_swing + 1/freq_swing + 4*c2tip) ) ; 
+    // CHECK maybe delete *(t0_,...)
+    Eigen::Vector3d p_rotational = robot->w_d.cross(robot->R_d * l->TIP_EXT);//*(t0_swing + 1/freq_swing + 4*c2tip);
+
+    p3 += p_rotational;
+    p3(2) = p0(2)  + dz_incl; //HERE ADDED dz_incl(INCLINATION)
+
+    l->foothold = p3; 
+    Eigen::Vector3d ofset = p3 - p0;
+    ofset(2) = 0.021 ; //HERE  ADDED dz_incl(INCLINATION)
+
+    Eigen::Vector3d p1, p2;
+    p1(0) = p0(0) + 0.5*ofset(0);   p2(0) = p0(0) + 0.8*ofset(0);
+    p1(1) = p0(1) + 0.5*ofset(1);   p2(1) = p0(1) + 0.8*ofset(1);
+    p1(2) = p0(2) + 2.5*ofset(2);   p2(2) = p0(2) + 2.8*ofset(2); // 0.019 1.5 1.8 
+
+    std::vector<double> xX{p0(0), p1(0), p2(0), p3(0)}; 
+    std::vector<double> yY{p0(1), p1(1), p2(1), p3(1)}; 
+    std::vector<double> zZ{p0(2), p1(2), p2(2), p3(2)};
+
+    double bCurveXt, dot_bCurveXt;
+    double bCurveYt, dot_bCurveYt;
+    double bCurveZt, dot_bCurveZt;
+    for (double t = 0.0; t <= 1; t += step_bez)
+    {
+        bCurveXt = std::pow((1 - t), 3) * xX[0] + 3 * std::pow((1 - t), 2) * t * xX[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * xX[2] + std::pow(t, 3) * xX[3]; //  p0(0) + ofset(0)*t; //
+        bCurveYt = std::pow((1 - t), 3) * yY[0] + 3 * std::pow((1 - t), 2) * t * yY[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * yY[2] + std::pow(t, 3) * yY[3]; // p0(1) + ofset(1)*t;// 
+        bCurveZt = std::pow((1 - t), 3) * zZ[0] + 3 * std::pow((1 - t), 2) * t * zZ[1] + 3 * std::pow((1 - t), 1) * std::pow(t, 2) * zZ[2] + std::pow(t, 3) * zZ[3];
+        l->bCurveX.push_back(bCurveXt);
+        l->bCurveY.push_back(bCurveYt);
+        l->bCurveZ.push_back(bCurveZt);
+        dot_bCurveXt = 3 * std::pow((1 - t), 2) *(xX[1] - xX[0])  + 6 * (1 - t) * t * (xX[2] - xX[1]) + 3 * std::pow(t, 2) * ( xX[3] - xX[2] );
+        dot_bCurveYt = 3 * std::pow((1 - t), 2) *(yY[1] - yY[0])  + 6 * (1 - t) * t * (yY[2] - yY[1]) + 3 * std::pow(t, 2) * ( yY[3] - yY[2] );
+        dot_bCurveZt = 3 * std::pow((1 - t), 2) *(zZ[1] - zZ[0])  + 6 * (1 - t) * t * (zZ[2] - zZ[1]) + 3 * std::pow(t, 2) * ( zZ[3] - zZ[2] );
+        l->dot_bCurveX.push_back(dot_bCurveXt);
+        l->dot_bCurveY.push_back(dot_bCurveYt);
+        l->dot_bCurveZ.push_back(dot_bCurveZt);
+    }
+    
+}
 void LocomotionController::swingTrajectory()
 {
     if(t_phase<t0_swing) //  yet there are forces
@@ -644,14 +731,92 @@ void LocomotionController::dynaErrors(Eigen::Vector3d dp_cmd)
 
     // compute orientation ERROR
     // PREV: Re = robot->R_c*robot->R_c0.transpose(); R_d_phase
-    Re = robot->R_c*robot->R_c0.transpose(); // prev
+    Re = robot->R_c*robot->R_d.transpose(); // prev R_d affects the desired rotation of the robot
     ang.fromRotationMatrix(Re);
     e_o = ang.angle()*ang.axis();
     
     e_p(2) = 4*(robot->p_c(2) - (robot->height_z + terrain_height));
+    // std::cout<<"terrain_height= "<<terrain_height<<std::endl;
+    // std::cout<<"robot world z= "<<robot->p_c(2)<<std::endl;
 
     // New additions: - robot->w_d
     e_v.block(0,0,3,1) = (robot->dp_c - robot->R_c*dp_cmd) ; // compute velocity error TODO //robot->R_c0*
     e_v.block(3,0,3,1) = robot->w_CoM - robot->w_d;  
     e_v.block(3,0,3,1) = 0.7*this->e_v.block(3,0,3,1) ; 
+}
+
+void LocomotionController::change_Rd(Eigen::Vector3d euler_angle)
+{
+
+
+    Eigen::Matrix3d R_euler = Eigen::AngleAxisd(euler_angle[2], Eigen::Vector3d::UnitZ()).toRotationMatrix() *
+    Eigen::AngleAxisd(euler_angle[1], Eigen::Vector3d::UnitY()).toRotationMatrix() *
+    Eigen::AngleAxisd(euler_angle[0], Eigen::Vector3d::UnitX()).toRotationMatrix();
+    robot->R_d = robot->R_c0*R_euler;
+
+}
+void LocomotionController::updateInclination(Eigen::Vector3d dp_cmd)
+{
+    // Vel 0.5
+    if (INCLINATION and t_real > 5.0 and t_real < 7)
+    {
+        // std::cout<<"Changed"<<std::endl;
+        // std::cout<<"time"<<t_real<<std::endl;
+        incl_a = -0.04; //HERE set inclination
+        change_Rd( Eigen::Vector3d(0, incl_a, 0));
+        dz_offset = dp_cmd(0)*dt*tanh(-incl_a)+0.05;
+    }
+    else if (INCLINATION and t_real > 9.8 and t_real < 12.0) //14.5
+    {
+        // std::cout<<"Changed descent"<<std::endl;
+        incl_a = 0.04; //HERE set inclination
+
+        change_Rd( Eigen::Vector3d(0, incl_a, 0));
+        dz_offset = dp_cmd(0)*dt*tanh(-incl_a);
+    }
+    else if (t_real >= 12.0) //14.5
+    {
+        // INCLINATION = false;
+        // std::cout<<"Changed to Rc0"<<std::endl;
+        incl_a = 0.0; //HERE set inclination
+        change_Rd( Eigen::Vector3d(0, incl_a, 0));
+        dz_offset = 0.0;//dp_cmd(0)*dt*tanh(-incl_a);//0.05;
+    }
+
+    // // Vel 0.3
+    // if (INCLINATION and t_real > 9.0 and t_real < 10)
+    // {
+    //     // std::cout<<"Changed"<<std::endl;
+    //     // std::cout<<"time"<<t_real<<std::endl;
+    //     incl_a = -0.04; //HERE set inclination
+    //     change_Rd( Eigen::Vector3d(0, incl_a, 0));
+    //     dz_offset = dp_cmd(0)*dt*tanh(-incl_a)+0.04;
+    // }
+    // else if (INCLINATION and t_real > 17.2 and t_real < 20.0) //14.5
+    // {
+    //     // std::cout<<"Changed descent"<<std::endl;
+    //     incl_a = 0.04; //HERE set inclination
+
+    //     change_Rd( Eigen::Vector3d(0, incl_a, 0));
+    //     dz_offset = dp_cmd(0)*dt*tanh(-incl_a);
+    // }
+    // else if (t_real >= 20.0) //14.5
+    // {
+    //     // INCLINATION = false;
+    //     // std::cout<<"Changed to Rc0"<<std::endl;
+    //     incl_a = 0.0; //HERE set inclination
+    //     change_Rd( Eigen::Vector3d(0, incl_a, 0));
+    //     dz_offset = 0.0;//dp_cmd(0)*dt*tanh(-incl_a);//0.05;
+    // }
+
+
+
+    terrain_height = (robot->p_c(2) - robot->p_c0(2)) + dz_offset;  //HERE TOO, AFFETCS ERROR IN POSITION
+
+
+    // Need to update the terrain heigh, where the robot it is not + estimaiton of the upcomming inclunation
+    // Those are correlated:
+            //  controller->terrain_height, 
+            //  controller->change_Rd( Eigen::Vector3d(0, -0.1, 0));
+            // controller->dz_offset = 0.1;
 }

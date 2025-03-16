@@ -36,6 +36,7 @@ class Wrapper
         void update_PCE();
         void update_PCE_forces(double fz_swing_a, double fz_swing_b);
         void setParamsMujocoPCE();
+        void update_PCE_onlystance();
 
 };
 

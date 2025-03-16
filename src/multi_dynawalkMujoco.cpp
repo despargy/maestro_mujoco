@@ -146,10 +146,11 @@ void my_controller_walk(const mjModel* m, mjData* d)
         //     topController->wrapper->pce_obj[3].save_csv();
         //     ONCE_SAVE = false;
         // }
-        else if(topController->fsm->state == DYNA_GAIT)
+        else if(topController->fsm->state == DYNA_GAIT or topController->fsm->state == INCLINED_DYNA_GAIT)
         {
             // topController->wrapper->update_PCE();
-            topController->wrapper->update_PCE_forces(topController->controller->f_applied_a(2), topController->controller->f_applied_b(2));
+            // topController->wrapper->update_PCE_forces(topController->controller->f_applied_a(2), topController->controller->f_applied_b(2));
+            topController->wrapper->update_PCE_onlystance();
             // topController->wrapper->pce_obj[0].save_csv();
         }
 
