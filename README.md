@@ -22,6 +22,8 @@
 
 <h3 align="center"> A real-time adaptive locomotion controller for quadrupeds, designed to maintain stability and controllability on various surfaces, including highly slippery terrains. </h3> 
 
+<h4  align="center" style="color: red;" > Additional work in Progress: Slope Walking </h4>
+
 <h4>Supports: Unitree's Go2</h4>
 <p align="center">
   <a href="#key-features">Key Features</a> •
