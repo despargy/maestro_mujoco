@@ -764,9 +764,9 @@ void LocomotionController::updateInclination(Eigen::Vector3d dp_cmd)
         // std::cout<<"time"<<t_real<<std::endl;
         incl_a = -0.04; //HERE set inclination
         change_Rd( Eigen::Vector3d(0, incl_a, 0));
-        dz_offset = dp_cmd(0)*dt*tanh(-incl_a)+0.05;
+        dz_offset = dp_cmd(0)*dt*tanh(-incl_a)+0.05; //0.05
     }
-    else if (INCLINATION and t_real > 9.8 and t_real < 12.0) //14.5
+    else if (INCLINATION and t_real > 9.8 and t_real < 13.0) //14.5
     {
         // std::cout<<"Changed descent"<<std::endl;
         incl_a = 0.04; //HERE set inclination
@@ -774,7 +774,7 @@ void LocomotionController::updateInclination(Eigen::Vector3d dp_cmd)
         change_Rd( Eigen::Vector3d(0, incl_a, 0));
         dz_offset = dp_cmd(0)*dt*tanh(-incl_a);
     }
-    else if (t_real >= 12.0) //14.5
+    else if (t_real >= 15.5) //12
     {
         // INCLINATION = false;
         // std::cout<<"Changed to Rc0"<<std::endl;

@@ -1,4 +1,5 @@
 #include <TopLevelControl.h>
+#include <Perception.h>
 
 #ifndef _LOCOMOTIONTOPLEVELCONTROL_H_
 #define _LOCOMOTIONTOPLEVELCONTROL_H_
@@ -10,6 +11,7 @@ class LocomotionTopLevelControl : public TopLevelControl
 {
     public:
         LocomotionController* controller; // LocomotionController pointer obj.
+        Perception* perceive;
 
         int loc_i, foothold_id, phase_id;
         bool DYNA_LOCO, A_PD, B_PD ;

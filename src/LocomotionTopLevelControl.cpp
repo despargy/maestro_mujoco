@@ -1,4 +1,5 @@
 #include <LocomotionTopLevelControl.h>
+#include <Perception.h>
 /* Construtor */
 LocomotionTopLevelControl::LocomotionTopLevelControl()
 {

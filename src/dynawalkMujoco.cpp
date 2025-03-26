@@ -159,9 +159,9 @@ void my_controller_walk(const mjModel* m, mjData* d)
         topController->wrapper->set_gains(m,d,topController->controller->A_PD,topController->controller->B_PD); 
         topController->wrapper->send_torque_pos_Dynamic(m,d,topController->controller->A_PD,topController->controller->B_PD); 
 
+
     }
 }
-
 
 // main function
 int main(int argc, const char** argv)

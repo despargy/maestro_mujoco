@@ -24,7 +24,9 @@ find_library(NLOPT_LIBRARIES
     NAMES nlopt nlopt_cxx
     HINTS ${PC_NLOPT_LIBDIR})
 
-
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+link_directories(${OpenCV_LIBRARY_DIRS})
 
 # find_package(nlopt REQUIRED)
 find_package(orocos_kdl REQUIRED)
@@ -50,11 +52,12 @@ set(MAESTRO_CPP
     ../Math.cpp
     ../Wrapper.cpp
     ../LocomotionController.cpp
+    ../Perception.cpp
     "${PCE_CPP}/src/pce.cpp"
 )
 
 add_executable(dynawalk ../dynawalkMujoco.cpp ${MAESTRO_CPP} )
-target_link_libraries(dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} m mujoco glfw)
+target_link_libraries(dynawalk ${OpenCV_LIBS} ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} m mujoco glfw)
 
 add_executable(multi_dynawalk ../multi_dynawalkMujoco.cpp ${MAESTRO_CPP} )
-target_link_libraries(multi_dynawalk ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} m mujoco glfw)
+target_link_libraries(multi_dynawalk ${OpenCV_LIBS} ${NLOPT_LIBRARIES} ${orocos_kdl_LIBRARIES} m mujoco glfw)
